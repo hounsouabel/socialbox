@@ -39,8 +39,8 @@ Ce projet est une application mobile développée avec **Flutter**, ayant pour b
 
 1. **Cloner le projet :**  
    ```bash
-   git clone https://github.com/Leloucher95/Groupe7.git
-   cd Groupe7
+   git clone https://gitlab.com/school_projects2351346/groupe-7.git
+  
    ```
 
 2. **Installer les dépendances :**  
