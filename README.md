@@ -1,8 +1,6 @@
 
 
----
-
-# 📱 **Mini Réseau Social - Projet Académique**
+## 📱 **Mini Réseau Social - Projet Académique**
 
 Ce projet est une application mobile développée avec **Flutter**, ayant pour but de créer un mini réseau social interactif et moderne. Il vise à offrir une plateforme permettant aux utilisateurs de se connecter, partager du contenu, et interagir avec une communauté dynamique.
 
