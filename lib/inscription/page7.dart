@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:groupe7/chatterbox.dart';
 import 'package:groupe7/home.dart';
 import 'package:groupe7/inscription/page6.dart';
 
@@ -66,7 +67,10 @@ class _Page7State extends State<Page7> {
             SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
-                // Action pour le bouton se connecter
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => ChatterBox())
+                );
               },
               style: ElevatedButton.styleFrom(
                   shape: RoundedRectangleBorder(

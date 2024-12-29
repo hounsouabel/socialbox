@@ -65,6 +65,8 @@ flutter:
      - assets/logo-removebg-preview.png
      - assets/c152cc1f10414675bcf2ac324984b408~tplv-rjxq75k7vb-image.png
      - assets/home.png
+     - assets/background.png
+     - assets/text.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images
@@ -77,10 +79,10 @@ flutter:
   # "family" key with the font family name, and a "fonts" key with a
   # list giving the asset and other descriptors for the font. For
   # example:
-  # fonts:
-  #   - family: Schyler
-  #     fonts:
-  #       - asset: fonts/Schyler-Regular.ttf
+  fonts:
+     - family: BlackOpsOne
+       fonts:
+         - asset: assets/fonts/BlackOpsOne-Regular.ttf
   #       - asset: fonts/Schyler-Italic.ttf
   #         style: italic
   #   - family: Trajan Pro
