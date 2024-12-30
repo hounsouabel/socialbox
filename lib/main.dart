@@ -8,6 +8,8 @@ import 'firebase_options.dart';
 import 'package:groupe7/responsive/mobile_screen_layout.dart';
 import 'package:groupe7/responsive/web_screen_layout.dart';
 
+import 'home.dart';
+
 
 Future<void> main () async {
   //Ajout pour initilaliser Firebase dans le projet | voir la vidéo tuto
@@ -29,7 +31,8 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: ThemeData.dark().copyWith(scaffoldBackgroundColor: mobileBackgroundColor ),
      // home: const MyHomePage(title: 'Groupe 7'),
-      home: const ResponsiveLayout(mobileScreenLayout:MobileScreenLayout() ,webScreenLayout: WebScreenLayout(),),
+      //home: const ResponsiveLayout(mobileScreenLayout:MobileScreenLayout() ,webScreenLayout: WebScreenLayout(),),
+      home: MyHomePage(),
     );
   }
 }
