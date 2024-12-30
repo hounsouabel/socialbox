@@ -1,6 +1,6 @@
-Oui, voici le **code Markdown** prêt à être copié directement dans votre fichier `README.md` :
 
-```markdown
+
+
 # 📱 **Mini Réseau Social - Projet Académique**
 
 Ce projet est une application mobile développée avec **Flutter**, ayant pour but de créer un mini réseau social interactif et moderne. Il vise à offrir une plateforme permettant aux utilisateurs de se connecter, partager du contenu, et interagir avec une communauté dynamique.
