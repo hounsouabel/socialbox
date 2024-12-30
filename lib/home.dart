@@ -3,7 +3,12 @@ import 'package:groupe7/inscription/page1.dart';
 import 'login.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(
+    Directionality(
+      textDirection: TextDirection.ltr, // ou TextDirection.rtl pour les langues de droite à gauche
+      child: MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -71,7 +76,12 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      body: SingleChildScrollView(
+      body: Container(
+        decoration: BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage('assets/background.png'),
+              fit: BoxFit.cover,          )
+        ),
         padding: EdgeInsets.symmetric(vertical: 70, horizontal: 20),
         child: SingleChildScrollView(
           child: Column(
@@ -116,7 +126,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     'Bienvenue sur ChatterBox 👋',
                     style: TextStyle(fontSize: 20, color: Colors.black),
                   ),
-                  SizedBox(height: 60),
+                  SizedBox(height: 84),
                   ElevatedButton(
                     onPressed: () {
                       Navigator.push(

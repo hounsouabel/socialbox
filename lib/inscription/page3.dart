@@ -95,9 +95,7 @@ class _Page3State extends State<Page3> {
                           ? _selectedDate!.toString().split(' ')[0] // Affiche la date sélectionnée
                           : 'Date de naissance',
                     ),
-                    validator: (String? value) {
-                      return value == null || value == "" ? "Ce champ est obligatoire" : null;
-                    },
+
                   ),
                 ),
               ],
@@ -105,14 +103,10 @@ class _Page3State extends State<Page3> {
             SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
-                if(formKey.currentState!.validate()) {
-                  setState(() {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => Page4())
-                    );
-                  });
-                }
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => Page4())
+                );
               },
               style: ElevatedButton.styleFrom(
                   shape: RoundedRectangleBorder(

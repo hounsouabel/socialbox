@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:groupe7/chatterbox.dart';
 import 'package:groupe7/home.dart';
 import 'inscription/page1.dart';
 
@@ -169,7 +170,10 @@ class _MyLoginPageState extends State<MyLoginPage> {
             SizedBox(height: 10),
             TextButton(
               onPressed: () {
-                // Action pour le lien mot de passe oublié
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => ChatterBox())
+                );
               },
               child: Text(
                 'Mot de passe oublié ?',

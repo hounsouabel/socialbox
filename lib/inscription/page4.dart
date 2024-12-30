@@ -89,21 +89,14 @@ class _Page4State extends State<Page4> {
                     sexe = value;
                   });
                 },
-                validator: (String? value) {
-                  return value == null || value == "" ? "Ce champ est obligatoire" : null;
-                },
             ),
             SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
-                if(formKey.currentState!.validate()) {
-                  setState(() {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => Page5())
-                    );
-                  });
-                }
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => Page5())
+                );
               },
               style: ElevatedButton.styleFrom(
                   shape: RoundedRectangleBorder(
