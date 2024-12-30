@@ -40,8 +40,8 @@ Ce projet est une application mobile développée avec **Flutter**, ayant pour b
 
 1. **Cloner le projet :**  
    ```bash
-   git clone <URL_DU_DEPÔT>
-   cd <NOM_DU_RÉPERTOIRE>
+   git clone https://gitlab.com/school_projects2351346/groupe-7.git
+   cd Groupe7
    ```
 
 2. **Installer les dépendances :**  
@@ -64,8 +64,12 @@ Les contributions sont les bienvenues ! Créez une branche, proposez vos modific
 
 ## 👥 **Équipe du Projet**
 
-- **Chef de Projet :** (À compléter)  
-- **Développeurs :** (À compléter)  
+- **Chef de Projet** : AHOYO Juste 
+- **Equipe de développement** :
+   - AYININ Mohamed
+   - DA-CRUZ Edma
+   - HOUNSOU Abel
+   - SALIOU Abdel
 
 ---
 
