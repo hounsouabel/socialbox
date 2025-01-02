@@ -1,27 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:groupe7/inscription/inscription_data.dart';
 import 'package:groupe7/inscription/page4.dart';
 import 'package:groupe7/inscription/page6.dart';
 
-void main() {
-  runApp(const MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
-      ),
-      debugShowCheckedModeBanner: false,
-      home: Page5(),
-    );
-  }
-}
 
 class Page5 extends StatefulWidget {
   const Page5({super.key});
@@ -32,7 +13,7 @@ class Page5 extends StatefulWidget {
 
 class _Page5State extends State<Page5> {
 
-  final _formKey = GlobalKey<FormState>();
+  //final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
 
   String? _validateEmail(String? value) {
@@ -47,10 +28,12 @@ class _Page5State extends State<Page5> {
   }
 
   void _handleEmail() {
-    final email = _emailController.text; // Assuming you have a TextEditingController
+    inscriptionData.email=_emailController.text;
+    final email = _emailController.text; 
     final validationResult = _validateEmail(email);
 
     if (validationResult == null) {
+      
       Navigator.push(
         context,
         MaterialPageRoute(builder: (context) => Page6()),
@@ -60,6 +43,13 @@ class _Page5State extends State<Page5> {
         SnackBar(content: Text(validationResult)),
       );
     }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _emailController.text=inscriptionData.email;
+
   }
 
   @override
@@ -91,7 +81,7 @@ class _Page5State extends State<Page5> {
             ),
             SizedBox(height: 20),
             Text(
-              'Entrez l\'adresse e-mail où vous joindre. Personne ne le verra sur votre profil.',
+              'Entrez l\'adresse e-mail où vous joindre. Personne ne le verra sur votre profil',
               style: TextStyle(fontSize: 15, color: Colors.black),
             ),
             SizedBox(height: 20),
@@ -113,7 +103,7 @@ class _Page5State extends State<Page5> {
             ),
             SizedBox(height: 20),
             Text(
-              'Vous recevrez des e-mails de notre part et pouvez à tout moment les désactiver.',
+              'Vous recevrez des e-mails de notre part et pouvez à tout moment les désactiver',
               style: TextStyle(fontSize: 15, color: Colors.black),
             ),
             SizedBox(height: 20),
@@ -129,7 +119,7 @@ class _Page5State extends State<Page5> {
               ),
               child: Text(
                 'Suivant',
-                style: TextStyle(color: Colors.white),),
+                style: TextStyle(color: Colors.black),),
             ),
             SizedBox(height: 10),
           ],

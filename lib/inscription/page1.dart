@@ -3,26 +3,7 @@ import 'package:groupe7/inscription/page2.dart';
 
 import '../home.dart';
 
-void main() {
-  runApp(const MyApp());
-}
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
-      ),
-      debugShowCheckedModeBanner: false,
-      home: Page1(),
-    );
-  }
-}
 
 class Page1 extends StatefulWidget {
   const Page1({super.key});
@@ -71,7 +52,7 @@ class _Page1State extends State<Page1> {
             ),
             SizedBox(height: 20),
             Text(
-              'Créez un compte pour communiquer avec vos proches et avec les communautés qui partagent vos centres d''intérêts',
+              "Créez un compte pour communiquer avec vos proches et avec les communautés qui partagent vos centres d'intérêts",
               style: TextStyle(fontSize: 15, color: Colors.black),
             ),
             SizedBox(height: 20),
@@ -92,7 +73,7 @@ class _Page1State extends State<Page1> {
               ),
               child: Text(
                 'Démarrer',
-                style: TextStyle(color: Colors.white),),
+                style: TextStyle(color: Colors.black),),
             ),
             SizedBox(height: 10),
           ],

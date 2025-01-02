@@ -1,27 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:groupe7/inscription/inscription_data.dart';
 import 'package:groupe7/inscription/page5.dart';
 import 'package:groupe7/inscription/page7.dart';
-
-void main() {
-  runApp(const MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
-      ),
-      debugShowCheckedModeBanner: false,
-      home: Page6(),
-    );
-  }
-}
+import 'package:groupe7/services/auth_service.dart';
 
 class Page6 extends StatefulWidget {
   const Page6({super.key});
@@ -32,6 +13,7 @@ class Page6 extends StatefulWidget {
 
 class _Page6State extends State<Page6> {
   bool _isObscure = true;
+  bool _isLoading = false; // Ajout de l'état de chargement
 
   final _formKey = GlobalKey<FormState>();
   final _passwordController = TextEditingController();
@@ -46,15 +28,51 @@ class _Page6State extends State<Page6> {
     return null;
   }
 
-  void _handlePass() {
-    final password = _passwordController.text; // Assuming you have a TextEditingController
+  Future<void> _handlePass() async {
+    final password = _passwordController.text;
     final validationResult = _validatePassword(password);
 
     if (validationResult == null) {
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => Page7()),
-      );
+      if (inscriptionData.email.isEmpty ||
+          inscriptionData.firstname.isEmpty ||
+          inscriptionData.lastname.isEmpty ||
+          inscriptionData.birthDate==null ||
+          inscriptionData.gender==null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Certaines informations sont manquantes.')),
+        );
+        return;
+      }
+
+      setState(() {
+        _isLoading = true;
+      });
+
+      AuthService authService = AuthService();
+      try {
+        await authService.signUpUser(
+          email: inscriptionData.email,
+          password: _passwordController.text,
+          firstName: inscriptionData.firstname,
+          lastName: inscriptionData.lastname,
+          birthDate: inscriptionData.birthDate,
+          gender: inscriptionData.gender,
+        );
+
+        if (!mounted) return;
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => Page7()),
+        );
+      } catch (e) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Erreur : $e')),
+        );
+      } finally {
+        setState(() {
+          _isLoading = false;
+        });
+      }
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(validationResult)),
@@ -75,11 +93,11 @@ class _Page6State extends State<Page6> {
             Align(
               alignment: Alignment.topLeft,
               child: IconButton(
-                icon: Icon(Icons.arrow_back, color: Colors.blue, size: 30,),
+                icon: Icon(Icons.arrow_back, color: Colors.blue, size: 30),
                 onPressed: () {
                   Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => Page5())
+                    context,
+                    MaterialPageRoute(builder: (context) => Page5()),
                   );
                 },
               ),
@@ -87,11 +105,15 @@ class _Page6State extends State<Page6> {
             SizedBox(height: 20),
             Text(
               'Créez un mot de passe',
-              style: TextStyle(fontSize: 30, color: Colors.black, fontWeight: FontWeight.bold),
+              style: TextStyle(
+                fontSize: 30,
+                color: Colors.black,
+                fontWeight: FontWeight.bold,
+              ),
             ),
             SizedBox(height: 20),
             Text(
-              'Créez unn mot de passe comprenant au moins 6 caractères.',
+              'Créez un mot de passe comprenant au moins 6 caractères.',
               style: TextStyle(fontSize: 15, color: Colors.black),
             ),
             SizedBox(height: 20),
@@ -104,7 +126,7 @@ class _Page6State extends State<Page6> {
                     keyboardType: TextInputType.visiblePassword,
                     obscureText: _isObscure,
                     decoration: InputDecoration(
-                      icon: Icon(Icons.lock, color: Colors.blue,),
+                      icon: Icon(Icons.lock, color: Colors.blue),
                       labelText: 'Mot de passe',
                       suffixIcon: IconButton(
                         icon: Icon(
@@ -116,6 +138,9 @@ class _Page6State extends State<Page6> {
                           });
                         },
                       ),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
                     ),
                     validator: _validatePassword,
                   ),
@@ -123,20 +148,23 @@ class _Page6State extends State<Page6> {
               ],
             ),
             SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: _handlePass,
-              style: ElevatedButton.styleFrom(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(50),
+            _isLoading
+                ? CircularProgressIndicator()
+                : ElevatedButton(
+                    onPressed: _handlePass,
+                    style: ElevatedButton.styleFrom(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(50),
+                      ),
+                      padding: EdgeInsets.symmetric(vertical: 15),
+                      minimumSize: Size(double.infinity, 50),
+                      backgroundColor: Colors.blue,
+                    ),
+                    child: Text(
+                      'Suivant',
+                      style: TextStyle(color: Colors.white),
+                    ),
                   ),
-                  padding: EdgeInsets.symmetric(vertical: 15),
-                  minimumSize: Size(double.infinity, 50),
-                  backgroundColor: Colors.blue
-              ),
-              child: Text(
-                'Suivant',
-                style: TextStyle(color: Colors.white),),
-            ),
             SizedBox(height: 10),
           ],
         ),

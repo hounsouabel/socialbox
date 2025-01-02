@@ -1,27 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:groupe7/inscription/inscription_data.dart';
 import 'package:groupe7/inscription/page1.dart';
 import 'package:groupe7/inscription/page3.dart';
 
-void main() {
-  runApp(const MyApp());
-}
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
-      ),
-      debugShowCheckedModeBanner: false,
-      home: Page2(),
-    );
-  }
-}
 
 class Page2 extends StatefulWidget {
   const Page2({super.key});
@@ -36,6 +18,14 @@ class _Page2State extends State<Page2> {
   final lastnameController = TextEditingController();
 
   final formKey = GlobalKey<FormState>();
+
+  @override
+  void initState() {
+    super.initState();
+    //Remplissage auto.
+    firstnameController.text = inscriptionData.firstname;
+    lastnameController.text = inscriptionData.lastname;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -107,6 +97,8 @@ class _Page2State extends State<Page2> {
             ElevatedButton(
               onPressed: () {
                 if(formKey.currentState!.validate()) {
+                  inscriptionData.firstname = firstnameController.text;
+                  inscriptionData.lastname = lastnameController.text;
                   setState(() {
                     Navigator.push(
                         context,
@@ -125,7 +117,7 @@ class _Page2State extends State<Page2> {
               ),
               child: Text(
                 'Suivant',
-                style: TextStyle(color: Colors.white),),
+                style: TextStyle(color: Colors.black),),
             ),
             SizedBox(height: 10),
           ],

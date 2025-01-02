@@ -67,7 +67,7 @@ class _Page7State extends State<Page7> {
             SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
-                Navigator.push(
+                Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(builder: (context) => ChatterBox())
                 );
@@ -82,7 +82,7 @@ class _Page7State extends State<Page7> {
               ),
               child: Text(
                 'Enregistrer',
-                style: TextStyle(color: Colors.white),),
+                style: TextStyle(color: Colors.black),),
             ),
             SizedBox(height: 10),
             ElevatedButton(
