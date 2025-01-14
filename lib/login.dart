@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:groupe7/home.dart';
 import 'package:groupe7/inscription/page1.dart';
-import 'package:groupe7/chatterbox.dart';
+import 'package:groupe7/screens/home_page.dart';
 import 'package:groupe7/services/auth_service.dart';
 
 class MyLoginPage extends StatefulWidget {

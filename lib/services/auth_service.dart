@@ -1,6 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+
+
 class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -13,10 +15,12 @@ class AuthService {
     required String lastName,
     required DateTime? birthDate,
     required String? gender,
+    required String pseudo,
   }) async {
     try {
       // Créer l'utilisateur dans Firebase Authentication
-      UserCredential userCredential = await _auth.createUserWithEmailAndPassword(
+      UserCredential userCredential =
+          await _auth.createUserWithEmailAndPassword(
         email: email,
         password: password,
       );
@@ -25,11 +29,14 @@ class AuthService {
       await _firestore.collection('users').doc(userCredential.user?.uid).set({
         'firstName': firstName,
         'lastName': lastName,
+        'pseudo': pseudo,
         'birthDate': birthDate?.toIso8601String(),
         'gender': gender,
         'email': email,
         'createdAt': FieldValue.serverTimestamp(),
       });
+
+      
     } on FirebaseAuthException catch (e) {
       throw Exception('Erreur Firebase Auth: ${e.message}');
     } catch (e) {
@@ -38,7 +45,8 @@ class AuthService {
   }
 
   // 🔑 ✅ 2. Connexion d'un utilisateur
-  Future<User?> signInWithEmailAndPassword(String email, String password) async {
+  Future<User?> signInWithEmailAndPassword(
+      String email, String password) async {
     try {
       UserCredential userCredential = await _auth.signInWithEmailAndPassword(
         email: email,
@@ -54,6 +62,7 @@ class AuthService {
   Future<void> signOut() async {
     try {
       await _auth.signOut();
+     
     } catch (e) {
       throw Exception('Erreur lors de la déconnexion : $e');
     }
@@ -71,7 +80,8 @@ class AuthService {
       }
       return null;
     } catch (e) {
-      throw Exception('Erreur lors de la récupération des données utilisateur : $e');
+      throw Exception(
+          'Erreur lors de la récupération des données utilisateur : $e');
     }
   }
 
@@ -80,7 +90,8 @@ class AuthService {
     try {
       await _auth.sendPasswordResetEmail(email: email);
     } on FirebaseAuthException catch (e) {
-      throw Exception('Erreur lors de la réinitialisation du mot de passe : ${e.message}');
+      throw Exception(
+          'Erreur lors de la réinitialisation du mot de passe : ${e.message}');
     }
   }
 
@@ -109,10 +120,15 @@ class AuthService {
         Map<String, dynamic> updatedData = {};
         if (firstName != null) updatedData['firstName'] = firstName;
         if (lastName != null) updatedData['lastName'] = lastName;
-        if (birthDate != null) updatedData['birthDate'] = birthDate.toIso8601String();
+        if (birthDate != null) {
+          updatedData['birthDate'] = birthDate.toIso8601String();
+        }
         if (gender != null) updatedData['gender'] = gender;
 
-        await _firestore.collection('users').doc(currentUser?.uid).update(updatedData);
+        await _firestore
+            .collection('users')
+            .doc(currentUser?.uid)
+            .update(updatedData);
       } else {
         throw Exception('Aucun utilisateur connecté.');
       }
@@ -124,6 +140,29 @@ class AuthService {
   // 👀 ✅ 8. Vérifier si l'utilisateur est connecté
   bool isUserLoggedIn() {
     return currentUser != null;
+  }
+
+  // 📨 Envoyer un e-mail de vérification
+  Future<void> sendEmailVerification() async {
+    try {
+      if (_auth.currentUser != null && !_auth.currentUser!.emailVerified) {
+        await _auth.currentUser!.sendEmailVerification();
+      }
+    } catch (e) {
+      throw Exception(
+          'Erreur lors de l\'envoi de l\'e-mail de vérification : $e');
+    }
+  }
+  
+
+  // ✅ Vérifier si l'e-mail est vérifié
+  bool isEmailVerified() {
+    return _auth.currentUser?.emailVerified ?? false;
+  }
+
+  // 🔄 Rafraîchir les informations utilisateur
+  Future<void> reloadUser() async {
+    await _auth.currentUser?.reload();
   }
 
   // 📤 ✅ 9. Supprimer le compte utilisateur
