@@ -1,14 +1,26 @@
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
 // for picking up image from gallery
-pickImage(ImageSource source) async {
+/*pickImage(ImageSource source) async {
   final ImagePicker imagePicker = ImagePicker();
   XFile? file = await imagePicker.pickImage(source: source);
   if (file != null) {
     return await file.readAsBytes();
   }
   print('Aucune image séléctionnée');
+}
+*/
+
+Future<Uint8List?> pickImage(ImageSource source) async {
+  final ImagePicker picker = ImagePicker();
+  XFile? image = await picker.pickImage(source: source);
+  if (image != null) {
+    return await image.readAsBytes();
+  }
+  return null; // Retourne null si aucune image n'est sélectionnée
 }
 
 // for displaying snackbars

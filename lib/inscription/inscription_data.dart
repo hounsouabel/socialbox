@@ -3,6 +3,7 @@ class InscriptionData {
   // Étape 1
   String firstname;
   String lastname;
+  String pseudo;
   
   // Étape 2
   DateTime? birthDate;
@@ -22,7 +23,7 @@ class InscriptionData {
     this.password = '',
     this.firstname = '',
     this.lastname = '',
-  
+    this.pseudo='',  
     //this.phoneNumber = '',
     //this.address = '',
   });
