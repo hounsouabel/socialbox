@@ -58,14 +58,14 @@ class _Page4State extends State<Page4> {
                 'Quel est votre genre ?',
                 style: TextStyle(
                   fontSize: 30,
-                  color: Colors.black,
+                  
                   fontWeight: FontWeight.bold,
                 ),
               ),
               SizedBox(height: 20),
               Text(
                 'Cochez le sexe auquel vous appartenez.',
-                style: TextStyle(fontSize: 15, color: Colors.black),
+                style: TextStyle(fontSize: 15, ),
               ),
               SizedBox(height: 20),
               DropdownButtonFormField<String>(

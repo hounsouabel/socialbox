@@ -74,13 +74,13 @@ class _Page3State extends State<Page3> {
               'Quelle est votre date de naissance ?',
               style: TextStyle(
                   fontSize: 30,
-                  color: Colors.black,
+                  
                   fontWeight: FontWeight.bold),
             ),
             SizedBox(height: 20),
             Text(
               'Choisissez votre date de naissance. Mettez vos proches au courant de votre date de naissance pour recevoir de petits gestes',
-              style: TextStyle(fontSize: 15, color: Colors.black),
+              style: TextStyle(fontSize: 15, ),
             ),
             SizedBox(height: 20),
             Row(
@@ -128,7 +128,7 @@ class _Page3State extends State<Page3> {
               ),
               child: Text(
                 'Suivant',
-                style: TextStyle(color: Colors.black),
+                style: TextStyle(),
               ),
             ),
             SizedBox(height: 10),

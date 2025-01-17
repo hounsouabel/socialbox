@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:groupe7/home.dart';
+import 'package:groupe7/screens/settings/account.dart';
 import 'package:groupe7/services/auth_service.dart';
 
 class SettingsPage extends StatefulWidget {
@@ -122,7 +123,10 @@ class _MyHomePageState extends State<SettingsPage> {
                               size: 30,
                             ),
                             TextButton(
-                              onPressed: null,
+                              onPressed: ()
+                              {
+                                Navigator.push(context, MaterialPageRoute(builder: (context)=>const AccountSettings()));
+                              },
                               child: Text(
                                 "  Compte",
                                 style: TextStyle(fontSize: 18),

@@ -84,6 +84,11 @@ class _Page6State extends State<Page6> {
           const SnackBar(content: Text('Un e-mail de vérification a été envoyé.')),
         );
 
+
+        //sauvegarde le mdp dans InscriptionData
+        inscriptionData.password=password;
+
+
         // Redirige vers la page de vérification
         if (!mounted) return;
         Navigator.pushReplacement(
@@ -133,14 +138,14 @@ class _Page6State extends State<Page6> {
               'Créez un mot de passe',
               style: TextStyle(
                 fontSize: 30,
-                color: Colors.black,
+                
                 fontWeight: FontWeight.bold,
               ),
             ),
             const SizedBox(height: 20),
             const Text(
               'Créez un mot de passe comprenant au moins 6 caractères.',
-              style: TextStyle(fontSize: 15, color: Colors.black),
+              style: TextStyle(fontSize: 15, ),
             ),
             const SizedBox(height: 20),
             Row(

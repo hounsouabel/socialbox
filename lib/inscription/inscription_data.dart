@@ -24,6 +24,7 @@ class InscriptionData {
     this.firstname = '',
     this.lastname = '',
     this.pseudo='',  
+    
     //this.phoneNumber = '',
     //this.address = '',
   });

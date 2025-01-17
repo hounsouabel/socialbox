@@ -52,12 +52,12 @@ class _Page2State extends State<Page2> {
               const SizedBox(height: 20),
               const Text(
                 'Comment vous appelez-vous ?',
-                style: TextStyle(fontSize: 30, color: Colors.black, fontWeight: FontWeight.bold),
+                style: TextStyle(fontSize: 30,  fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 20),
               const Text(
                 'Entrez le nom complet que vous utilisez au quotidien.',
-                style: TextStyle(fontSize: 15, color: Colors.black),
+                style: TextStyle(fontSize: 15, ),
               ),
               const SizedBox(height: 20),
               Form(
@@ -96,7 +96,7 @@ class _Page2State extends State<Page2> {
                     const SizedBox(height: 30),
                     const Text(
                       'Entrez votre pseudonyme. Il servira à vous reconnaître.',
-                      style: TextStyle(fontSize: 15, color: Colors.black),
+                      style: TextStyle(fontSize: 15, ),
                     ),
                     const SizedBox(height: 10),
                     TextFormField(
@@ -135,7 +135,7 @@ class _Page2State extends State<Page2> {
                 ),
                 child: const Text(
                   'Suivant',
-                  style: TextStyle(color: Colors.black),
+                  style: TextStyle(),
                 ),
               ),
               const SizedBox(height: 10),

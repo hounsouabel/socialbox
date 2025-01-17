@@ -77,12 +77,12 @@ class _Page5State extends State<Page5> {
             SizedBox(height: 20),
             Text(
               'Quel est votre e-mail ?',
-              style: TextStyle(fontSize: 30, color: Colors.black, fontWeight: FontWeight.bold),
+              style: TextStyle(fontSize: 30,  fontWeight: FontWeight.bold),
             ),
             SizedBox(height: 20),
             Text(
               'Entrez l\'adresse e-mail où vous joindre. Personne ne le verra sur votre profil',
-              style: TextStyle(fontSize: 15, color: Colors.black),
+              style: TextStyle(fontSize: 15, ),
             ),
             SizedBox(height: 20),
             Row(
@@ -104,7 +104,7 @@ class _Page5State extends State<Page5> {
             SizedBox(height: 20),
             Text(
               'Vous recevrez des e-mails de notre part et pouvez à tout moment les désactiver',
-              style: TextStyle(fontSize: 15, color: Colors.black),
+              style: TextStyle(fontSize: 15, ),
             ),
             SizedBox(height: 20),
             ElevatedButton(
@@ -119,7 +119,7 @@ class _Page5State extends State<Page5> {
               ),
               child: Text(
                 'Suivant',
-                style: TextStyle(color: Colors.black),),
+                style: TextStyle(),),
             ),
             SizedBox(height: 10),
           ],

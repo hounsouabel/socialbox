@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:groupe7/screens/settings.dart';
+import 'package:groupe7/screens/add_post_screen.dart';
+import 'package:groupe7/screens/settings/settings.dart';
 
 class ChatterBox extends StatefulWidget {
   const ChatterBox({super.key});
@@ -61,6 +62,7 @@ class _ChatterBoxState extends State<ChatterBox> {
     return [
       _buildStyledIconButton(Icons.add_sharp, () {
         // Action à effectuer lors du clic sur le bouton "Ajouter"
+        Navigator.push(context, MaterialPageRoute(builder: (context)=>AddPostScreen()));
       }),
       _buildStyledIconButton(Icons.search, () {
         // Action à effectuer lors du clic sur le bouton "J'aime"

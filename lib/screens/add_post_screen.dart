@@ -80,7 +80,7 @@ class _AddPostScreenState extends State<AddPostScreen> {
               ),
               title: const Text(
                 'Post to',
-                style: TextStyle(color: Colors.white),
+               
               ),
               centerTitle: false,
               actions: [

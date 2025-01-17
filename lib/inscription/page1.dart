@@ -38,7 +38,7 @@ class _Page1State extends State<Page1> {
             SizedBox(height: 20),
             Text(
               'Rejoignez Chatterbox',
-              style: TextStyle(fontSize: 30, color: Colors.black, fontWeight: FontWeight.bold),
+              style: TextStyle(fontSize: 30,  fontWeight: FontWeight.bold),
             ),
             SizedBox(height: 20),
             Center(
@@ -53,7 +53,7 @@ class _Page1State extends State<Page1> {
             SizedBox(height: 20),
             Text(
               "Créez un compte pour communiquer avec vos proches et avec les communautés qui partagent vos centres d'intérêts",
-              style: TextStyle(fontSize: 15, color: Colors.black),
+              style: TextStyle(fontSize: 15, ),
             ),
             SizedBox(height: 20),
             ElevatedButton(
@@ -73,7 +73,7 @@ class _Page1State extends State<Page1> {
               ),
               child: Text(
                 'Démarrer',
-                style: TextStyle(color: Colors.black),),
+                style: TextStyle(),),
             ),
             SizedBox(height: 10),
           ],

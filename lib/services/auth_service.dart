@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 
 
@@ -67,6 +68,8 @@ class AuthService {
       throw Exception('Erreur lors de la déconnexion : $e');
     }
   }
+
+  
 
   // 🔍 ✅ 4. Obtenir les informations de l'utilisateur actuel
   User? get currentUser => _auth.currentUser;
@@ -177,5 +180,35 @@ class AuthService {
     } catch (e) {
       throw Exception('Erreur lors de la suppression du compte : $e');
     }
+  }
+}
+
+
+
+class AuthStorageService {
+  // Enregistrer les informations de connexion
+  Future<void> saveUserCredentials({
+    required String email,
+    required String password,
+  }) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('user_email', email);
+    await prefs.setString('user_password', password);
+  }
+
+  // Récupérer les informations de connexion
+  Future<Map<String, String?>> getUserCredentials() async {
+    final prefs = await SharedPreferences.getInstance();
+    return {
+      'email': prefs.getString('user_email'),
+      'password': prefs.getString('user_password'),
+    };
+  }
+
+  // Supprimer les informations de connexion
+  Future<void> clearUserCredentials() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.remove('user_email');
+    await prefs.remove('user_password');
   }
 }

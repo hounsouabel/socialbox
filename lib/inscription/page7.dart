@@ -1,90 +1,116 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
+import 'package:groupe7/inscription/inscription_data.dart';
 import 'package:groupe7/screens/home_page.dart';
 import 'package:groupe7/home.dart';
 import 'package:groupe7/inscription/page6.dart';
-
-
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Page7 extends StatefulWidget {
-  const Page7({super.key});
+  
+  const Page7({super.key,});
 
   @override
   State<Page7> createState() => _Page7State();
 }
 
 class _Page7State extends State<Page7> {
+  Future<void> _saveLoginInformation(String email, String password) async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setString('user_email', email);
+      await prefs.setString('user_password', password);
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Informations enregistrées avec succès !')),
+      );
+
+      // Redirection après l'enregistrement
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => const ChatterBox()),
+      );
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Erreur lors de l\'enregistrement : $e')),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    
+    final String userEmail = inscriptionData.email; // Récupère l'e-mail utilisateur
+    final String userPassword = inscriptionData.password; // Récupère le mot de passe utilisateur
+
     return Scaffold(
       backgroundColor: Colors.pink[30],
       body: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 15),
+        padding: const EdgeInsets.symmetric(horizontal: 15),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            SizedBox(height: 45),
+            const SizedBox(height: 45),
             Align(
               alignment: Alignment.topLeft,
               child: IconButton(
-                icon: Icon(Icons.arrow_back, color: Colors.blue, size: 30,),
+                icon: const Icon(Icons.arrow_back, color: Colors.blue, size: 30),
                 onPressed: () {
                   Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => Page6())
+                    context,
+                    MaterialPageRoute(builder: (context) => const Page6()),
                   );
                 },
               ),
             ),
-            SizedBox(height: 20),
-            Text(
+            const SizedBox(height: 20),
+            const Text(
               'Enregistrer vos informations de connexion ?',
-              style: TextStyle(fontSize: 30, color: Colors.black, fontWeight: FontWeight.bold),
+              style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
             ),
-            SizedBox(height: 20),
-            Text(
+            const SizedBox(height: 20),
+            const Text(
               'Nous enregistrerons vos informations de connexion afin que vous n\'ayez pas à les entrer lors de votre prochaine connexion.',
-              style: TextStyle(fontSize: 15, color: Colors.black),
+              style: TextStyle(fontSize: 15),
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             ElevatedButton(
-              onPressed: () {
-                Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(builder: (context) => ChatterBox())
-                );
-              },
+              onPressed: () => _saveLoginInformation(userEmail, userPassword),
               style: ElevatedButton.styleFrom(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(50),
-                  ),
-                  padding: EdgeInsets.symmetric(vertical: 15),
-                  minimumSize: Size(double.infinity, 50),
-                  backgroundColor: Colors.blue
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(50),
+                ),
+                padding: const EdgeInsets.symmetric(vertical: 15),
+                minimumSize: const Size(double.infinity, 50),
+                backgroundColor: Colors.blue,
               ),
-              child: Text(
+              child: const Text(
                 'Enregistrer',
-                style: TextStyle(color: Colors.black),),
+                style: TextStyle(color: Colors.white),
+              ),
             ),
-            SizedBox(height: 10),
+            const SizedBox(height: 10),
             ElevatedButton(
               onPressed: () {
                 Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => MyHomePage())
+                  context,
+                  MaterialPageRoute(builder: (context) => const MyHomePage()),
                 );
               },
               style: ElevatedButton.styleFrom(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(50),
-                    side: BorderSide(color: Colors.blue),
-                  ),
-                  padding: EdgeInsets.symmetric(vertical: 15),
-                  minimumSize: Size(double.infinity, 50),
-                  backgroundColor: Colors.pink[30]
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(50),
+                  side: const BorderSide(color: Colors.blue),
+                ),
+                padding: const EdgeInsets.symmetric(vertical: 15),
+                minimumSize: const Size(double.infinity, 50),
+                backgroundColor: Colors.pink[30],
               ),
-              child: Text(
+              child: const Text(
                 'Annuler',
-                style: TextStyle(color: Colors.blue),),
+                style: TextStyle(color: Colors.blue),
+              ),
             ),
           ],
         ),
