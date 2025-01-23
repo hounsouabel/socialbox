@@ -22,8 +22,8 @@ Future<void> main () async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
   await FirebaseAppCheck.instance.activate(
-  androidProvider: AndroidProvider.playIntegrity,
-);
+    androidProvider: AndroidProvider.playIntegrity,
+  );
 
   runApp(const MyApp());
 }
@@ -51,13 +51,13 @@ class MyApp extends StatelessWidget {
         scaffoldBackgroundColor: Colors.black, // Couleur de fond pour le thème sombre
       ),
       themeMode: ThemeMode.system, // Utiliser le thème du système
-      
 
-     
+
+
       //home: const ResponsiveLayout(mobileScreenLayout:MobileScreenLayout() ,webScreenLayout: WebScreenLayout(),),
       home: MyHomePage(),
-     //home: ChatterBox(),
-     
+      //home: ChatterBox(),
+
     );
   }
 }

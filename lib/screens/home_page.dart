@@ -1,5 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:groupe7/screens/add_post_screen.dart';
+import 'package:groupe7/screens/feed_screen.dart';
+import 'package:groupe7/screens/profile_screen.dart';
+import 'package:groupe7/screens/search_screen.dart';
 import 'package:groupe7/screens/settings.dart';
+
+import 'chats_screen.dart';
+
 
 class ChatterBox extends StatefulWidget {
   const ChatterBox({super.key});
@@ -9,7 +16,14 @@ class ChatterBox extends StatefulWidget {
 }
 
 class _ChatterBoxState extends State<ChatterBox> {
-  int selectedIndex = 0;
+  int _selectedIndex = 0; // Use _ for private variables
+  final List<Widget> _screens = [
+    FeedScreen(), // Add home screen
+    SearchScreen(), // Add search screen
+    AddPostScreen(),
+    const Text('Placeholder for Video Library'), // Placeholder for future video screen
+    ProfileScreen(),
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -17,22 +31,10 @@ class _ChatterBoxState extends State<ChatterBox> {
       appBar: AppBar(
         toolbarHeight: 80,
         title: _buildAppBarTitle(),
-        //backgroundColor: Colors.black,
         actions: _buildAppBarActions(),
       ),
-      // Uncomment the bottom navigation bar if needed
       bottomNavigationBar: _buildBottomNavigationBar(),
-      body: Container(
-        margin: EdgeInsets.only(top: 3.0),
-        //color: Colors.black,
-        child: ListView(
-          children: [
-            const Text(
-              "",
-            )
-          ],
-        ),
-      ),
+      body: _screens[_selectedIndex], // Display current selected screen
     );
   }
 
@@ -59,14 +61,15 @@ class _ChatterBoxState extends State<ChatterBox> {
 
   List<Widget> _buildAppBarActions() {
     return [
-      _buildStyledIconButton(Icons.add_sharp, () {
-        // Action à effectuer lors du clic sur le bouton "Ajouter"
-      }),
       _buildStyledIconButton(Icons.search, () {
         // Action à effectuer lors du clic sur le bouton "J'aime"
       }),
+      _buildStyledIconButton(Icons.message, () {
+        // Action à effectuer lors du clic sur le bouton "Ajouter"
+        Navigator.push(context, MaterialPageRoute(builder: (context)=>ChatsScreen()));
+      }),
       _buildStyledIconButton(Icons.menu, () {
-        
+
         Navigator.push(
           context,
           MaterialPageRoute(builder: (context) => SettingsPage()),
@@ -95,28 +98,28 @@ class _ChatterBoxState extends State<ChatterBox> {
   BottomNavigationBar _buildBottomNavigationBar() {
     return BottomNavigationBar(
       backgroundColor: Colors.black,
-      currentIndex: selectedIndex,
+      currentIndex: _selectedIndex,
       onTap: (int index) {
         setState(() {
-          selectedIndex = index;
+          _selectedIndex = index;
         });
       },
       items: const [
         BottomNavigationBarItem(
-            icon: Icon(Icons.home_filled, color: Colors.white),
-            label: 'Inscription'),
+            icon: Icon(Icons.home_filled, color: Colors.pink),
+            label: ''),
         BottomNavigationBarItem(
-            icon: Icon(Icons.search, color: Colors.white),
-            label: 'Information'),
+            icon: Icon(Icons.search, color: Colors.pink),
+            label: ''),
         BottomNavigationBarItem(
-            icon: Icon(Icons.add_box_outlined, color: Colors.white),
-            label: 'Paramètres'),
+            icon: Icon(Icons.add_box_outlined, color: Colors.pink),
+            label: ''),
         BottomNavigationBarItem(
-            icon: Icon(Icons.video_library_outlined, color: Colors.white),
-            label: 'Videos'),
+            icon: Icon(Icons.video_library_outlined, color: Colors.pink),
+            label: ''),
         BottomNavigationBarItem(
-            icon: Icon(Icons.person_outline, color: Colors.white),
-            label: 'Profile'),
+            icon: Icon(Icons.person_outline, color: Colors.pink),
+            label: ''),
       ],
     );
   }
