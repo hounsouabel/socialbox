@@ -8,7 +8,7 @@ class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  // 🔐 ✅ 1. Inscription d'un nouvel utilisateur avec informations supplémentaires
+  // Inscription d'un nouvel utilisateur avec informations supplémentaires
   Future<void> signUpUser({
     required String email,
     required String password,
@@ -34,6 +34,7 @@ class AuthService {
         'birthDate': birthDate?.toIso8601String(),
         'gender': gender,
         'email': email,
+        'firstLogin': true, // Nouvelle connexion
         'createdAt': FieldValue.serverTimestamp(),
       });
 
@@ -45,7 +46,7 @@ class AuthService {
     }
   }
 
-  // 🔑 ✅ 2. Connexion d'un utilisateur
+  //  2. Connexion d'un utilisateur
   Future<User?> signInWithEmailAndPassword(
       String email, String password) async {
     try {
@@ -71,7 +72,7 @@ class AuthService {
 
   
 
-  // 🔍 ✅ 4. Obtenir les informations de l'utilisateur actuel
+  // 4. Obtenir les informations de l'utilisateur actuel
   User? get currentUser => _auth.currentUser;
 
   Future<Map<String, dynamic>?> getUserData() async {
@@ -88,7 +89,25 @@ class AuthService {
     }
   }
 
-  // 📧 ✅ 5. Réinitialiser le mot de passe
+
+
+  //
+  Future<Map<String, dynamic>> getBasicUserInfo() async {
+  try {
+    if (currentUser != null) {
+      final userDoc = await _firestore.collection('users').doc(currentUser?.uid).get();
+      if (userDoc.exists) {
+        return userDoc.data() as Map<String, dynamic>;
+      }
+    }
+    throw Exception('Utilisateur non trouvé.');
+  } catch (e) {
+    throw Exception('Erreur lors de la récupération des données utilisateur : $e');
+  }
+}
+
+
+  // 5. Réinitialiser le mot de passe
   Future<void> resetPassword(String email) async {
     try {
       await _auth.sendPasswordResetEmail(email: email);
@@ -98,7 +117,7 @@ class AuthService {
     }
   }
 
-  // 🛡️ ✅ 6. Mettre à jour le mot de passe
+  //  6. Mettre à jour le mot de passe
   Future<void> updatePassword(String newPassword) async {
     try {
       if (currentUser != null) {
@@ -111,7 +130,7 @@ class AuthService {
     }
   }
 
-  // ✍️ ✅ 7. Mettre à jour les informations de l'utilisateur
+  //  7. Mettre à jour les informations de l'utilisateur
   Future<void> updateUserProfile({
     String? firstName,
     String? lastName,
@@ -140,7 +159,7 @@ class AuthService {
     }
   }
 
-  // 👀 ✅ 8. Vérifier si l'utilisateur est connecté
+  //  8. Vérifier si l'utilisateur est connecté
   bool isUserLoggedIn() {
     return currentUser != null;
   }
@@ -204,6 +223,8 @@ class AuthStorageService {
       'password': prefs.getString('user_password'),
     };
   }
+
+  
 
   // Supprimer les informations de connexion
   Future<void> clearUserCredentials() async {

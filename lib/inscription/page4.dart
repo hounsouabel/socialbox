@@ -3,8 +3,6 @@ import 'package:groupe7/inscription/inscription_data.dart';
 import 'package:groupe7/inscription/page3.dart';
 import 'package:groupe7/inscription/page5.dart';
 
-
-
 class Page4 extends StatefulWidget {
   const Page4({super.key});
 
@@ -58,29 +56,35 @@ class _Page4State extends State<Page4> {
                 'Quel est votre genre ?',
                 style: TextStyle(
                   fontSize: 30,
-                  
                   fontWeight: FontWeight.bold,
                 ),
               ),
               SizedBox(height: 20),
               Text(
                 'Cochez le sexe auquel vous appartenez.',
-                style: TextStyle(fontSize: 15, ),
+                style: TextStyle(fontSize: 15),
               ),
               SizedBox(height: 20),
               DropdownButtonFormField<String>(
-              
                 value: sexe,
                 decoration: InputDecoration(
                   icon: Icon(Icons.transgender, color: Colors.blue),
                   labelText: "Genre",
                   hintText: "Sélectionnez votre genre",
-                  
+                  filled: true, // Remplir le champ pour le contraste
+                  fillColor: Theme.of(context).colorScheme.surface, // Couleur de fond du champ
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                    borderSide: BorderSide(color: Colors.blue), // Couleur de la bordure
+                  ),
                 ),
                 items: genderOptions.map((String value) {
                   return DropdownMenuItem<String>(
                     value: value,
-                    child: Text(value),
+                    child: Text(
+                      value,
+                      style: TextStyle(color: Theme.of(context).textTheme.bodyMedium?.color), // Couleur du texte
+                    ),
                   );
                 }).toList(),
                 onChanged: (String? value) {

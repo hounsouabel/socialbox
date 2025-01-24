@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:groupe7/home.dart';
 import 'package:groupe7/inscription/page1.dart';
+import 'package:groupe7/screens/account_recovery.dart';
 import 'package:groupe7/screens/home_page.dart';
 import 'package:groupe7/services/auth_service.dart';
 
@@ -184,7 +185,7 @@ class _MyLoginPageState extends State<MyLoginPage> {
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => ChatterBox()),
+                    MaterialPageRoute(builder: (context) => AccountRecoveryScreen()),
                   );
                 },
                 child: Text(

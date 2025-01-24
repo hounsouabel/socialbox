@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:groupe7/screens/add_post_screen.dart';
+import 'package:groupe7/screens/create_post.dart';
 import 'package:groupe7/screens/settings/settings.dart';
 
 class ChatterBox extends StatefulWidget {
@@ -11,6 +12,7 @@ class ChatterBox extends StatefulWidget {
 
 class _ChatterBoxState extends State<ChatterBox> {
   int selectedIndex = 0;
+  final pages =[];
 
   @override
   Widget build(BuildContext context) {
@@ -21,11 +23,9 @@ class _ChatterBoxState extends State<ChatterBox> {
         //backgroundColor: Colors.black,
         actions: _buildAppBarActions(),
       ),
-      // Uncomment the bottom navigation bar if needed
       bottomNavigationBar: _buildBottomNavigationBar(),
       body: Container(
         margin: EdgeInsets.only(top: 3.0),
-        //color: Colors.black,
         child: ListView(
           children: [
             const Text(
@@ -62,7 +62,7 @@ class _ChatterBoxState extends State<ChatterBox> {
     return [
       _buildStyledIconButton(Icons.add_sharp, () {
         // Action à effectuer lors du clic sur le bouton "Ajouter"
-        Navigator.push(context, MaterialPageRoute(builder: (context)=>AddPostScreen()));
+        Navigator.push(context, MaterialPageRoute(builder: (context)=>CreatePostScreen()));
       }),
       _buildStyledIconButton(Icons.search, () {
         // Action à effectuer lors du clic sur le bouton "J'aime"
@@ -92,34 +92,43 @@ class _ChatterBoxState extends State<ChatterBox> {
       ),
     );
   }
-  // Uncomment this method if you want to use the bottom navigation bar
-
+  
+  
   BottomNavigationBar _buildBottomNavigationBar() {
-    return BottomNavigationBar(
-      backgroundColor: Colors.black,
-      currentIndex: selectedIndex,
-      onTap: (int index) {
-        setState(() {
-          selectedIndex = index;
-        });
-      },
-      items: const [
-        BottomNavigationBarItem(
-            icon: Icon(Icons.home_filled, color: Colors.white),
-            label: 'Inscription'),
-        BottomNavigationBarItem(
-            icon: Icon(Icons.search, color: Colors.white),
-            label: 'Information'),
-        BottomNavigationBarItem(
-            icon: Icon(Icons.add_box_outlined, color: Colors.white),
-            label: 'Paramètres'),
-        BottomNavigationBarItem(
-            icon: Icon(Icons.video_library_outlined, color: Colors.white),
-            label: 'Videos'),
-        BottomNavigationBarItem(
-            icon: Icon(Icons.person_outline, color: Colors.white),
-            label: 'Profile'),
-      ],
-    );
+  // Vérifiez si le mode sombre est activé
+  bool isDarkMode = MediaQuery.of(context).platformBrightness == Brightness.dark;
+
+  return BottomNavigationBar(
+    backgroundColor: isDarkMode ? Colors.black : Colors.white, // Couleur de fond
+    currentIndex: selectedIndex,
+    onTap: (int index) {
+      setState(() {
+        selectedIndex = index;
+      });
+    },
+    items: [
+      BottomNavigationBarItem(
+        icon: Icon(Icons.home_filled, color: isDarkMode ? Colors.white : Colors.black),
+        label: '',
+      ),
+      BottomNavigationBarItem(
+        icon: Icon(Icons.search, color: isDarkMode ? Colors.white : Colors.black),
+        label: '',
+      ),
+      BottomNavigationBarItem(
+        icon: Icon(Icons.add_box_outlined, color: isDarkMode ? Colors.white : Colors.black),
+        label: '',
+      ),
+      BottomNavigationBarItem(
+        icon: Icon(Icons.video_library_outlined, color: isDarkMode ? Colors.white : Colors.black),
+        label: '',
+      ),
+      BottomNavigationBarItem(
+        icon: Icon(Icons.person_outline, color: isDarkMode ? Colors.white : Colors.black),
+        label: '',
+      ),
+    ],
+  );
+
   }
 }

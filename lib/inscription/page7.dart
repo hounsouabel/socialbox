@@ -8,8 +8,9 @@ import 'package:groupe7/inscription/page6.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Page7 extends StatefulWidget {
-  
-  const Page7({super.key,});
+  const Page7({
+    super.key,
+  });
 
   @override
   State<Page7> createState() => _Page7State();
@@ -23,13 +24,15 @@ class _Page7State extends State<Page7> {
       await prefs.setString('user_password', password);
 
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Informations enregistrées avec succès !')),
+        const SnackBar(
+            content: Text('Informations enregistrées avec succès !')),
       );
 
       // Redirection après l'enregistrement
-      Navigator.pushReplacement(
+      Navigator.pushAndRemoveUntil(
         context,
         MaterialPageRoute(builder: (context) => const ChatterBox()),
+        (Route<dynamic> route) => false,
       );
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -40,9 +43,10 @@ class _Page7State extends State<Page7> {
 
   @override
   Widget build(BuildContext context) {
-    
-    final String userEmail = inscriptionData.email; // Récupère l'e-mail utilisateur
-    final String userPassword = inscriptionData.password; // Récupère le mot de passe utilisateur
+    final String userEmail =
+        inscriptionData.email; // Récupère l'e-mail utilisateur
+    final String userPassword =
+        inscriptionData.password; // Récupère le mot de passe utilisateur
 
     return Scaffold(
       backgroundColor: Colors.pink[30],
@@ -55,7 +59,8 @@ class _Page7State extends State<Page7> {
             Align(
               alignment: Alignment.topLeft,
               child: IconButton(
-                icon: const Icon(Icons.arrow_back, color: Colors.blue, size: 30),
+                icon:
+                    const Icon(Icons.arrow_back, color: Colors.blue, size: 30),
                 onPressed: () {
                   Navigator.push(
                     context,

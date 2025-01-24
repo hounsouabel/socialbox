@@ -35,7 +35,7 @@ class _MyHomePageState extends State<SettingsPage> {
       } else {
          if (!mounted) return;
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Aucune donnée utilisateur trouvée.')),
+          SnackBar(content: Text('Vérifiez votre connexion à Internet')),
         );
       }
     } catch (e) {
