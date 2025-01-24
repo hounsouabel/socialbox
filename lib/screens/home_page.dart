@@ -1,7 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:groupe7/screens/add_post_screen.dart';
+import 'package:groupe7/screens/feed_screen.dart';
+import 'package:groupe7/screens/profile_screen.dart';
+import 'package:groupe7/screens/search_screen.dart';
+import 'package:groupe7/screens/add_post_screen.dart';
 import 'package:groupe7/screens/create_post.dart';
 import 'package:groupe7/screens/settings/settings.dart';
+
+import 'chats_screen.dart';
+
 
 class ChatterBox extends StatefulWidget {
   const ChatterBox({super.key});
@@ -11,8 +18,14 @@ class ChatterBox extends StatefulWidget {
 }
 
 class _ChatterBoxState extends State<ChatterBox> {
-  int selectedIndex = 0;
-  final pages =[];
+  int _selectedIndex = 0; // Use _ for private variables
+  final List<Widget> _screens = [
+    FeedScreen(), // Add home screen
+    SearchScreen(), // Add search screen
+    AddPostScreen(),
+    const Text('Placeholder for Video Library'), // Placeholder for future video screen
+    ProfileScreen(),
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -20,20 +33,10 @@ class _ChatterBoxState extends State<ChatterBox> {
       appBar: AppBar(
         toolbarHeight: 80,
         title: _buildAppBarTitle(),
-        //backgroundColor: Colors.black,
         actions: _buildAppBarActions(),
       ),
       bottomNavigationBar: _buildBottomNavigationBar(),
-      body: Container(
-        margin: EdgeInsets.only(top: 3.0),
-        child: ListView(
-          children: [
-            const Text(
-              "",
-            )
-          ],
-        ),
-      ),
+      body: _screens[_selectedIndex], // Display current selected screen
     );
   }
 
@@ -67,8 +70,12 @@ class _ChatterBoxState extends State<ChatterBox> {
       _buildStyledIconButton(Icons.search, () {
         // Action à effectuer lors du clic sur le bouton "J'aime"
       }),
+      _buildStyledIconButton(Icons.message, () {
+        // Action à effectuer lors du clic sur le bouton "Ajouter"
+        Navigator.push(context, MaterialPageRoute(builder: (context)=>ChatsScreen()));
+      }),
       _buildStyledIconButton(Icons.menu, () {
-        
+
         Navigator.push(
           context,
           MaterialPageRoute(builder: (context) => SettingsPage()),

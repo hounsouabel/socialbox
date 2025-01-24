@@ -85,6 +85,10 @@ flutter:
      - assets/background.png
      - assets/text.png
      - assets/img_icon.svg
+     - assets/person.png
+     - assets/Accueil1.png
+     - assets/Accueil2.png
+     - assets/Accueil3.png
   
   
 

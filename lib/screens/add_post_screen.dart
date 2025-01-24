@@ -64,81 +64,81 @@ class _AddPostScreenState extends State<AddPostScreen> {
   Widget build(BuildContext context) {
     return _file == null
         ? Center(
-            child: IconButton(
-                onPressed: () => _selectImage(context),
-                icon: const Icon(Icons.upload)),
-          )
+      child: IconButton(
+          onPressed: () => _selectImage(context),
+          icon: const Icon(Icons.upload)),
+    )
         : Scaffold(
-            appBar: AppBar(
-              backgroundColor: mobileBackgroundColor,
-              leading: IconButton(
-                onPressed: () {},
-                icon: const Icon(
-                  Icons.arrow_back,
-                  color: Colors.white,
+      appBar: AppBar(
+        backgroundColor: mobileBackgroundColor,
+        leading: IconButton(
+          onPressed: () {},
+          icon: const Icon(
+            Icons.arrow_back,
+            color: Colors.white,
+          ),
+        ),
+        title: const Text(
+          'Post to',
+          style: TextStyle(color: Colors.white),
+        ),
+        centerTitle: false,
+        actions: [
+          TextButton(
+              onPressed: () {},
+              child: const Text(
+                'Post',
+                style: TextStyle(
+                  color: Colors.blueAccent,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16,
+                ),
+              ))
+        ],
+      ),
+      body: Column(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              CircleAvatar(
+                backgroundImage: NetworkImage(
+                    'https://images.unsplash.com/photo-1733832759200-28b6427c8424?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'),
+              ),
+              SizedBox(
+                width: MediaQuery.of(context).size.width * 0.45,
+                child: TextField(
+                  decoration: const InputDecoration(
+                    hintText: 'Write a caption...',
+                    border: InputBorder.none,
+                  ),
+                  maxLines: null,
                 ),
               ),
-              title: const Text(
-                'Post to',
-               
+              SizedBox(
+                height: 45,
+                width: 45,
+                child: AspectRatio(
+                  aspectRatio: 487 / 451,
+                  child: Container(
+                    decoration: BoxDecoration(
+                        image: DecorationImage(
+                          image: NetworkImage(
+                            'https://images.unsplash.com/photo-1733832759200-28b6427c8424?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+                          ),
+                          fit: BoxFit.fill,
+                          alignment: FractionalOffset.topCenter,
+                        )),
+                  ),
+                ),
               ),
-              centerTitle: false,
-              actions: [
-                TextButton(
-                    onPressed: () {},
-                    child: const Text(
-                      'Post',
-                      style: TextStyle(
-                        color: Colors.blueAccent,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 16,
-                      ),
-                    ))
-              ],
-            ),
-            body: Column(
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    CircleAvatar(
-                      backgroundImage: NetworkImage(
-                          'https://images.unsplash.com/photo-1733832759200-28b6427c8424?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'),
-                    ),
-                    SizedBox(
-                      width: MediaQuery.of(context).size.width * 0.45,
-                      child: TextField(
-                        decoration: const InputDecoration(
-                          hintText: 'Write a caption...',
-                          border: InputBorder.none,
-                        ),
-                        maxLines: null,
-                      ),
-                    ),
-                    SizedBox(
-                      height: 45,
-                      width: 45,
-                      child: AspectRatio(
-                        aspectRatio: 487 / 451,
-                        child: Container(
-                          decoration: BoxDecoration(
-                              image: DecorationImage(
-                            image: NetworkImage(
-                              'https://images.unsplash.com/photo-1733832759200-28b6427c8424?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-                            ),
-                            fit: BoxFit.fill,
-                            alignment: FractionalOffset.topCenter,
-                          )),
-                        ),
-                      ),
-                    ),
-                    const Divider(),
-                  ],
-                )
-              ],
-            ),
-          );
+              const Divider(),
+            ],
+          )
+        ],
+      ),
+    );
   }
 }
 */

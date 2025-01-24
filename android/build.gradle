@@ -1,3 +1,15 @@
+buildscript {
+    repositories {
+        google()
+        mavenCentral()
+    }
+    dependencies {
+        // Mise à jour de l'AGP vers la version 8.2.1 ou supérieure
+        classpath "com.android.tools.build:gradle:8.2.1"
+    }
+}
+
+
 allprojects {
     repositories {
         google()
@@ -16,3 +28,4 @@ subprojects {
 tasks.register("clean", Delete) {
     delete rootProject.buildDir
 }
+
