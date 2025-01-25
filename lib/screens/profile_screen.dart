@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:groupe7/screens/bio.dart';
-import 'package:groupe7/screens/settings.dart';
+import 'package:groupe7/screens/settings/settings.dart';
 import 'package:groupe7/screens/update_profile.dart';
 
 import '../services/auth_service.dart';
@@ -187,13 +187,13 @@ class ProfileMenuWidget extends StatelessWidget {
         color: textColor, // Modifie uniquement la couleur
       )),
       trailing: endIcon? Container(
-        width: 30,
-        height: 30,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(100),
-          color: Colors.grey.withOpacity(0.1),
-        ),
-        child: const Icon(Icons.navigate_next_outlined, size: 18.0, color: Colors.grey)) : null,
+          width: 30,
+          height: 30,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(100),
+            color: Colors.grey.withOpacity(0.1),
+          ),
+          child: const Icon(Icons.navigate_next_outlined, size: 18.0, color: Colors.grey)) : null,
     );
   }
 }

@@ -22,7 +22,7 @@ class _ChatterBoxState extends State<ChatterBox> {
   final List<Widget> _screens = [
     FeedScreen(), // Add home screen
     SearchScreen(), // Add search screen
-    AddPostScreen(),
+    CreatePostScreen(),
     const Text('Placeholder for Video Library'), // Placeholder for future video screen
     ProfileScreen(),
   ];
@@ -107,10 +107,10 @@ class _ChatterBoxState extends State<ChatterBox> {
 
   return BottomNavigationBar(
     backgroundColor: isDarkMode ? Colors.black : Colors.white, // Couleur de fond
-    currentIndex: selectedIndex,
+    currentIndex: _selectedIndex,
     onTap: (int index) {
       setState(() {
-        selectedIndex = index;
+        _selectedIndex = index;
       });
     },
     items: [
