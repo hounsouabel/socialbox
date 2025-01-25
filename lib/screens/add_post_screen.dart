@@ -1,4 +1,4 @@
-/*import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:groupe7/utilities/colors.dart';
@@ -15,6 +15,15 @@ class AddPostScreen extends StatefulWidget {
 
 class _AddPostScreenState extends State<AddPostScreen> {
   Uint8List? _file;
+
+Future<Uint8List?> pickImage(ImageSource source) async {
+  final ImagePicker picker = ImagePicker();
+  XFile? image = await picker.pickImage(source: source);
+  if (image != null) {
+    return await image.readAsBytes();
+  }
+  return null; // Retourne null si aucune image n'est sélectionnée
+}
 
   _selectImage(BuildContext context) async {
     return showDialog(
@@ -141,4 +150,3 @@ class _AddPostScreenState extends State<AddPostScreen> {
     );
   }
 }
-*/

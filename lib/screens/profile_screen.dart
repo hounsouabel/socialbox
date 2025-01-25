@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:groupe7/screens/bio.dart';
-import 'package:groupe7/screens/settings.dart';
+import 'package:groupe7/screens/settings/settings.dart';
 import 'package:groupe7/screens/update_profile.dart';
 
 import '../services/auth_service.dart';

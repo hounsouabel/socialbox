@@ -4,10 +4,10 @@ import 'package:flutter/material.dart';
 
 class ImageVideoView extends StatelessWidget {
   const ImageVideoView({
-    Key? key,
+    super.key,
     required this.fileType,
     required this.file,
-  }) : super(key: key);
+  });
 
   final String fileType;
   final File file;

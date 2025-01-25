@@ -107,10 +107,10 @@ class _ChatterBoxState extends State<ChatterBox> {
 
   return BottomNavigationBar(
     backgroundColor: isDarkMode ? Colors.black : Colors.white, // Couleur de fond
-    currentIndex: selectedIndex,
+    currentIndex: _selectedIndex,
     onTap: (int index) {
       setState(() {
-        selectedIndex = index;
+        _selectedIndex = index;
       });
     },
     items: [
