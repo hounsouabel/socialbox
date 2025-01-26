@@ -63,10 +63,6 @@ class _ChatterBoxState extends State<ChatterBox> {
 
   List<Widget> _buildAppBarActions() {
     return [
-      _buildStyledIconButton(Icons.add_sharp, () {
-        // Action à effectuer lors du clic sur le bouton "Ajouter"
-        Navigator.push(context, MaterialPageRoute(builder: (context)=>CreatePostScreen()));
-      }),
       _buildStyledIconButton(Icons.search, () {
         // Action à effectuer lors du clic sur le bouton "J'aime"
       }),
@@ -85,15 +81,12 @@ class _ChatterBoxState extends State<ChatterBox> {
   }
 
   Widget _buildStyledIconButton(IconData icon, VoidCallback onPressed) {
+    bool isDarkMode = MediaQuery.of(context).platformBrightness == Brightness.dark;
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 6.0),
       height: 40,
-      decoration: BoxDecoration(
-        color: Colors.grey[500],
-        shape: BoxShape.circle,
-      ),
       child: IconButton(
-        icon: Icon(icon, color: Colors.white),
+        icon: Icon(icon, color: isDarkMode ? Colors.white : Colors.black),
         onPressed: onPressed,
         //padding: const EdgeInsets.all(16.0),
       ),

@@ -69,7 +69,7 @@ class _MyHomePageState extends State<MyHomePage> {
                             width: currentPage == index ? 20 : 6,
                             decoration: BoxDecoration(
                               color: currentPage == index
-                                  ? const Color(0xFFD11E7C)
+                                  ? const Color(0xFFBA0572)
                                   : const Color(0xFFD8D8D8),
                               borderRadius: BorderRadius.circular(3),
                             ),
@@ -87,7 +87,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         style: ElevatedButton.styleFrom(
                           elevation: 0,
                           backgroundColor: const Color(0xFFD8D8D8),
-                          foregroundColor: const Color(0xFFD11E7C),
+                          foregroundColor: const Color(0xFFBA0572),
                           minimumSize: const Size(double.infinity, 48),
                           shape: const RoundedRectangleBorder(
                             borderRadius: BorderRadius.all(Radius.circular(16)),
@@ -105,7 +105,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         },
                         style: ElevatedButton.styleFrom(
                           elevation: 0,
-                          backgroundColor: const Color(0xFFD11E7C),
+                          backgroundColor: const Color(0xFFBA0572),
                           foregroundColor: const Color(0xFFD8D8D8),
                           minimumSize: const Size(double.infinity, 48),
                           shape: const RoundedRectangleBorder(

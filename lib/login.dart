@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:groupe7/home.dart';
-import 'package:groupe7/inscription/page1.dart';
 import 'package:groupe7/screens/account_recovery.dart';
 import 'package:groupe7/screens/home_page.dart';
 import 'package:groupe7/services/auth_service.dart';
+
+import 'inscription/page1.dart';
 
 class MyLoginPage extends StatefulWidget {
   const MyLoginPage({super.key});
@@ -25,7 +25,7 @@ class _MyLoginPageState extends State<MyLoginPage> {
       return 'Ce champ est obligatoire';
     }
     final emailRegex =
-        RegExp(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$');
+    RegExp(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$');
     if (!emailRegex.hasMatch(value)) {
       return 'Veuillez entrer un e-mail valide';
     }
@@ -63,7 +63,7 @@ class _MyLoginPageState extends State<MyLoginPage> {
         Navigator.pushAndRemoveUntil(
           context,
           MaterialPageRoute(builder: (context) => ChatterBox()),
-          (Route<dynamic> route) => false,
+              (Route<dynamic> route) => false,
         );
       } catch (e) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -84,130 +84,138 @@ class _MyLoginPageState extends State<MyLoginPage> {
 
   @override
   Widget build(BuildContext context) {
+    bool isDarkMode = MediaQuery.of(context).platformBrightness == Brightness.dark;
     return Scaffold(
-      backgroundColor: Colors.white,
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: EdgeInsets.symmetric(vertical: 40, horizontal: 20),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              Align(
-                alignment: Alignment.topLeft,
-                child: IconButton(
-                  icon: Icon(Icons.arrow_back, color: Colors.pink, size: 30),
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => MyHomePage()),
-                    );
-                  },
-                ),
-              ),
-              Center(
-                child: Image.asset(
-                  'assets/logo-removebg-preview.png',
-                  scale: 3,
-                ),
-              ),
-              SizedBox(height: 60),
-              Form(
-                key: _formKey,
-                child: Column(
-                  children: [
-                    TextFormField(
-                      controller: _emailController,
-                      keyboardType: TextInputType.emailAddress,
-                      style: TextStyle(color: Colors.black),
-                      decoration: InputDecoration(
-                        hintText: 'E-mail',
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
-                          borderSide: BorderSide(color: Colors.blue),
-                        ),
-                        prefixIcon: Icon(Icons.person_outline),
-                      ),
-                      validator: _validateEmail,
-                    ),
-                    SizedBox(height: 10),
-                    TextFormField(
-                      controller: _passwordController,
-                      keyboardType: TextInputType.visiblePassword,
-                      style: TextStyle(color: Colors.black),
-                      obscureText: _isObscure,
-                      decoration: InputDecoration(
-                        filled: true,
-                        fillColor: Colors.white,
-                        hintText: 'Mot de passe',
-                        suffixIcon: IconButton(
-                          icon: Icon(
-                            _isObscure
-                                ? Icons.visibility_off
-                                : Icons.visibility,
+      backgroundColor: isDarkMode ? Colors.black : Colors.white,
+      body: SafeArea(
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            return SingleChildScrollView(
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              child: Column(
+                children: [
+                  SizedBox(height: constraints.maxHeight * 0.1),
+                  Image.asset(
+                    "assets/logo-removebg-preview.png",
+                    height: 130,
+                  ),
+                  SizedBox(height: constraints.maxHeight * 0.1),
+                  Text(
+                    "Connectez-vous",
+                    style: TextStyle(color: isDarkMode ? Colors.white : Colors.black, fontWeight: FontWeight.bold, fontSize: 25),
+                  ),
+                  SizedBox(height: constraints.maxHeight * 0.05),
+                  Form(
+                    key: _formKey,
+                    child: Column(
+                      children: [
+                        TextFormField(
+                          controller: _emailController,
+                          keyboardType: TextInputType.emailAddress,
+                          style: TextStyle(color: Colors.black),
+                          decoration: const InputDecoration(
+                            hintText: 'E-mail',
+                            filled: true,
+                            fillColor: Color(0xFFFAECF5),
+                            contentPadding: const EdgeInsets.symmetric(
+                                horizontal: 16.0 * 1.5, vertical: 16.0),
+                            border: const OutlineInputBorder(
+                              borderSide: BorderSide.none,
+                              borderRadius:
+                              BorderRadius.all(Radius.circular(50)),
+                            ),
                           ),
+                          validator: _validateEmail,
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 16.0),
+                          child: TextFormField(
+                            controller: _passwordController,
+                            keyboardType: TextInputType.visiblePassword,
+                            obscureText: _isObscure,
+                            style: TextStyle(color: Colors.black),
+                            decoration: InputDecoration(
+                              hintText: 'Mot de passe',
+                              filled: true,
+                              fillColor: const Color(0xFFFAECF5),
+                              contentPadding: const EdgeInsets.symmetric(
+                                  horizontal: 16.0 * 1.5, vertical: 16.0),
+                              suffixIcon: IconButton(
+                                icon: Icon(
+                                  _isObscure
+                                      ? Icons.visibility_off
+                                      : Icons.visibility,
+                                ),
+                                onPressed: () {
+                                  setState(() {
+                                    _isObscure = !_isObscure;
+                                  });
+                                },
+                              ),
+
+                              border: const OutlineInputBorder(
+                                borderSide: BorderSide.none,
+                                borderRadius:
+                                BorderRadius.all(Radius.circular(50)),
+                              ),
+                            ),
+                            validator: _validatePassword,
+                          ),
+                        ),
+                        SizedBox(height: 20),
+                        _isLoading
+                            ? Center(child: CircularProgressIndicator(color: Colors.pink),)
+                            : ElevatedButton(
+                          onPressed: _handleLogin,
+                          style: ElevatedButton.styleFrom(
+                            elevation: 0,
+                            backgroundColor: const Color(0xFFBA0572),
+                            foregroundColor: Colors.white,
+                            minimumSize: const Size(double.infinity, 48),
+                            shape: const StadiumBorder(),
+                          ),
+                          child: const Text("Se connecter"),
+                        ),
+                        const SizedBox(height: 16.0),
+                        TextButton(
                           onPressed: () {
-                            setState(() {
-                              _isObscure = !_isObscure;
-                            });
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) => AccountRecoveryScreen()),
+                            );
                           },
+                          child: Text(
+                            'Mot de passe oublié?',
+                            style: TextStyle(color: isDarkMode ? Colors.white : Colors.black,),
+                          ),
                         ),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
-                          borderSide: BorderSide(color: Colors.blue),
+                        TextButton(
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) => Page1()),
+                            );
+                          },
+                          child: Text.rich(
+                            TextSpan(
+                              text: "Vous n'avez pas de compte? ",
+                              style: TextStyle(color: isDarkMode ? Colors.white : Colors.black,),
+                              children: const [
+                                TextSpan(
+                                  text: "Inscrivez-vous",
+                                  style: TextStyle(color: Color(0xFFBA0572)),
+                                ),
+                              ],
+                            ),
+                          ),
                         ),
-                        prefixIcon: Icon(Icons.lock_outline),
-                      ),
-                      validator: _validatePassword,
+                      ],
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
-              SizedBox(height: 20),
-              _isLoading
-                  ? Center(child: CircularProgressIndicator())
-                  : ElevatedButton(
-                      onPressed: _handleLogin,
-                      style: ElevatedButton.styleFrom(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(50),
-                        ),
-                        padding: EdgeInsets.symmetric(vertical: 15),
-                        minimumSize: Size(double.infinity, 50),
-                        backgroundColor: Colors.pink,
-                      ),
-                      child: Text(
-                        'Se connecter',
-                        style: TextStyle(color: Colors.white),
-                      ),
-                    ),
-              SizedBox(height: 10),
-              TextButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => AccountRecoveryScreen()),
-                  );
-                },
-                child: Text(
-                  'Mot de passe oublié ?',
-                  style: TextStyle(color: Colors.black),
-                ),
-              ),
-              SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => Page1()),
-                  );
-                },
-                child: Text(
-                  'Créer un compte',
-                  style: TextStyle(color: Colors.pink),
-                ),
-              ),
-            ],
-          ),
+            );
+          },
         ),
       ),
     );

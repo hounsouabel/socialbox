@@ -4,7 +4,6 @@ import 'package:groupe7/inscription/page2.dart';
 import '../home.dart';
 
 
-
 class Page1 extends StatefulWidget {
   const Page1({super.key});
 
