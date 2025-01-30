@@ -36,7 +36,7 @@ class PostRepository {
         throw Exception('Type de post invalide. Utilisez "image" ou "video".');
       }
 
-      final String postId = const Uuid().v1();
+      final String postId = const Uuid().v4();
       final String posterId = currentUser.uid;
       final DateTime now = DateTime.now();
 
@@ -74,6 +74,38 @@ class PostRepository {
       return null; // Succès
     } catch (e) {
       return e.toString(); 
+    }
+  }
+
+  // Like a post
+  Future<String?> likeDislikePost({
+    required String postId,
+    required List<String> likes,
+  }) async {
+    try {
+      final authorId = _auth.currentUser!.uid;
+
+      if (likes.contains(authorId)) {
+        // we already liked the post
+        _firestore
+            .collection('posts')
+            .doc(postId)
+            .update({
+         'likes': FieldValue.arrayRemove([authorId])
+        });
+      } else {
+        // we need to like the post
+        _firestore
+            .collection('posts')
+            .doc(postId)
+            .update({
+          'likes': FieldValue.arrayUnion([authorId])
+        });
+      }
+
+      return null;
+    } catch (e) {
+      return e.toString();
     }
   }
 }

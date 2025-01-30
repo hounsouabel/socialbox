@@ -1,200 +1,273 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:groupe7/screens/bio.dart';
+import 'package:groupe7/screens/profile_image_selection.dart';
 import 'package:groupe7/screens/settings/settings.dart';
 import 'package:groupe7/screens/update_profile.dart';
 
-import '../services/auth_service.dart';
+import '../home.dart';
 
 class ProfileScreen extends StatefulWidget {
-  const ProfileScreen({Key? key}) : super(key: key);
+  const ProfileScreen({super.key});
 
   @override
   State<ProfileScreen> createState() => _ProfileScreenState();
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-
-  String _userName = 'Utilisateur';
-
-  @override
-  void initState() {
-    super.initState();
-    _loadUserData();
-  }
-
-  Future<void> _loadUserData() async {
-    AuthService authService = AuthService();
-
-    try {
-      var userData = await authService.getUserData();
-
-      if (userData != null) {
-        setState(() {
-          _userName = '${userData['firstName']} ${userData['lastName']}';
-        });
-      } else {
-        if (!mounted) return;
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Aucune donnée utilisateur trouvée.')),
-        );
-      }
-    } catch (e) {
-      if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Erreur : $e')),
-      );
-    }
-  }
+  final User? _user = FirebaseAuth.instance.currentUser;
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   @override
   Widget build(BuildContext context) {
-    User? user = FirebaseAuth.instance.currentUser;
-    return Scaffold(
-      body: SingleChildScrollView(
-        child: Container(
-          child: Column(
-            children: [
-              Stack(
-                children: [
-                  SizedBox(
-                    width: 120,
-                    height: 120,
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(60), // Adjust radius for desired circle size
-                      child: Image.asset('assets/person.png', fit: BoxFit.cover),
-                    ),
-                  ),
-                  Positioned(
-                    bottom: 0,
-                    right: 0,
-                    child: Container(
-                      width: 35,
-                      height: 35,
-                      decoration: BoxDecoration(
-                        color: Colors.pink,
-                        shape: BoxShape.circle,
-                      ),
-                      child: Icon(
-                        Icons.edit,
-                        color: Colors.black,
-                        size: 16,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              TextButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => Bio()),
-                  );
-                },
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text('Ajouter une bio', style: TextStyle(color: Colors.pink)),
-                    SizedBox(width: 6), // Espace entre l'icône et le texte
-                    Icon(Icons.mode_edit_outlined, color: Colors.pink),
-                  ],
-                ),
-              ),
-              Column(
-                children: [
-                  ListTile(
-                    title: Text(_userName, textAlign: TextAlign.center),
-                    subtitle: Text(
-                      user != null ? user.email ?? 'Aucun email disponible' : "Veuillez vous connecter.",
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
-                ],
-              ),
-              SizedBox(
-                width: 200,
-                child: ElevatedButton(
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => UpdateProfile()),
-                      );
-                    },
-                    style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.pink, side: BorderSide.none, shape: const StadiumBorder()
-                    ),
-                    child: const Text(
-                        'Edit Profile', style: TextStyle(color: Colors.white)
-                    )
-                ),
-              ),
-              const SizedBox(height: 30),
-              const Divider(),
-              const SizedBox(height: 10),
+    if (_user == null) {
+      return _buildErrorWidget('Utilisateur non connecté');
+    }
 
-              ProfileMenuWidget(title: 'Paramètre', icon: Icons.settings, onPress: () { }),
-              ProfileMenuWidget(title: 'Billings Details', icon: Icons.details, onPress: () { }),
-              ProfileMenuWidget(title: 'User Management', icon: Icons.manage_accounts, onPress: () { }),
-              const Divider(),
-              const SizedBox(height: 10),
-              ProfileMenuWidget(title: 'Information', icon: Icons.info, onPress: () { }),
-              ProfileMenuWidget(
-                  title: 'Logout',
-                  icon: Icons.logout,
-                  textColor: Colors.red,
-                  endIcon: false,
-                  onPress: () { }
-              ),
-            ],
-          ),
+    return Scaffold(
+      body: StreamBuilder<DocumentSnapshot>(
+        stream: _firestore.collection('users').doc(_user!.uid).snapshots(),
+        builder: (context, snapshot) {
+          if (snapshot.hasError) {
+            return _buildErrorWidget('Erreur de chargement');
+          }
+
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          }
+
+          final userData = snapshot.data!.data() as Map<String, dynamic>;
+          final hasBio = (userData['bio'] as String?)?.isNotEmpty ?? false;
+
+          return SingleChildScrollView(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              children: [
+                _ProfileHeader(user: _user, userData: userData),
+                if (!hasBio) _BioButton(user: _user),
+                _UserInfo(userData: userData),
+                const _ProfileActions(),
+                const _ProfileMenu(),
+              ],
+            ),
+          );
+        },
+      ),
+    );
+  }
+
+  Widget _buildErrorWidget(String message) => Center(
+        child: Text(
+          message,
+          style: const TextStyle(color: Colors.red),
+        ),
+      );
+}
+
+class _ProfileHeader extends StatelessWidget {
+  final User user;
+  final Map<String, dynamic> userData;
+
+  const _ProfileHeader({required this.user, required this.userData});
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      alignment: Alignment.bottomRight,
+      children: [
+        CircleAvatar(
+          radius: 60,
+          backgroundImage: _getProfileImage(),
+          backgroundColor: Colors.grey[200],
+        ),
+        _EditProfileButton(user: user),
+      ],
+    );
+  }
+
+  ImageProvider _getProfileImage() {
+    final profileUrl = userData['profil'] as String?;
+    return (profileUrl?.isNotEmpty ?? false)
+        ? NetworkImage(profileUrl!)
+        : const AssetImage('assets/person.png') as ImageProvider;
+  }
+}
+
+class _EditProfileButton extends StatelessWidget {
+  final User user;
+
+  const _EditProfileButton({required this.user});
+
+  @override
+  Widget build(BuildContext context) {
+    return IconButton(
+      icon: Container(
+        padding: const EdgeInsets.all(6),
+        decoration: const BoxDecoration(
+          color: Colors.pink,
+          shape: BoxShape.circle,
+        ),
+        child: const Icon(Icons.edit, size: 20, color: Colors.white),
+      ),
+      onPressed: () => Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => ProfileImageSelection(userId: user.uid),
         ),
       ),
     );
   }
 }
 
+class _BioButton extends StatelessWidget {
+  final User user;
 
-class ProfileMenuWidget extends StatelessWidget {
-  const ProfileMenuWidget({
-    Key? key,
-    required this.title,
-    required this.icon,
-    required this.onPress,
-    this.endIcon = true,
-    this.textColor,
-  }) : super(key: key);
+  const _BioButton({required this.user});
 
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(top: 8.0),
+      child: TextButton(
+        onPressed: () => Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => Bio(userId: user.uid)),
+        ),
+        child: const Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text('Ajouter une bio', style: TextStyle(color: Colors.pink)),
+            SizedBox(width: 6),
+            Icon(Icons.mode_edit_outlined, color: Colors.pink, size: 18),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _UserInfo extends StatelessWidget {
+  final Map<String, dynamic> userData;
+
+  const _UserInfo({required this.userData});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 20),
+      child: Column(
+        children: [
+          Text(
+            '${userData['firstName']} ${userData['lastName']}',
+            //style: Theme.of(context).textTheme.headlineSmall,
+          ),
+          const SizedBox(height: 8),
+          Text(
+            userData['email'] ?? 'Aucun email',
+            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                  color: Colors.grey,
+                ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _ProfileActions extends StatelessWidget {
+  const _ProfileActions();
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        ElevatedButton(
+          onPressed: () => Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const UpdateProfile()),
+          ),
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Colors.pink,
+            shape: const StadiumBorder(),
+            padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 12),
+          ),
+          child: const Text(
+            'Modifier le profil',
+            style: TextStyle(color: Colors.white),
+          ),
+        ),
+        const SizedBox(height: 30),
+        const Divider(),
+        const SizedBox(height: 10),
+      ],
+    );
+  }
+}
+
+class _ProfileMenu extends StatelessWidget {
+  const _ProfileMenu();
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        _ProfileMenuItem(title: 'Paramètres', icon: Icons.settings,onTap: (){Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const SettingsPage()),
+        );},),
+        // _ProfileMenuItem(title: 'Facturation', icon: Icons.payment),
+        _ProfileMenuItem(title: 'Gestion compte', icon: Icons.manage_accounts),
+        const Divider(),
+        const SizedBox(height: 10),
+        _ProfileMenuItem(title: 'Informations', icon: Icons.info),
+        _ProfileMenuItem(
+          title: 'Déconnexion',
+          icon: Icons.logout,
+          color: Colors.red,
+          onTap: () {
+            FirebaseAuth.instance.signOut();
+
+            Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(builder: (context) => MyHomePage()),
+              (Route<dynamic> route) => false,
+            );
+          },
+        ),
+      ],
+    );
+  }
+}
+
+class _ProfileMenuItem extends StatelessWidget {
   final String title;
   final IconData icon;
-  final VoidCallback onPress;
-  final bool endIcon;
-  final Color?  textColor;
+  final Color? color;
+  final VoidCallback? onTap;
+
+  const _ProfileMenuItem({
+    required this.title,
+    required this.icon,
+    this.color,
+    this.onTap,
+  });
 
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      onTap: onPress,
+      onTap: onTap,
       leading: Container(
         width: 40,
         height: 40,
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(100),
           color: Colors.grey.withOpacity(0.1),
+          shape: BoxShape.circle,
         ),
-        child: Icon(icon, color: Colors.blueAccent),
+        child: Icon(icon, color: color ?? Colors.blueAccent),
       ),
-      title: Text(title, style: Theme.of(context).textTheme.bodyMedium?.copyWith( // Crée une copie de bodyMedium
-        color: textColor, // Modifie uniquement la couleur
-      )),
-      trailing: endIcon? Container(
-          width: 30,
-          height: 30,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(100),
-            color: Colors.grey.withOpacity(0.1),
-          ),
-          child: const Icon(Icons.navigate_next_outlined, size: 18.0, color: Colors.grey)) : null,
+      title: Text(title, style: TextStyle(color: color)),
+      trailing: const Icon(Icons.navigate_next, color: Colors.grey),
     );
   }
 }
-

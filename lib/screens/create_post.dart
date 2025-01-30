@@ -16,6 +16,8 @@ import 'package:cloudinary_api/uploader/cloudinary_uploader.dart';
 import 'package:cloudinary_api/src/request/model/uploader_params.dart';
 import 'package:uuid/uuid.dart';
 
+import 'home_page.dart';
+
 class CreatePostScreen extends ConsumerStatefulWidget {
   const CreatePostScreen({super.key});
 
@@ -87,7 +89,11 @@ class _CreatePostScreenState extends ConsumerState<CreatePostScreen> {
       file: file!,
       postType: fileType,
     );
-    Navigator.of(context).pop(); // Retourne à l'écran précédent
+    Navigator.pushAndRemoveUntil(
+      context,
+      MaterialPageRoute(builder: (context) => ChatterBox()),
+          (Route<dynamic> route) => false,
+    );
   } catch (e) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(content: Text('Erreur lors de la création du post : $e')),

@@ -11,19 +11,29 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 Future<void> main() async {
-  // Initialisation de Firebase
   WidgetsFlutterBinding.ensureInitialized();
+
+  // Initialisation de Firebase
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  await FirebaseAppCheck.instance.activate(
-    androidProvider: AndroidProvider.playIntegrity,
-  );
-// Configuration de Firestore
+
+  // Activation de Firebase App Check avec Play Integrity
+  try {
+    await FirebaseAppCheck.instance.activate(
+      androidProvider: AndroidProvider.playIntegrity,
+    );
+    debugPrint("Firebase App Check activé avec succès.");
+  } catch (e) {
+    debugPrint("Erreur lors de l'activation de Firebase App Check : $e");
+  }
+
+  // Configuration des paramètres Firestore
   FirebaseFirestore.instance.settings = const Settings(
     persistenceEnabled: true, // Active la persistance locale
-    sslEnabled: true, // Assure que SSL est activé
+    // Assure que SSL est activé
   );
+
   runApp(
     const ProviderScope(
       child: MyApp(),
@@ -47,7 +57,10 @@ class MyApp extends StatelessWidget {
 
         // Vérifie si l'utilisateur est connecté
         if (user != null) {
-          final userDoc = await FirebaseFirestore.instance.collection('users').doc(user.uid).get();
+          final userDoc = await FirebaseFirestore.instance
+              .collection('users')
+              .doc(user.uid)
+              .get();
 
           // Redirige vers la sélection de l'image de profil si c'est la première connexion
           if (userDoc.exists && userDoc.data()?['firstLogin'] == true) {
@@ -72,11 +85,12 @@ class MyApp extends StatelessWidget {
     return FutureBuilder<Widget>(
       future: _getInitialPage(),
       builder: (context, snapshot) {
-        final Widget initialPage = snapshot.connectionState == ConnectionState.waiting
-            ? const Scaffold(
-                body: Center(child: CircularProgressIndicator()),
-              )
-            : snapshot.data ?? const MyHomePage();
+        final Widget initialPage =
+            snapshot.connectionState == ConnectionState.waiting
+                ? const Scaffold(
+                    body: Center(child: CircularProgressIndicator()),
+                  )
+                : snapshot.data ?? const MyHomePage();
 
         return MaterialApp(
           title: 'Social Hub',

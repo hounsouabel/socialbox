@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Bio extends StatefulWidget {
-  const Bio({super.key});
+  final String userId;
+  const Bio({super.key, required this.userId});
 
   @override
   State<Bio> createState() => _BioState();
@@ -10,48 +13,52 @@ class Bio extends StatefulWidget {
 class _BioState extends State<Bio> {
   final TextEditingController controller = TextEditingController();
   final _formKey = GlobalKey<FormState>();
+  bool _isSaving = false;
 
-  bool _isSaving = false; // Indicateur pour montrer si on est en train d'enregistrer
+  Future<void> _saveBio() async {
+    if (!_formKey.currentState!.validate()) return;
 
-  void _saveBio() {
-    setState(() {
-      _isSaving = true;
-    });
+    setState(() => _isSaving = true);
 
-    if (_formKey.currentState!.validate()) {
-      // Ici, vous mettriez en place votre logique pour enregistrer la bio
-      // Par exemple, envoyer les données à un serveur
-      print('Bio enregistrée : ${controller.text}');
+    try {
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(widget.userId)
+          .update({
+        'bio': controller.text,
+        'lastUpdate': FieldValue.serverTimestamp(),
+      });
 
-      // Réinitialiser le formulaire après l'enregistrement
-      controller.clear();
+      Navigator.pop(context);
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Bio enregistrée avec succès !')),
+        const SnackBar(content: Text('Bio mise à jour avec succès !')),
       );
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Erreur : ${e.toString()}')),
+      );
+    } finally {
+      setState(() => _isSaving = false);
     }
-
-    setState(() {
-      _isSaving = false;
-    });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Bio'),
+        title: const Text('Bio'),
         leading: IconButton(
-          icon: Icon(Icons.arrow_back),
-          onPressed: () {
-            Navigator.pop(context);
-          },
+          icon: const Icon(Icons.arrow_back),
+          onPressed: _isSaving ? null : () => Navigator.pop(context),
         ),
         actions: [
           TextButton(
-            onPressed: _saveBio,
+            onPressed: _isSaving ? null : _saveBio,
             child: Text(
               'Enregistrer',
-              style: TextStyle(color: Colors.blue),
+              style: TextStyle(
+                color: _isSaving ? Colors.grey : Colors.blue,
+              ),
             ),
           ),
         ],
@@ -64,19 +71,21 @@ class _BioState extends State<Bio> {
             child: Column(
               children: [
                 TextFormField(
-                  keyboardType: TextInputType.text,
+                  controller: controller,
+                  maxLines: 5,
                   maxLength: 150,
+                  decoration: InputDecoration(
+                    labelText: 'Écrivez quelque chose à propos de vous...',
+                    border: const OutlineInputBorder(),
+                    counterText: '${controller.text.length}/150',
+                  ),
                   validator: (value) {
+                    if (value?.isEmpty ?? true) return 'Ce champ est requis';
                     if (value!.length > 150) {
-                      return 'Veuillez ne pas dépasser 150 caractères.';
+                      return '150 caractères maximum';
                     }
                     return null;
                   },
-                  decoration: InputDecoration(
-                    labelText: 'Écrivez quelque chose à propos de vous...',
-                    counterText: '${controller.text.length}/150',
-                  ),
-                  controller: controller,
                 ),
               ],
             ),

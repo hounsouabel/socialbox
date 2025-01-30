@@ -1,30 +1,24 @@
-import 'dart:async';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:groupe7/models/post.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-final getAllPostsProvider = StreamProvider.autoDispose<Iterable<Post>>((ref) {
-  final controller = StreamController<Iterable<Post>>();
-
-  final sub = FirebaseFirestore.instance
-      .collection('posts') // Remplacement de FirebaseCollectionNames.posts
-      .orderBy('datePublished', descending: true) // Remplacement de FirebaseFieldNames.datePublished
+/// 🔥 **Provider pour récupérer tous les posts de Firestore**
+final getAllPostsProvider = StreamProvider.autoDispose<List<Post>>((ref) {
+  return FirebaseFirestore.instance
+      .collection('posts')
+      .orderBy('datePublished', descending: true)
       .snapshots()
-      .listen((snapshot) {
-    final posts = snapshot.docs.map(
-      (postData) => Post.fromMap(
-        postData.data(),
-      ),
-    ).cast<Post>(); // Conversion  en Iterable<Post>
-
-    controller.sink.add(posts);
+      .map((snapshot) {
+    return snapshot.docs.map((doc) {
+      try {
+        return Post.fromMap(doc.data());
+      } catch (e) {
+        print('Erreur lors de la conversion du document : $e');
+        return null; // Ou gérer l'erreur comme vous le souhaitez
+      }
+    }).where((post) => post != null).cast<Post>().toList();
+  })
+      .handleError((error) {
+    print('Erreur lors de la récupération des posts : $error');
   });
-
-  ref.onDispose(() {
-    sub.cancel();
-    controller.close();
-  });
-
-  return controller.stream;
 });

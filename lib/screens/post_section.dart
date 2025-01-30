@@ -4,19 +4,38 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../providers/get_all_pots_provider.dart';
 import '../widgets/post_widget.dart';
+import '../widgets/stories_section.dart';
 import 'loader.dart';
 
-class PostsScreen extends StatelessWidget {
-  const PostsScreen({super.key});
+class PostsSection extends StatelessWidget {
+   PostsSection({super.key});
 
+  final List<String> storyImages = [
+    'assets/story1.jpg',
+    'assets/story2.jpg',
+    'assets/story3.jpg',
+    'assets/story4.jpg',
+    'assets/story5.jpg',
+    'assets/story6.jpg',
+    'assets/story7.jpg',
+    'assets/story8.jpg',
+    'assets/story9.jpg',
+    'assets/story10.jpg',
+  ];
+  final String profileImage = 'assets/addpost.jpg';
   @override
   Widget build(BuildContext context) {
-    return const CustomScrollView(
+
+    return CustomScrollView(
       slivers: [
-        SliverToBoxAdapter(
+        StoriesSection(
+          storyImages: storyImages,
+          profileImage: profileImage,
+        ),
+        const SliverToBoxAdapter(
           child: SizedBox(height: 8),
         ),
-        PostsList(),
+        const PostsList(),
       ],
     );
   }

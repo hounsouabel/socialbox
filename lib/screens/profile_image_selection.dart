@@ -1,9 +1,15 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:groupe7/screens/home_page.dart'; // ChatterBox
+
+
+import 'package:cloudinary_url_gen/cloudinary.dart';
+import 'package:cloudinary_api/uploader/cloudinary_uploader.dart';
+import 'package:cloudinary_api/src/request/model/uploader_params.dart';
 
 class ProfileImageSelection extends StatefulWidget {
   final String userId;
@@ -17,10 +23,10 @@ class ProfileImageSelection extends StatefulWidget {
 class _ProfileImageSelectionState extends State<ProfileImageSelection> {
   File? _selectedImage;
   bool _isLoading = false;
+  final Cloudinary cloudinary = Cloudinary.fromStringUrl('cloudinary://837771674223148:9mnsJFyFSNRI7SsT3kPcgSpwSPY@davhr8fip');
 
   Future<void> _pickImage() async {
     final pickedImage = await ImagePicker().pickImage(source: ImageSource.gallery);
-
     if (pickedImage != null) {
       setState(() {
         _selectedImage = File(pickedImage.path);
@@ -36,23 +42,35 @@ class _ProfileImageSelectionState extends State<ProfileImageSelection> {
     });
 
     try {
-      final storageRef = FirebaseStorage.instance.ref();
-      final profileImageRef = storageRef.child('profile_images/${widget.userId}.jpg');
-      await profileImageRef.putFile(_selectedImage!);
+      final response = await cloudinary.uploader().upload(
+        _selectedImage!,
+        params: UploadParams(
+          uniqueFilename: false,
+          overwrite: true,
+          publicId: widget.userId,
+          resourceType: 'image',
+        ),
+      );
 
-      final imageUrl = await profileImageRef.getDownloadURL();
+      if (response == null || response.data?.secureUrl == null) {
+        throw Exception('Échec du téléversement sur Cloudinary.');
+      }
 
-      // Mettre à jour Firestore avec l'URL de l'image
-      FirebaseFirestore.instance.collection('users').doc(widget.userId).update({
-        'profileImage': imageUrl,
+      final String downloadUrl = response.data!.secureUrl!;
+
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(widget.userId)
+          .update({
+        'profil': downloadUrl,
         'firstLogin': false,
       });
 
       Navigator.pushAndRemoveUntil(
-  context,
-  MaterialPageRoute(builder: (context) => const ChatterBox()),
-  (Route<dynamic> route) => false, 
-);
+        context,
+        MaterialPageRoute(builder: (context) => const ChatterBox()),
+            (Route<dynamic> route) => false,
+      );
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Erreur : $e')),
@@ -74,7 +92,8 @@ class _ProfileImageSelectionState extends State<ProfileImageSelection> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             _selectedImage != null
-                ? Image.file(_selectedImage!, height: 150, width: 150, fit: BoxFit.cover)
+                ? Image.file(_selectedImage!,
+                height: 150, width: 150, fit: BoxFit.cover)
                 : const Icon(Icons.account_circle, size: 150, color: Colors.grey),
             const SizedBox(height: 20),
             ElevatedButton(
@@ -85,9 +104,9 @@ class _ProfileImageSelectionState extends State<ProfileImageSelection> {
             _isLoading
                 ? const CircularProgressIndicator()
                 : ElevatedButton(
-                    onPressed: _uploadImage,
-                    child: const Text('Enregistrer'),
-                  ),
+              onPressed: _uploadImage,
+              child: const Text('Enregistrer'),
+            ),
             const SizedBox(height: 10),
             TextButton(
               onPressed: () {

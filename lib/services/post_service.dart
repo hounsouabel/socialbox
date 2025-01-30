@@ -1,4 +1,4 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+/*import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:groupe7/models/post.dart';
 import 'package:uuid/uuid.dart';
 
@@ -9,7 +9,7 @@ class PostService {
   // Ajouter un post
   Future<void> addPost(String content, String userId) async {
     final postId = const Uuid().v4(); // Génère un ID unique
-    final post = Post(id: postId, content: content, userId: userId);
+    final post = Post(pid: postId, content: content, userId: userId);
 
     await _firestore.collection('posts').doc(postId).set(post.toJson());
   }
@@ -26,4 +26,4 @@ class PostService {
     final postRef = _firestore.collection('posts').doc(postId);
     await postRef.update({'likes': FieldValue.increment(1)});
   }
-}
+}*/

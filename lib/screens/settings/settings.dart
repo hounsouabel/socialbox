@@ -61,16 +61,7 @@ class _MyHomePageState extends State<SettingsPage> {
           : Container(
               child: ListView(
               children: [
-                Container(
-                    margin: EdgeInsets.symmetric(horizontal: 10),
-                    child: Card(
-                      child: ListTile(
-                        title: Text(_userName),
-                        subtitle: Text(user != null
-                            ? user.email ?? 'Aucun email disponible'
-                            : "Veuillez vous connecter."),
-                      ),
-                    )),
+
                 const SizedBox(
                   height: 10,
                 ),

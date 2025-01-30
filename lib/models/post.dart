@@ -1,35 +1,46 @@
-class Post {
-  final String id; // Identifiant unique du post
-  final String content; // Contenu du post
-  final String userId; // Identifiant de l'utilisateur
-  int likes; // Nombre de likes
+import 'package:flutter/foundation.dart' show immutable;
 
-  Post({
-    required this.id,
+@immutable
+class Post {
+  final String postId;
+  final String posterId;
+  final String content;
+  final String postType;
+  final String fileUrl;
+  final DateTime createdAt;
+  final List<String> likes;
+
+  const Post({
+    required this.postId,
+    required this.posterId,
     required this.content,
-    required this.userId,
-    this.likes = 0,
+    required this.postType,
+    required this.fileUrl,
+    required this.createdAt,
+    required this.likes,
   });
 
-  // Convertir un post en JSON (pour Firebase/Firestore)
-  Map<String, dynamic> toJson() {
+  Map<String, dynamic> toMap() {
     return {
-      'id': id,
+      'post_id': postId,
+      'poster_id': posterId,
       'content': content,
-      'userId': userId,
+      'file_url': fileUrl,
+      'datePublished': createdAt.millisecondsSinceEpoch, // Correction ici
       'likes': likes,
+      'postType': postType,
     };
   }
 
-  // Créer un post à partir d'un JSON (Firebase/Firestore)
-  factory Post.fromJson(Map<String, dynamic> json) {
+  factory Post.fromMap(Map<String, dynamic> map) {
     return Post(
-      id: json['id'],
-      content: json['content'],
-      userId: json['userId'],
-      likes: json['likes'] ?? 0,
+      postId: map['postId'] ?? '',
+      posterId: map['posterId'] ?? '',
+      content: map['content'] ?? '',
+      postType: map['postType'] ?? '',
+      fileUrl: map['fileUrl'] ?? '',
+      createdAt: DateTime.fromMillisecondsSinceEpoch(map['datePublished'] ?? 0), // Correction ici
+      likes: List<String>.from(map['likes'] ?? []),
     );
   }
-
-  static fromMap(Map<String, dynamic> data) {}
 }

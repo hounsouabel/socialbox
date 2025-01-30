@@ -1,16 +1,17 @@
 import 'package:comment_box/comment/comment.dart';
 import 'package:flutter/material.dart';
+import 'package:groupe7/screens/post_section.dart';
 import 'package:like_button/like_button.dart';
 import 'package:intl/intl.dart'; // Import the intl package for date formatting
 
-class FeedScreen extends StatefulWidget {
-  const FeedScreen({super.key});
+class PostsScreen extends StatefulWidget {
+  const PostsScreen({super.key});
 
   @override
-  State<FeedScreen> createState() => _FeedScreenState();
+  State<PostsScreen> createState() => _PostScreenState();
 }
 
-class _FeedScreenState extends State<FeedScreen> {
+class _PostScreenState extends State<PostsScreen> {
   // Liste des histoires et autres données
   final List<String> storyImages = [
     'assets/story1.jpg',
@@ -32,18 +33,20 @@ class _FeedScreenState extends State<FeedScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            _buildStoriesSection(),
-            SizedBox(height: 20.0),
-           _buildPostSection(),
-            _buildPostImage(),
-            _buildPostActions(),
-            _buildPostDescription(),
-          ],
-        ),
+      body: CustomScrollView( // Remplacez SingleChildScrollView par CustomScrollView
+        slivers: [
+          SliverToBoxAdapter(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _buildStoriesSection(),
+                SizedBox(height: 20.0),
+              ],
+            ),
+          ),
+          // Ici, nous appelons la classe PostsSection
+           PostsSection(), // Ajoutez cette ligne
+        ],
       ),
     );
   }
@@ -378,20 +381,20 @@ class _FeedScreenState extends State<FeedScreen> {
           ),
           SizedBox(height: 3),
           Padding(
-            padding: const EdgeInsets.only(left: 10),
-            child: TextButton(
-                onPressed: (){
-                  showDialog(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return Dialog(
-                        insetPadding: EdgeInsets.all(10),
-                        child: TestMe(),
-                      );
-                    },
-                  );
-                },
-                child: Text('Voir tous les commentaires', style: TextStyle(color: Colors.grey),))
+              padding: const EdgeInsets.only(left: 10),
+              child: TextButton(
+                  onPressed: (){
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return Dialog(
+                          insetPadding: EdgeInsets.all(10),
+                          child: TestMe(),
+                        );
+                      },
+                    );
+                  },
+                  child: Text('Voir tous les commentaires', style: TextStyle(color: Colors.grey),))
           ),
         ],
       ),
