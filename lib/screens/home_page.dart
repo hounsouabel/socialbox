@@ -3,12 +3,11 @@ import 'package:groupe7/screens/add_post_screen.dart';
 import 'package:groupe7/screens/feed_screen.dart';
 import 'package:groupe7/screens/profile_screen.dart';
 import 'package:groupe7/screens/search_screen.dart';
-import 'package:groupe7/screens/add_post_screen.dart';
 import 'package:groupe7/screens/create_post.dart';
 import 'package:groupe7/screens/settings/settings.dart';
+import 'package:groupe7/screens/video_screen/home_page.dart';
 
 import 'chats_screen.dart';
-
 
 class ChatterBox extends StatefulWidget {
   const ChatterBox({super.key});
@@ -23,18 +22,18 @@ class _ChatterBoxState extends State<ChatterBox> {
     FeedScreen(), // Add home screen
     SearchScreen(), // Add search screen
     CreatePostScreen(),
-    const Text('Placeholder for Video Library'), // Placeholder for future video screen
+    HomePage(), // Placeholder for future video screen
     ProfileScreen(),
   ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
+      appBar: _selectedIndex != 3 && _selectedIndex != 1 ? AppBar(
         toolbarHeight: 80,
         title: _buildAppBarTitle(),
         actions: _buildAppBarActions(),
-      ),
+      ) : null,
       bottomNavigationBar: _buildBottomNavigationBar(),
       body: _screens[_selectedIndex], // Display current selected screen
     );
@@ -45,11 +44,11 @@ class _ChatterBoxState extends State<ChatterBox> {
       text: TextSpan(
         style: const TextStyle(
           fontFamily: 'BlackOpsOne',
-          fontSize: 20,
+          fontSize: 23,
         ),
         children: [
           const TextSpan(
-            text: 'Chatter',
+            text: 'Social',
             style: TextStyle(color: Colors.pink),
           ),
           const TextSpan(
@@ -64,14 +63,16 @@ class _ChatterBoxState extends State<ChatterBox> {
   List<Widget> _buildAppBarActions() {
     return [
       _buildStyledIconButton(Icons.search, () {
-        // Action à effectuer lors du clic sur le bouton "J'aime"
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => SearchScreen()),
+        );
       }),
       _buildStyledIconButton(Icons.message, () {
         // Action à effectuer lors du clic sur le bouton "Ajouter"
         Navigator.push(context, MaterialPageRoute(builder: (context)=>ChatsScreen()));
       }),
       _buildStyledIconButton(Icons.menu, () {
-
         Navigator.push(
           context,
           MaterialPageRoute(builder: (context) => SettingsPage()),
@@ -92,43 +93,41 @@ class _ChatterBoxState extends State<ChatterBox> {
       ),
     );
   }
-  
-  
+
   BottomNavigationBar _buildBottomNavigationBar() {
-  // Vérifiez si le mode sombre est activé
-  bool isDarkMode = MediaQuery.of(context).platformBrightness == Brightness.dark;
+    // Vérifiez si le mode sombre est activé
+    bool isDarkMode = MediaQuery.of(context).platformBrightness == Brightness.dark;
 
-  return BottomNavigationBar(
-    backgroundColor: isDarkMode ? Colors.black : Colors.white, // Couleur de fond
-    currentIndex: _selectedIndex,
-    onTap: (int index) {
-      setState(() {
-        _selectedIndex = index;
-      });
-    },
-    items: [
-      BottomNavigationBarItem(
-        icon: Icon(Icons.home_filled, color: isDarkMode ? Colors.white : Colors.black),
-        label: '',
-      ),
-      BottomNavigationBarItem(
-        icon: Icon(Icons.search, color: isDarkMode ? Colors.white : Colors.black),
-        label: '',
-      ),
-      BottomNavigationBarItem(
-        icon: Icon(Icons.add_box_outlined, color: isDarkMode ? Colors.white : Colors.black),
-        label: '',
-      ),
-      BottomNavigationBarItem(
-        icon: Icon(Icons.video_library_outlined, color: isDarkMode ? Colors.white : Colors.black),
-        label: '',
-      ),
-      BottomNavigationBarItem(
-        icon: Icon(Icons.person_outline, color: isDarkMode ? Colors.white : Colors.black),
-        label: '',
-      ),
-    ],
-  );
-
+    return BottomNavigationBar(
+      backgroundColor: isDarkMode ? Colors.black : Colors.white, // Couleur de fond
+      currentIndex: _selectedIndex,
+      onTap: (int index) {
+        setState(() {
+          _selectedIndex = index;
+        });
+      },
+      items: [
+        BottomNavigationBarItem(
+          icon: Icon(Icons.home_filled, color: isDarkMode ? Colors.white : Colors.black),
+          label: '',
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.search, color: isDarkMode ? Colors.white : Colors.black),
+          label: '',
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.add_box_outlined, color: isDarkMode ? Colors.white : Colors.black),
+          label: '',
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.video_library_outlined, color: isDarkMode ? Colors.white : Colors.black),
+          label: '',
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.person_outline, color: isDarkMode ? Colors.white : Colors.black),
+          label: '',
+        ),
+      ],
+    );
   }
 }
