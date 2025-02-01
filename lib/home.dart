@@ -14,7 +14,7 @@ class _MyHomePageState extends State<MyHomePage> {
   int currentPage = 0;
   List<Map<String, String>> splashData = [
     {
-      "text": "Bienvenue sur Chatterbox, rejoignez \nla communauté !",
+      "text": "Bienvenue sur Socialbox, rejoignez \nla communauté !",
       "image": "assets/Accueil1.png", // Replace with your image file name
     },
     {
@@ -154,7 +154,7 @@ class _SplashContentState extends State<SplashContent> {
             ),
             children: [
               TextSpan(
-                text: 'Chatter',
+                text: 'Social',
                 style: TextStyle(color: Colors.pink),
               ),
               TextSpan(

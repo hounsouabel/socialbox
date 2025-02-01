@@ -36,7 +36,7 @@ class _Page1State extends State<Page1> {
             ),
             SizedBox(height: 20),
             Text(
-              'Rejoignez Chatterbox',
+              'Rejoignez Socialbox',
               style: TextStyle(fontSize: 30,  fontWeight: FontWeight.bold),
             ),
             SizedBox(height: 20),

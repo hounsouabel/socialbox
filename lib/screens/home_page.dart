@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:groupe7/screens/feed_screen.dart';
 import 'package:groupe7/screens/post_screen.dart';
 import 'package:groupe7/screens/profile_screen.dart';
+import 'package:groupe7/screens/search_screen.dart';
 import 'package:groupe7/screens/create_post.dart';
 import 'package:groupe7/screens/settings/settings.dart';
 import 'package:groupe7/screens/test.dart';
-import '../services/auth_service.dart';
+import '../services/auth_service.dart';import 'package:groupe7/screens/video_screen/home_page.dart';
+
 import 'chats_screen.dart';
 
 class ChatterBox extends StatefulWidget {
@@ -21,7 +23,7 @@ class _ChatterBoxState extends State<ChatterBox> {
     PostsSection(),
     Text("A implémenter"),
     CreatePostScreen(),
-    PostScreen(),
+    HomePage(), // Placeholder for future video screen
     ProfileScreen(),
   ];
 
@@ -30,11 +32,11 @@ class _ChatterBoxState extends State<ChatterBox> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
+      appBar: _selectedIndex != 3 && _selectedIndex != 1 ? AppBar(
         toolbarHeight: 80,
         title: _buildAppBarTitle(),
         actions: _buildAppBarActions(),
-      ),
+      ) : null,
       bottomNavigationBar: _buildBottomNavigationBar(),
       body: _screens[_selectedIndex], // Display current selected screen
     );
@@ -45,11 +47,11 @@ class _ChatterBoxState extends State<ChatterBox> {
       text: TextSpan(
         style: const TextStyle(
           fontFamily: 'BlackOpsOne',
-          fontSize: 20,
+          fontSize: 23,
         ),
         children: [
           const TextSpan(
-            text: 'Chatter',
+            text: 'Social',
             style: TextStyle(color: Colors.pink),
           ),
           const TextSpan(
@@ -64,7 +66,10 @@ class _ChatterBoxState extends State<ChatterBox> {
   List<Widget> _buildAppBarActions() {
     return [
       _buildStyledIconButton(Icons.search, () {
-        // Action à effectuer lors du clic sur le bouton "J'aime"
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => SearchScreen()),
+        );
       }),
       _buildStyledIconButton(Icons.message, () {
         // Action à effectuer lors du clic sur le bouton "Ajouter"
