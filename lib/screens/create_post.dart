@@ -6,7 +6,7 @@ import 'package:groupe7/utilities/utils.dart';
 import 'package:groupe7/widgets/round_button.dart';
 import 'package:groupe7/widgets/image_video_view.dart';
 import 'package:groupe7/widgets/profile_info.dart';
-import 'package:groupe7/providers/posts_provider.dart';
+import 'package:groupe7/providers/general_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -84,7 +84,7 @@ class _CreatePostScreenState extends ConsumerState<CreatePostScreen> {
 
   setState(() => isLoading = true);
   try {
-    await ref.read(postsProvider).makePost(
+    await ref.read(globalProvider).makePost(
       content: _postController.text,
       file: file!,
       postType: fileType,
@@ -107,12 +107,12 @@ class _CreatePostScreenState extends ConsumerState<CreatePostScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        actions: [
+        /*actions: [
           TextButton(
             onPressed: makePost,
             child: const Text('PUBLIER'),
           ),
-        ],
+        ],*/
       ),
       body: SingleChildScrollView(
         child: Padding(

@@ -1,3 +1,4 @@
+import 'package:intl/intl.dart';
 /*import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
@@ -98,4 +99,23 @@ void showToastMessage({
     toastLength: Toast.LENGTH_LONG,
     gravity: ToastGravity.BOTTOM,
   );
+}
+
+//affiche dynamique timestamp
+
+String formatTimeAgo(DateTime date) {
+  final now = DateTime.now();
+  final difference = now.difference(date);
+
+  if (difference.inSeconds < 60) {
+    return "\u00C0 l'instant"; // A en majuscule => \u00C0 (unicode)
+  } else if (difference.inMinutes < 60) {
+    return "${difference.inMinutes} min";
+  } else if (difference.inHours < 24) {
+    return "${difference.inHours} h";
+  } else if (difference.inDays < 7) {
+    return "${difference.inDays} j";
+  } else {
+    return DateFormat('dd/MM/yy').format(date);
+  }
 }

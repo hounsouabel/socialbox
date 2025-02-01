@@ -3,10 +3,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:like_button/like_button.dart';
 import 'package:firebase_auth/firebase_auth.dart'; // Ajout pour récupérer l'utilisateur actuel
 import '../models/post.dart';
-import '../providers/posts_provider.dart';
+import '../providers/general_provider.dart';
 import '../screens/feed_screen.dart';
 import '../widgets/post_footer.dart';
 import '../widgets/post_header.dart';
+import 'package:groupe7/widgets/comment_screen.dart';
 
 class PostWidget extends ConsumerWidget {
   const PostWidget({super.key, required this.post});
@@ -19,21 +20,22 @@ class PostWidget extends ConsumerWidget {
     if (post.posterId.isEmpty) {
       return const Padding(
         padding: EdgeInsets.all(8.0),
-        child: Text('ID de l\'afficheur manquant'),
+        child: Text("ID de l'afficheur manquant"),
       );
     }
 
     return Padding(
-      padding: const EdgeInsets.all(8.0),
+      ///toujours garder à 0
+      padding: const EdgeInsets.all(0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          PostHeader(userId: post.posterId),
+          PostHeader(userId: post.posterId, postId: post.postId,),
           const SizedBox(height: 8),
           _buildPostImage(context),
           _buildPostActions(context, ref),
           PostFooter(userId: post.posterId, post: post),
-          const SizedBox(height: 5),
+          const SizedBox(height: 8),
         ],
       ),
     );
@@ -45,9 +47,9 @@ class PostWidget extends ConsumerWidget {
       padding: const EdgeInsets.all(0),
       child: Container(
         width: double.infinity,
-        child: post.fileUrl != null && post.fileUrl!.isNotEmpty
+        child: post.fileUrl.isNotEmpty
             ? Image.network(
-          post.fileUrl!,
+          post.fileUrl,
           height: 300,
           fit: BoxFit.cover,
         )
@@ -60,6 +62,7 @@ class PostWidget extends ConsumerWidget {
   Widget _buildPostActions(BuildContext context, WidgetRef ref) {
     final String currentUserId = FirebaseAuth.instance.currentUser?.uid ?? ''; // Récupérer l'ID de l'utilisateur connecté
     final bool isLiked = post.likes.contains(currentUserId); // Vérifier si l'utilisateur a liké le post
+    bool isDarkMode = MediaQuery.of(context).platformBrightness == Brightness.dark;
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 10),
@@ -70,7 +73,7 @@ class PostWidget extends ConsumerWidget {
             size: 25,
             isLiked: isLiked, // Vérification correcte
             onTap: (isLiked) async {
-              await ref.read(postsProvider).likeDislikePost(
+              await ref.read(globalProvider).likeDislikePost(
                 postId: post.postId,
                 likes: post.likes,
               );
@@ -78,15 +81,15 @@ class PostWidget extends ConsumerWidget {
             },
             likeBuilder: (bool isLiked) {
               return Icon(
-                Icons.favorite,
+                isLiked ? Icons.favorite : Icons.favorite_border_outlined, // Affiche l'icône favorite ou favorite_border_outlined
                 size: 25,
-                color: isLiked ? Colors.red : Colors.black, // Corrigé : couleur rouge SEULEMENT si l'utilisateur a liké
+                color: isLiked ? Colors.red : (isDarkMode ? Colors.white : Colors.black), // Couleur de l'icône
               );
             },
             likeCount: post.likes.length,
             countBuilder: (int? count, bool isLiked, String text) {
               return Text(
-                count == 0 ? 'Like' : text,
+                count == 0 ? '' : text,
                 style: TextStyle(
                   color: isLiked ? Colors.red : Colors.black,
                 ),
@@ -103,7 +106,7 @@ class PostWidget extends ConsumerWidget {
                 builder: (BuildContext context) {
                   return Dialog(
                     insetPadding: const EdgeInsets.all(10),
-                    child: TestMe(), // Remplace par ton `TestMe()`
+                    child: CommentScreen(postId: post.postId),
                   );
                 },
               );

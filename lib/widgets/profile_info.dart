@@ -29,8 +29,8 @@ class _ProfileInfoState extends State<ProfileInfo> {
 
         if (snapshot.hasData) {
           final userInfo = snapshot.data!;
-          final profilePicUrl = userInfo['profileImage'] ?? 'https://img.icons8.com/?size=100&id=98957&format=png&color=000000';
-          final fullName = '${userInfo['firstName']} ${userInfo['lastName']}';
+          final profilePicUrl = userInfo['profil'] ?? 'https://img.icons8.com/?size=100&id=98957&format=png&color=000000';
+          final fullName = '${userInfo['pseudo']}';
 
           return Row(
             children: [
