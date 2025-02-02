@@ -84,26 +84,26 @@ class _CreatePostScreenState extends ConsumerState<CreatePostScreen> {
   Future<void> makePost() async {
     if (isLoading || file == null) return;
 
-    setState(() => isLoading = true);
-    try {
-      await ref.read(globalProvider).makePost(
-        content: _postController.text,
-        file: file!,
-        postType: fileType,
-      );
-      Navigator.pushAndRemoveUntil(
-        context,
-        MaterialPageRoute(builder: (context) => ChatterBox()),
-            (Route<dynamic> route) => false,
-      );
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Erreur lors de la création du post : $e')),
-      );
-    } finally {
-      setState(() => isLoading = false);
-    }
+  setState(() => isLoading = true);
+  try {
+    await ref.read(globalProvider).makePost(
+      content: _postController.text,
+      file: file!,
+      postType: fileType,
+    );
+    Navigator.pushAndRemoveUntil(
+      context,
+      MaterialPageRoute(builder: (context) => ChatterBox()),
+          (Route<dynamic> route) => false,
+    );
+  } catch (e) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('Erreur lors de la création du post : $e')),
+    );
+  } finally {
+    setState(() => isLoading = false);
   }
+}
 
   @override
   Widget build(BuildContext context) {

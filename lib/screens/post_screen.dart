@@ -8,7 +8,7 @@ import '../widgets/stories_section.dart';
 import 'loader.dart';
 
 class PostsSection extends StatelessWidget {
-  PostsSection({super.key});
+   PostsSection({super.key});
 
   final List<String> storyImages = [
     'assets/story1.jpg',

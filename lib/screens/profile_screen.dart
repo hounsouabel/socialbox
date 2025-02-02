@@ -128,20 +128,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               borderRadius: BorderRadius.circular(60),
                               child: userData['profil']?.isNotEmpty ?? false
                                   ? Image.network(
-                                // Affiche l'image depuis Firestore
-                                userData['profil']!,
-                                fit: BoxFit.cover,
-                                errorBuilder: (_, __, ___) => Image.asset(
-                                  // Fallback si l'URL est invalide
-                                  'assets/person.png',
-                                  fit: BoxFit.cover,
-                                ),
-                              )
+                                      // Affiche l'image depuis Firestore
+                                      userData['profil']!,
+                                      fit: BoxFit.cover,
+                                      errorBuilder: (_, __, ___) => Image.asset(
+                                        // Fallback si l'URL est invalide
+                                        'assets/person.png',
+                                        fit: BoxFit.cover,
+                                      ),
+                                    )
                                   : Image.asset(
-                                // Asset par défaut
-                                'assets/person.png',
-                                fit: BoxFit.cover,
-                              ),
+                                      // Asset par défaut
+                                      'assets/person.png',
+                                      fit: BoxFit.cover,
+                                    ),
                             ),
                           ),
                           Positioned(
@@ -304,7 +304,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             CircleAvatar(
               backgroundImage: AssetImage(imagePath),
               radius:
-              40, // Réduisez le rayon de l'image pour la rendre plus petite
+                  40, // Réduisez le rayon de l'image pour la rendre plus petite
             ),
             Padding(
               padding: const EdgeInsets.all(8.0),
@@ -331,8 +331,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
 }
 
 Widget _buildErrorWidget(String message) => Center(
-  child: Text(
-    message,
-    style: const TextStyle(color: Colors.red),
-  ),
-);
+      child: Text(
+        message,
+        style: const TextStyle(color: Colors.red),
+      ),
+    );

@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/post.dart';
 import '../providers/get_user_info_by_id_provider.dart';
-import '../screens/feed_screen.dart';
+import 'comment_screen.dart';
+
 
 class PostFooter extends ConsumerWidget {
   final String userId;
@@ -19,7 +20,7 @@ class PostFooter extends ConsumerWidget {
       loading: () => const CircularProgressIndicator(),
       error: (error, stackTrace) => Text('Erreur: $error'),
       data: (userData) {
-        // Vérifiez si userData contient les clés attendues
+
         final String profileImage = userData["profil"] ?? ''; // Valeur par défaut si null
 
         return Padding(
@@ -27,58 +28,21 @@ class PostFooter extends ConsumerWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Row(
-                children: [
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(30),
-                    child: Image.network(
-                      profileImage, // Utilisez profileImage ici
-                      height: 25,
-                      width: 25,
-                      fit: BoxFit.cover,
-                      errorBuilder: (context, error, stackTrace) {
-                        return const Icon(Icons.error, size: 25); // Affiche une icône d'erreur si l'image ne se charge pas
-                      },
-                    ),
-                  ),
-                  Flexible(
-                    child: RichText(
-                      text: TextSpan(
-                        children: [
-                          TextSpan(
-                            text: ' Aimé par ',
-                            style: TextStyle(color: isDarkMode ? Colors.white : Colors.black),
-                          ),
-                          TextSpan(
-                            text: 'Viral ',
-                            style: TextStyle(fontWeight: FontWeight.bold, color: isDarkMode ? Colors.white : Colors.black),
-                          ),
-                          TextSpan(
-                            text: 'et ',
-                            style: TextStyle(color: isDarkMode ? Colors.white : Colors.black),
-                          ),
-                          TextSpan(
-                            text: '98 autres personnes',
-                            style: TextStyle(fontWeight: FontWeight.bold, color: isDarkMode ? Colors.white : Colors.black),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
-              ),
+              //je parle de cette partie
+
               SizedBox(height: 5),
               Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
+
                     userData["pseudo"],
-                    style: TextStyle(fontWeight: FontWeight.w500),
+                    style: TextStyle(fontWeight: FontWeight.w700),
                   ),
                   Expanded(
                     child: Text(
-                     " ${post.content}",
-                      style: TextStyle(fontWeight: FontWeight.bold, color: isDarkMode ? Colors.white : Colors.black),
+                     "  ${post.content}",
+                      style: TextStyle(fontWeight: FontWeight.w500, color: isDarkMode ? Colors.white : Colors.black),
                       overflow: TextOverflow.visible, // S'assure que le texte s'affiche correctement
                     ),
                   ),
@@ -86,7 +50,7 @@ class PostFooter extends ConsumerWidget {
               ),
               SizedBox(height: 3),
               Padding(
-                padding: const EdgeInsets.only(left: 10),
+                padding: const EdgeInsets.only(left: 0),
                 child: TextButton(
                   onPressed: () {
                     showDialog(
@@ -94,7 +58,7 @@ class PostFooter extends ConsumerWidget {
                       builder: (BuildContext context) {
                         return Dialog(
                           insetPadding: EdgeInsets.all(10),
-                          child: TestMe(),
+                          child: CommentScreen(postId: post.postId),
                         );
                       },
                     );
