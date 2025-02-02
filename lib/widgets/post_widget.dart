@@ -91,7 +91,7 @@ class PostWidget extends ConsumerWidget {
               return Text(
                 count == 0 ? '' : text,
                 style: TextStyle(
-                  color: isLiked ? Colors.red : Colors.black,
+                  color: isLiked ? Colors.red : (isDarkMode ? Colors.white : Colors.black),
                 ),
               );
             },

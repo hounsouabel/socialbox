@@ -20,7 +20,7 @@ class PostFooter extends ConsumerWidget {
       loading: () => const CircularProgressIndicator(),
       error: (error, stackTrace) => Text('Erreur: $error'),
       data: (userData) {
-        // Vérifiez si userData contient les clés attendues
+
         final String profileImage = userData["profil"] ?? ''; // Valeur par défaut si null
 
         return Padding(
