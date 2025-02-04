@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:groupe7/screens/use_profile.dart';
 import '../providers/general_provider.dart';
 import '../providers/get_user_info_by_id_provider.dart';
 import '../screens/full_image_screen.dart';
@@ -29,21 +30,31 @@ class PostHeader extends ConsumerWidget {
           padding: const EdgeInsets.symmetric(horizontal: 5),
           child: Row(
             children: [
-              ClipRRect(
-                borderRadius: BorderRadius.circular(30),
-                child: Image.network(
-                  profileImage,
-                  height: 40,
-                  width: 40,
-                  fit: BoxFit.cover,
-                  errorBuilder: (context, error, stackTrace) {
-                    return Image.network(
-                      "https://cdn.pixabay.com/photo/2016/11/14/17/39/person-1824147_640.png",
-                      height: 40,
-                      width: 40,
-                      fit: BoxFit.contain,
-                    );
-                  },
+              GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => UserProfile(),
+                    ),
+                  );
+                },
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(30),
+                  child: Image.network(
+                    profileImage,
+                    height: 40,
+                    width: 40,
+                    fit: BoxFit.cover,
+                    errorBuilder: (context, error, stackTrace) {
+                      return Image.network(
+                        "https://cdn.pixabay.com/photo/2016/11/14/17/39/person-1824147_640.png",
+                        height: 40,
+                        width: 40,
+                        fit: BoxFit.contain,
+                      );
+                    },
+                  ),
                 ),
               ),
               const SizedBox(width: 10),
