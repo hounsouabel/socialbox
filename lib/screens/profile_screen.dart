@@ -73,9 +73,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
       ),
     ),
   ];
-
+  final FirebaseAuth auth = FirebaseAuth.instance;
   final List<Widget> tabBarViews = [
-    FeedView(),
+    FeedView(userId: FirebaseAuth.instance.currentUser!.uid, ),
     ReelsView(),
     TaggedView(),
   ];
@@ -272,7 +272,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   tabs: tabs,
                 ),
                 SizedBox(
-                  height: 1000,
+                  height: 400,
                   child: TabBarView(
                     children: tabBarViews,
                   ),

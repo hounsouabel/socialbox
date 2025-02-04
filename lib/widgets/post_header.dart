@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import '../providers/general_provider.dart';
 import '../providers/get_user_info_by_id_provider.dart';
-import '../screens/feed_screen.dart';
+import '../screens/full_image_screen.dart';
 import 'comment_screen.dart';
 
 class PostHeader extends ConsumerWidget {

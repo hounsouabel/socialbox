@@ -8,16 +8,6 @@ import 'package:groupe7/providers/general_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:cloudinary_url_gen/cloudinary.dart';
-import 'package:cloudinary_api/uploader/cloudinary_uploader.dart';
-import 'package:cloudinary_api/src/request/model/uploader_params.dart';
-import 'package:uuid/uuid.dart';
-
-import 'package:groupe7/utilities/utils.dart';
-import 'package:groupe7/widgets/round_button.dart';
-import 'package:groupe7/widgets/image_video_view.dart';
-import 'package:groupe7/widgets/profile_info.dart';
-//import 'package:groupe7/providers/posts_provider.dart';
-
 import 'home_page.dart';
 
 class CreatePostScreen extends ConsumerStatefulWidget {
@@ -48,7 +38,7 @@ class _CreatePostScreenState extends ConsumerState<CreatePostScreen> {
     super.dispose();
   }
 
-  Future<void> uploadFile(String fileName) async {
+  /*Future<void> uploadFile(String fileName) async {
     if (file == null) return; // Vérifiez si le fichier est sélectionné
 
     setState(() {
@@ -79,37 +69,37 @@ class _CreatePostScreenState extends ConsumerState<CreatePostScreen> {
         isLoading = false; // Réinitialisez l'état de chargement
       });
     }
-  }
+  }*/
 
   Future<void> makePost() async {
     if (isLoading || file == null) return;
 
-  setState(() => isLoading = true);
-  try {
-    await ref.read(globalProvider).makePost(
-      content: _postController.text,
-      file: file!,
-      postType: fileType,
-    );
-    Navigator.pushAndRemoveUntil(
-      context,
-      MaterialPageRoute(builder: (context) => ChatterBox()),
-          (Route<dynamic> route) => false,
-    );
-  } catch (e) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('Erreur lors de la création du post : $e')),
-    );
-  } finally {
-    setState(() => isLoading = false);
+    setState(() => isLoading = true);
+    try {
+      await ref.read(globalProvider).makePost(
+            content: _postController.text,
+            file: file!,
+            postType: fileType,
+          );
+      Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(builder: (context) => ChatterBox()),
+        (Route<dynamic> route) => false,
+      );
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Erreur lors de la création du post : $e')),
+      );
+    } finally {
+      setState(() => isLoading = false);
+    }
   }
-}
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        /*actions: [
+          /*actions: [
           TextButton(
             onPressed: makePost,
             child: const Text(
@@ -118,7 +108,7 @@ class _CreatePostScreenState extends ConsumerState<CreatePostScreen> {
             ),
           ),
         ],*/
-      ),
+          ),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(20.0),
@@ -149,37 +139,46 @@ class _CreatePostScreenState extends ConsumerState<CreatePostScreen> {
               const SizedBox(height: 20),
               file != null
                   ? ImageVideoView(
-                file: file!,
-                fileType: fileType,
-              )
+                      file: file!,
+                      fileType: fileType,
+                    )
                   : PickFileWidget(
-                pickImage: () async {
-                  fileType = 'image';
-                  file = await pickImage();
-                  setState(() {});
-                },
-                pickVideo: () async {
-                  fileType = 'video';
-                  file = await pickVideo();
-                  setState(() {});
-                },
-              ),
+                      pickImage: () async {
+                        fileType = 'image';
+                        file = await pickImage();
+                        setState(() {});
+                      },
+                      pickVideo: () async {
+                        fileType = 'video';
+                        try {
+                          file =
+                              await pickVideo();
+                          setState(() {});
+                        } catch (e) {
+                          if (mounted) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(content: Text(e.toString())),
+                            );
+                          }
+                        }
+                      },
+                    ),
               const SizedBox(height: 20),
               isLoading
                   ? const Center(
-                child: CircularProgressIndicator(),
-              )
+                      child: CircularProgressIndicator(),
+                    )
                   : Center(
-                child: RoundButton(
-                  onPressed: file != null
-                      ? () {
-                    makePost();
-                    //uploadFile(file!.path.split('/').last);
-                  }
-                      : null, // Désactivez le bouton si le fichier est nul
-                  label: 'PUBLIER',
-                ),
-              ),
+                      child: RoundButton(
+                        onPressed: file != null
+                            ? () {
+                                makePost();
+                                //uploadFile(file!.path.split('/').last);
+                              }
+                            : null, // Désactivez le bouton si le fichier est nul
+                        label: 'PUBLIER',
+                      ),
+                    ),
             ],
           ),
         ),
@@ -207,7 +206,8 @@ class PickFileWidget extends StatelessWidget {
           icon: const Icon(Icons.image),
           label: const Text('Sélectionner une image'),
           style: ElevatedButton.styleFrom(
-            foregroundColor: Colors.white, backgroundColor: Colors.blueAccent,
+            foregroundColor: Colors.white,
+            backgroundColor: Colors.blueAccent,
             minimumSize: const Size(double.infinity, 50),
           ),
         ),
@@ -217,7 +217,8 @@ class PickFileWidget extends StatelessWidget {
           icon: const Icon(Icons.videocam),
           label: const Text('Sélectionner une vidéo'),
           style: ElevatedButton.styleFrom(
-            foregroundColor: Colors.white, backgroundColor: Colors.blueAccent,
+            foregroundColor: Colors.white,
+            backgroundColor: Colors.blueAccent,
             minimumSize: const Size(double.infinity, 50),
           ),
         ),

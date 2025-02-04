@@ -1,57 +1,81 @@
 import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:video_player/video_player.dart';
 
+class VideoScreen extends StatefulWidget {
+  @override
+  _VideoScreenState createState() => _VideoScreenState();
+}
 
+class _VideoScreenState extends State<VideoScreen> {
+  late VideoPlayerController _controller;
+  bool _isPlaying = false;
 
-class PostScreen extends StatelessWidget {
-  // Méthode pour récupérer les posts depuis Firestore
-  Future<List<String>> fetchPosts() async {
-    List<String> posts = [];
-    try {
-      // Récupérer les documents de la collection 'posts'
-      QuerySnapshot snapshot = await FirebaseFirestore.instance.collection('posts').get();
-      for (var doc in snapshot.docs) {
-        // Ajouter le contenu du post à la liste
-        posts.add(doc['content']); // Assurez-vous que 'content' est le bon champ
-      }
-    } catch (e) {
-      print('Erreur lors de la récupération des posts: $e');
-    }
-    return posts;
+  @override
+  void initState() {
+    super.initState();
+    _controller = VideoPlayerController.networkUrl(
+        'https://www.learningcontainer.com/wp-content/uploads/2020/05/sample-mp4-file.mp4' as Uri // Remplace avec ton URL
+    )
+      ..initialize().then((_) {
+        setState(() {}); // Met à jour l'interface une fois la vidéo chargée
+      })
+      ..setLooping(true) // Répète la vidéo en boucle
+      ..addListener(() {
+        setState(() {
+          _isPlaying = _controller.value.isPlaying;
+        });
+      });
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose(); // Nettoyer la mémoire
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Posts'),
-      ),
-      body: FutureBuilder<List<String>>(
-        future: fetchPosts(),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
-          } else if (snapshot.hasError) {
-            return Center(child: Text('Erreur: ${snapshot.error}'));
-          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            return Center(child: Text('Aucun post disponible'));
-          } else {
-            // Afficher les posts
-            final posts = snapshot.data!;
-            return ListView.builder(
-              itemCount: posts.length,
-              itemBuilder: (context, index) {
-                return Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text(
-                    posts[index],
-                    style: TextStyle(fontSize: 16),
-                  ),
-                );
-              },
-            );
-          }
-        },
+      appBar: AppBar(title: Text('Lecteur Vidéo')),
+      body: Center(
+        child: _controller.value.isInitialized
+            ? Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            AspectRatio(
+              aspectRatio: _controller.value.aspectRatio,
+              child: VideoPlayer(_controller),
+            ),
+            SizedBox(height: 20),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                IconButton(
+                  icon: Icon(_isPlaying ? Icons.pause : Icons.play_arrow),
+                  iconSize: 40,
+                  onPressed: () {
+                    setState(() {
+                      if (_isPlaying) {
+                        _controller.pause();
+                      } else {
+                        _controller.play();
+                      }
+                    });
+                  },
+                ),
+                IconButton(
+                  icon: Icon(Icons.stop),
+                  iconSize: 40,
+                  onPressed: () {
+                    _controller.pause();
+                    _controller.seekTo(Duration.zero);
+                  },
+                ),
+              ],
+            ),
+          ],
+        )
+            : CircularProgressIndicator(), // Affiche un chargement si la vidéo n'est pas prête
       ),
     );
   }

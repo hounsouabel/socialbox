@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:groupe7/screens/feed_screen.dart';
+import 'package:groupe7/screens/full_image_screen.dart';
 import 'package:groupe7/screens/post_screen.dart';
 import 'package:groupe7/screens/profile_screen.dart';
 import 'package:groupe7/screens/search_screen.dart';
@@ -21,7 +21,7 @@ class _ChatterBoxState extends State<ChatterBox> {
   int _selectedIndex = 0;
   final List<Widget> _screens = [
     PostsSection(),
-    Text("A implémenter"),
+    VideoScreen(),
     CreatePostScreen(),
     HomePage(), // Placeholder for future video screen
     ProfileScreen(),

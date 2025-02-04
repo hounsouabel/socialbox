@@ -8,7 +8,7 @@ import '../widgets/stories_section.dart';
 import 'loader.dart';
 
 class PostsSection extends StatelessWidget {
-   PostsSection({super.key});
+  PostsSection({super.key});
 
   final List<String> storyImages = [
     'assets/story1.jpg',
@@ -23,10 +23,11 @@ class PostsSection extends StatelessWidget {
     'assets/story10.jpg',
   ];
   final String profileImage = 'assets/addpost.jpg';
+
   @override
   Widget build(BuildContext context) {
-
     return CustomScrollView(
+      key: const PageStorageKey<String>('postsScroll'),
       slivers: [
         StoriesSection(
           storyImages: storyImages,
@@ -92,7 +93,7 @@ class PostsList extends ConsumerWidget {
                   const SizedBox(height: 16),
                   ElevatedButton(
                     onPressed: () {
-                      // Trigger a refresh or retry logic
+                      // Rafraîchit le provider pour retenter la récupération des posts.
                       ref.refresh(getAllPostsProvider);
                     },
                     child: const Text('Réessayer'),

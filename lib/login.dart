@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:groupe7/screens/account_recovery.dart';
 import 'package:groupe7/screens/home_page.dart';
 import 'package:groupe7/services/auth_service.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'inscription/page1.dart';
 
@@ -41,44 +42,83 @@ class _MyLoginPageState extends State<MyLoginPage> {
     }
     return null;
   }
+  Future<void> _saveLoginInformation() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setString('user_email', _emailController.text.trim());
+      await prefs.setString('user_password', _passwordController.text.trim());
+
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Informations enregistrées avec succès !')),
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Erreur d\'enregistrement : $e')),
+        );
+      }
+    }
+  }
 
   Future<void> _handleLogin() async {
-    if (_formKey.currentState?.validate() == true) {
-      setState(() {
-        _isLoading = true;
-      });
-
-      AuthService authService = AuthService();
-
-      try {
-        await authService.signInWithEmailAndPassword(
-          _emailController.text.trim(),
-          _passwordController.text.trim(),
-        );
-        if (!mounted) return;
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Connexion réussie !')),
-        );
-
-        Navigator.pushAndRemoveUntil(
-          context,
-          MaterialPageRoute(builder: (context) => ChatterBox()),
-              (Route<dynamic> route) => false,
-        );
-      } catch (e) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Erreur : $e')),
-        );
-      } finally {
-        setState(() {
-          _isLoading = false;
-        });
-      }
-    } else {
+    if (_formKey.currentState?.validate() != true) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-            content: Text('Veuillez corriger les erreurs avant de continuer.')),
+        const SnackBar(content: Text('Veuillez corriger les erreurs')),
       );
+      return;
+    }
+
+    setState(() => _isLoading = true);
+
+    try {
+      final authService = AuthService();
+      await authService.signInWithEmailAndPassword(
+        _emailController.text.trim(),
+        _passwordController.text.trim(),
+      );
+
+      if (!mounted) return;
+
+      // Afficher la boîte de dialogue d'enregistrement
+      final saveCredentials = await showDialog<bool>(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: const Text('Enregistrer les identifiants'),
+          content: const Text('Voulez-vous enregistrer vos informations de connexion ?'),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context, false),
+              child: const Text('Annuler'),
+            ),
+            TextButton(
+              onPressed: () => Navigator.pop(context, true),
+              child: const Text('Enregistrer'),
+            ),
+          ],
+        ),
+      );
+
+      if (saveCredentials == true) {
+        await _saveLoginInformation();
+      }
+
+      // Redirection vers la page d'accueil
+      Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(builder: (context) => ChatterBox()),
+            (Route<dynamic> route) => false,
+      );
+
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Erreur de connexion : $e')),
+        );
+      }
+    } finally {
+      if (mounted) setState(() => _isLoading = false);
     }
   }
 
