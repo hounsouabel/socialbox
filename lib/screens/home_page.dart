@@ -6,7 +6,8 @@ import 'package:groupe7/screens/search_screen.dart';
 import 'package:groupe7/screens/create_post.dart';
 import 'package:groupe7/screens/settings/settings.dart';
 import 'package:groupe7/screens/test.dart';
-import '../services/auth_service.dart';import 'package:groupe7/screens/video_screen/home_page.dart';
+import '../services/auth_service.dart';
+import 'package:groupe7/screens/video_screen/home_page.dart';
 
 import 'chats_screen.dart';
 
@@ -21,7 +22,7 @@ class _ChatterBoxState extends State<ChatterBox> {
   int _selectedIndex = 0;
   final List<Widget> _screens = [
     PostsSection(),
-    Text("A implémenter"),
+    SearchScreen(),
     CreatePostScreen(),
     HomePage(), // Placeholder for future video screen
     ProfileScreen(),
@@ -76,12 +77,12 @@ class _ChatterBoxState extends State<ChatterBox> {
         Navigator.push(
             context, MaterialPageRoute(builder: (context) => ChatsScreen()));
       }),
-      /*_buildStyledIconButton(Icons.menu, () {
+      _buildStyledIconButton(Icons.menu, () {
         Navigator.push(
           context,
           MaterialPageRoute(builder: (context) => SettingsPage()),
         );
-      }),*/
+      }),
     ];
   }
 

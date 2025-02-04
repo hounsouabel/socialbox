@@ -64,7 +64,7 @@ class _ContentScreenState extends State<ContentScreen> {
             : Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            CircularProgressIndicator(color: Colors.pink,),
+            CircularProgressIndicator(color: Colors.pink    ,),
             SizedBox(height: 10),
             Text('Loading...')
           ],

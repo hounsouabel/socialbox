@@ -129,7 +129,7 @@ class PostWidget extends ConsumerWidget {
               return Icon(
                 Icons.bookmark,
                 size: 25,
-                color: isLiked ? Colors.yellowAccent : Colors.black,
+                color: isLiked ? Colors.yellowAccent : (isDarkMode ? Colors.white : Colors.black),
               );
             },
           ),
