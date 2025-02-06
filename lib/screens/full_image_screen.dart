@@ -59,11 +59,11 @@ class FullScreenImageScreen extends ConsumerWidget {
                     trimLines: 3,
                     pseudoStyle: TextStyle(
                       fontWeight: FontWeight.w700,
-                      color: isDarkMode ? Colors.black : Colors.white,
+                      color:  Colors.white ,
                     ),
                     contentStyle: TextStyle(
                       fontWeight: FontWeight.w400,
-                      color: isDarkMode ? Colors.black : Colors.white,
+                      color:  Colors.white ,
                     ),
                   );
                 },
