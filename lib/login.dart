@@ -16,6 +16,7 @@ class MyLoginPage extends StatefulWidget {
 class _MyLoginPageState extends State<MyLoginPage> {
   bool _isObscure = true;
   bool _isLoading = false;
+  bool _rememberMe = false;
 
   final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
@@ -42,6 +43,7 @@ class _MyLoginPageState extends State<MyLoginPage> {
     }
     return null;
   }
+
   Future<void> _saveLoginInformation() async {
     try {
       final prefs = await SharedPreferences.getInstance();
@@ -81,26 +83,7 @@ class _MyLoginPageState extends State<MyLoginPage> {
 
       if (!mounted) return;
 
-      // Afficher la boîte de dialogue d'enregistrement
-      final saveCredentials = await showDialog<bool>(
-        context: context,
-        builder: (context) => AlertDialog(
-          title: const Text('Enregistrer les identifiants'),
-          content: const Text('Voulez-vous enregistrer vos informations de connexion ?'),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context, false),
-              child: const Text('Annuler'),
-            ),
-            TextButton(
-              onPressed: () => Navigator.pop(context, true),
-              child: const Text('Enregistrer'),
-            ),
-          ],
-        ),
-      );
-
-      if (saveCredentials == true) {
+      if (_rememberMe) {
         await _saveLoginInformation();
       }
 
@@ -110,7 +93,6 @@ class _MyLoginPageState extends State<MyLoginPage> {
         MaterialPageRoute(builder: (context) => ChatterBox()),
             (Route<dynamic> route) => false,
       );
-
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -142,7 +124,10 @@ class _MyLoginPageState extends State<MyLoginPage> {
                   SizedBox(height: constraints.maxHeight * 0.1),
                   Text(
                     "Connectez-vous",
-                    style: TextStyle(color: isDarkMode ? Colors.white : Colors.black, fontWeight: FontWeight.bold, fontSize: 25),
+                    style: TextStyle(
+                        color: isDarkMode ? Colors.white : Colors.black,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 25),
                   ),
                   SizedBox(height: constraints.maxHeight * 0.05),
                   Form(
@@ -157,9 +142,9 @@ class _MyLoginPageState extends State<MyLoginPage> {
                             hintText: 'E-mail',
                             filled: true,
                             fillColor: Color(0xFFFAECF5),
-                            contentPadding: const EdgeInsets.symmetric(
+                            contentPadding: EdgeInsets.symmetric(
                                 horizontal: 16.0 * 1.5, vertical: 16.0),
-                            border: const OutlineInputBorder(
+                            border: OutlineInputBorder(
                               borderSide: BorderSide.none,
                               borderRadius:
                               BorderRadius.all(Radius.circular(50)),
@@ -192,7 +177,6 @@ class _MyLoginPageState extends State<MyLoginPage> {
                                   });
                                 },
                               ),
-
                               border: const OutlineInputBorder(
                                 borderSide: BorderSide.none,
                                 borderRadius:
@@ -202,9 +186,25 @@ class _MyLoginPageState extends State<MyLoginPage> {
                             validator: _validatePassword,
                           ),
                         ),
-                        SizedBox(height: 20),
+                        CheckboxListTile(
+                          title: const Text('Se souvenir de moi'),
+                          value: _rememberMe,
+                          activeColor: Colors.pink,
+                          checkColor: Colors.white,
+                          onChanged: (value) {
+                            setState(() {
+                              _rememberMe = value ?? false;
+                            });
+                          },
+                          controlAffinity: ListTileControlAffinity.leading,
+                          contentPadding: EdgeInsets.zero,
+                        ),
+                        const SizedBox(height: 20),
                         _isLoading
-                            ? Center(child: CircularProgressIndicator(color: Colors.pink),)
+                            ? const Center(
+                          child: CircularProgressIndicator(
+                              color: Colors.pink),
+                        )
                             : ElevatedButton(
                           onPressed: _handleLogin,
                           style: ElevatedButton.styleFrom(
@@ -221,12 +221,16 @@ class _MyLoginPageState extends State<MyLoginPage> {
                           onPressed: () {
                             Navigator.push(
                               context,
-                              MaterialPageRoute(builder: (context) => AccountRecoveryScreen()),
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      AccountRecoveryScreen()),
                             );
                           },
                           child: Text(
                             'Mot de passe oublié?',
-                            style: TextStyle(color: isDarkMode ? Colors.white : Colors.black,),
+                            style: TextStyle(
+                              color: isDarkMode ? Colors.white : Colors.black,
+                            ),
                           ),
                         ),
                         TextButton(
@@ -239,7 +243,9 @@ class _MyLoginPageState extends State<MyLoginPage> {
                           child: Text.rich(
                             TextSpan(
                               text: "Vous n'avez pas de compte? ",
-                              style: TextStyle(color: isDarkMode ? Colors.white : Colors.black,),
+                              style: TextStyle(
+                                color: isDarkMode ? Colors.white : Colors.black,
+                              ),
                               children: const [
                                 TextSpan(
                                   text: "Inscrivez-vous",
