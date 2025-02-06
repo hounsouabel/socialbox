@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:groupe7/screens/full_image_screen.dart';
 import 'package:groupe7/screens/post_screen.dart';
 import 'package:groupe7/screens/profile_screen.dart';
+import 'package:groupe7/screens/requests_screen.dart';
 import 'package:groupe7/screens/search_screen.dart';
 import 'package:groupe7/screens/create_post.dart';
 import 'package:groupe7/screens/settings/settings.dart';
@@ -24,7 +25,8 @@ class _ChatterBoxState extends State<ChatterBox> {
     PostsSection(),
     SearchScreen(),
     CreatePostScreen(),
-    HomePage(), // Placeholder for future video screen
+    //HomePage(), // Placeholder for future video screen
+    FriendRequestsScreen(),
     ProfileScreen(),
   ];
 

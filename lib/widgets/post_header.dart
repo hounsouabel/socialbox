@@ -35,7 +35,11 @@ class PostHeader extends ConsumerWidget {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => UserProfile(),
+                      builder: (context) => UserProfile(
+                        userId: userId,
+                        isSelfProfile:
+                            currentUserId == userId, //si l'user connecté
+                      ),
                     ),
                   );
                 },
@@ -83,7 +87,10 @@ class PostHeader extends ConsumerWidget {
                   ),
                   onSelected: (String value) {
                     if (value == 'delete') {
-                      ref.read(globalProvider).deletePost(postId: postId).then((result) {
+                      ref
+                          .read(globalProvider)
+                          .deletePost(postId: postId)
+                          .then((result) {
                         if (result != null) {
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(content: Text("Erreur : $result")),

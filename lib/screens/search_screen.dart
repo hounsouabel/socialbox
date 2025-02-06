@@ -1,6 +1,7 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:groupe7/screens/use_profile.dart'; // Assurez-vous que le nom du fichier est correct
+import 'package:groupe7/screens/user_profile.dart';
 
 class SearchScreen extends StatefulWidget {
   const SearchScreen({super.key});
@@ -14,6 +15,7 @@ class _SearchScreenState extends State<SearchScreen> {
   List<User> allUsers = [];
   List<User> suggestedUsers = [];
   List<User> recentSearches = [];
+  final currentUserId = FirebaseAuth.instance.currentUser?.uid ?? '';
 
   @override
   void initState() {
@@ -48,7 +50,8 @@ class _SearchScreenState extends State<SearchScreen> {
     });
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => UserProfile()),
+      MaterialPageRoute(builder: (context) => UserProfile(userId: user.userId, isSelfProfile:
+          currentUserId == user.userId,)),
     );
   }
 
@@ -261,14 +264,16 @@ class RoundedCounter extends StatelessWidget {
 }
 
 class User {
+  final String userId;
   final String pseudo;
   final String profilePicUrl;
 
-  User({required this.pseudo, required this.profilePicUrl});
+  User({required this.pseudo, required this.profilePicUrl, required this.userId});
 
   factory User.fromFirestore(DocumentSnapshot doc) {
     Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
     return User(
+      userId : doc.id,
       pseudo: data['pseudo'] ?? '',
       profilePicUrl: data['profil']?.isNotEmpty ?? false
           ? data['profil']

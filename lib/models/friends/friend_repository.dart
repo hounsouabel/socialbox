@@ -8,7 +8,7 @@ class FriendRepository {
   final _firestore = FirebaseFirestore.instance;
 
   // Send friend request
-  Future<String?> sendFriendReuqest({
+  Future<String?> sendFriendRequest({
     required String userId,
   }) async {
     try {
@@ -109,5 +109,18 @@ class FriendRepository {
     } catch (e) {
       return e.toString();
     }
+  }
+
+  Stream<List<String>> getReceivedRequests() {
+    return _firestore.collection('users').doc(_myUid).snapshots().map((doc) {
+      return List<String>.from(doc.data()?['receivedRequests'] ?? []);
+    });
+  }
+
+  // Récupérer les demandes d'amis envoyées
+  Stream<List<String>> getSentRequests() {
+    return _firestore.collection('users').doc(_myUid).snapshots().map((doc) {
+      return List<String>.from(doc.data()?['sentRequests'] ?? []);
+    });
   }
 }
