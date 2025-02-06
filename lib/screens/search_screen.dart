@@ -1,11 +1,61 @@
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:groupe7/screens/use_profile.dart'; // Assurez-vous que le nom du fichier est correct
 
-class SearchScreen extends StatelessWidget {
+class SearchScreen extends StatefulWidget {
   const SearchScreen({super.key});
+
+  @override
+  _SearchScreenState createState() => _SearchScreenState();
+}
+
+class _SearchScreenState extends State<SearchScreen> {
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  List<User> allUsers = [];
+  List<User> suggestedUsers = [];
+  List<User> recentSearches = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _getUsers().then((users) {
+      setState(() {
+        allUsers = users;
+      });
+    });
+  }
+
+  Future<List<User>> _getUsers() async {
+    QuerySnapshot snapshot = await _firestore.collection('users').get();
+    return snapshot.docs.map((doc) {
+      return User.fromFirestore(doc);
+    }).toList();
+  }
+
+  void _onSearchChanged(String query) {
+    setState(() {
+      suggestedUsers = allUsers
+          .where((user) => user.pseudo.toLowerCase().contains(query.toLowerCase()))
+          .toList();
+    });
+  }
+
+  void _onUserSelected(User user) {
+    setState(() {
+      if (!recentSearches.contains(user)) {
+        recentSearches.add(user);
+      }
+    });
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => UserProfile()),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     bool isDarkMode = MediaQuery.of(context).platformBrightness == Brightness.dark;
+    Color textColor = isDarkMode ? Colors.white : Colors.black;
 
     return Scaffold(
       backgroundColor: isDarkMode ? Colors.black : Colors.white,
@@ -14,7 +64,7 @@ class SearchScreen extends StatelessWidget {
         elevation: 0,
         backgroundColor: Colors.pink,
         foregroundColor: Colors.white,
-        title: Text("Amis", style: TextStyle(color: isDarkMode ? Colors.black : Colors.white),),
+        title: Text("Amis", style: TextStyle(color: Colors.white)),
       ),
       body: Column(
         children: [
@@ -31,9 +81,7 @@ class SearchScreen extends StatelessWidget {
               child: TextFormField(
                 autofocus: true,
                 textInputAction: TextInputAction.search,
-                onChanged: (value) {
-                  // search logic
-                },
+                onChanged: _onSearchChanged,
                 style: TextStyle(color: Colors.black), // Forcer la couleur du texte à noir
                 decoration: InputDecoration(
                   fillColor: Colors.white,
@@ -47,8 +95,8 @@ class SearchScreen extends StatelessWidget {
                   ),
                   filled: true,
                   contentPadding: const EdgeInsets.symmetric(
-                      horizontal: 16.0 * 1.5,
-                      vertical: 16.0
+                    horizontal: 16.0 * 1.5,
+                    vertical: 16.0,
                   ),
                   border: const OutlineInputBorder(
                     borderSide: BorderSide.none,
@@ -58,15 +106,18 @@ class SearchScreen extends StatelessWidget {
               ),
             ),
           ),
-          const Expanded(
+          Expanded(
             child: SingleChildScrollView(
-              padding: EdgeInsets.symmetric(vertical: 16.0),
+              padding: const EdgeInsets.symmetric(vertical: 16.0),
               child: Column(
                 children: [
-                  RecentSearchContacts(),
-                  SizedBox(height: 16.0),
-                  // you can show suggested style for search result
-                  SuggestedContacts()
+                  RecentSearchContacts(recentSearches: recentSearches, textColor: textColor),
+                  const SizedBox(height: 16.0),
+                  SuggestedContacts(
+                    suggestedUsers: suggestedUsers,
+                    onUserSelected: _onUserSelected,
+                    textColor: textColor,
+                  ),
                 ],
               ),
             ),
@@ -78,37 +129,45 @@ class SearchScreen extends StatelessWidget {
 }
 
 class SuggestedContacts extends StatelessWidget {
-  const SuggestedContacts({super.key});
+  final List<User> suggestedUsers;
+  final Function(User) onUserSelected;
+  final Color textColor;
+
+  const SuggestedContacts({
+    super.key,
+    required this.suggestedUsers,
+    required this.onUserSelected,
+    required this.textColor,
+  });
 
   @override
   Widget build(BuildContext context) {
-    final titleSmall = Theme.of(context).textTheme.titleSmall;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16.0),
           child: Text(
-            "Suggested",
-            style: titleSmall?.copyWith(
-              color: titleSmall?.color?.withOpacity(0.32),
+            "Suggestions",
+            style: TextStyle(
+              color: textColor.withOpacity(0.32),
+              fontSize: Theme.of(context).textTheme.titleSmall?.fontSize,
             ),
           ),
         ),
         const SizedBox(height: 16.0),
-        ...List.generate(
-          demoContactsImage.length,
-              (index) => ListTile(
+        ...suggestedUsers.map(
+              (user) => ListTile(
             contentPadding: const EdgeInsets.symmetric(
-                horizontal: 16.0,
-                vertical: 16.0 / 2
+              horizontal: 16.0,
+              vertical: 16.0 / 2,
             ),
             leading: CircleAvatar(
               radius: 24,
-              backgroundImage: AssetImage(demoContactsImage[index]),
+              backgroundImage: NetworkImage(user.profilePicUrl),
             ),
-            title: const Text("Jenny Wilson"),
-            onTap: () {},
+            title: Text(user.pseudo),
+            onTap: () => onUserSelected(user),
           ),
         ),
       ],
@@ -117,11 +176,13 @@ class SuggestedContacts extends StatelessWidget {
 }
 
 class RecentSearchContacts extends StatelessWidget {
-  const RecentSearchContacts({super.key});
+  final List<User> recentSearches;
+  final Color textColor;
+
+  const RecentSearchContacts({super.key, required this.recentSearches, required this.textColor});
 
   @override
   Widget build(BuildContext context) {
-    final titleSmall = Theme.of(context).textTheme.titleSmall;
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16.0),
       child: Column(
@@ -129,8 +190,9 @@ class RecentSearchContacts extends StatelessWidget {
         children: [
           Text(
             "Recherche récente",
-            style: titleSmall?.copyWith(
-              color: titleSmall?.color?.withOpacity(0.32),
+            style: TextStyle(
+              color: textColor.withOpacity(0.32),
+              fontSize: Theme.of(context).textTheme.titleSmall?.fontSize,
             ),
           ),
           const SizedBox(height: 16.0),
@@ -140,7 +202,7 @@ class RecentSearchContacts extends StatelessWidget {
             child: Stack(
               children: [
                 ...List.generate(
-                  demoContactsImage.length + 1,
+                  recentSearches.length,
                       (index) => Positioned(
                     left: index * 48,
                     child: Container(
@@ -151,15 +213,17 @@ class RecentSearchContacts extends StatelessWidget {
                         ),
                         shape: BoxShape.circle,
                       ),
-                      child: index < demoContactsImage.length
-                          ? CircleAvatar(
+                      child: CircleAvatar(
                         radius: 26,
-                        backgroundImage: AssetImage(demoContactsImage[index]),
-                      )
-                          : const RoundedCounter(total: 35),
+                        backgroundImage: NetworkImage(recentSearches[index].profilePicUrl),
+                      ),
                     ),
                   ),
                 ),
+                if (recentSearches.isEmpty)
+                  const Center(
+                    child: Text("Aucune recherche récente"),
+                  ),
               ],
             ),
           ),
@@ -196,10 +260,19 @@ class RoundedCounter extends StatelessWidget {
   }
 }
 
-final List<String> demoContactsImage = [
-  'assets/story2.jpg',
-  'assets/story10.jpg',
-  'assets/story4.jpg',
-  'assets/story8.jpg',
-  'assets/story9.jpg',
-];
+class User {
+  final String pseudo;
+  final String profilePicUrl;
+
+  User({required this.pseudo, required this.profilePicUrl});
+
+  factory User.fromFirestore(DocumentSnapshot doc) {
+    Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
+    return User(
+      pseudo: data['pseudo'] ?? '',
+      profilePicUrl: data['profil']?.isNotEmpty ?? false
+          ? data['profil']
+          : 'https://img.icons8.com/?size=100&id=98957&format=png&color=000000',
+    );
+  }
+}
