@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:groupe7/screens/use_profile.dart';
+import 'package:groupe7/screens/user_profile.dart';
 import '../providers/general_provider.dart';
 import '../providers/get_user_info_by_id_provider.dart';
 import '../screens/full_image_screen.dart';

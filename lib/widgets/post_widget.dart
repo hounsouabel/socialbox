@@ -12,6 +12,8 @@ import '../widgets/post_footer.dart';
 import '../widgets/post_header.dart';
 import 'package:groupe7/widgets/comment_screen.dart';
 
+import 'network_video_view.dart';
+
 class PostWidget extends ConsumerWidget {
   const PostWidget({super.key, required this.post});
 
@@ -33,7 +35,10 @@ class PostWidget extends ConsumerWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          PostHeader(userId: post.posterId, postId: post.postId,),
+          PostHeader(
+            userId: post.posterId,
+            postId: post.postId,
+          ),
           const SizedBox(height: 8),
           _buildPostImage(context),
           _buildPostActions(context, ref),
@@ -54,7 +59,10 @@ class PostWidget extends ConsumerWidget {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => FullScreenImageScreen(imageUrl: post.fileUrl, post: post,),
+              builder: (context) => FullScreenImageScreen(
+                imageUrl: post.fileUrl,
+                post: post,
+              ),
             ),
           );
         },
@@ -70,19 +78,22 @@ class PostWidget extends ConsumerWidget {
     }
   }
 
-
   Widget _buildVideoThumbnail(String videoUrl) {
-    return VideoPlayerWidget(videoUrl: videoUrl);
+    return NetworkVideoView(
+      videoUrl: videoUrl, autoPlay: false, // Désactive la lecture automatique
+      looping: false, // Désactive la boucle
+      showControls: true,
+    ); // Affiche les contrôles de lecture);
   }
-
-
-
 
   /// Widget pour afficher les boutons d'action sous le post (Like, Comment, Share)
   Widget _buildPostActions(BuildContext context, WidgetRef ref) {
-    final String currentUserId = FirebaseAuth.instance.currentUser?.uid ?? ''; // Récupérer l'ID de l'utilisateur connecté
-    final bool isLiked = post.likes.contains(currentUserId); // Vérifier si l'utilisateur a liké le post
-    bool isDarkMode = MediaQuery.of(context).platformBrightness == Brightness.dark;
+    final String currentUserId = FirebaseAuth.instance.currentUser?.uid ??
+        ''; // Récupérer l'ID de l'utilisateur connecté
+    final bool isLiked = post.likes
+        .contains(currentUserId); // Vérifier si l'utilisateur a liké le post
+    bool isDarkMode =
+        MediaQuery.of(context).platformBrightness == Brightness.dark;
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 10),
@@ -94,16 +105,23 @@ class PostWidget extends ConsumerWidget {
             isLiked: isLiked, // Vérification correcte
             onTap: (isLiked) async {
               await ref.read(globalProvider).likeDislikePost(
-                postId: post.postId,
-                likes: post.likes,
-              );
+                    postId: post.postId,
+                    likes: post.likes,
+                  );
               return !isLiked;
             },
             likeBuilder: (bool isLiked) {
               return Icon(
-                isLiked ? Icons.favorite : Icons.favorite_border_outlined, // Affiche l'icône favorite ou favorite_border_outlined
+                isLiked
+                    ? Icons.favorite
+                    : Icons
+                        .favorite_border_outlined, // Affiche l'icône favorite ou favorite_border_outlined
                 size: 25,
-                color: isLiked ? Colors.red : (isDarkMode ? Colors.white : Colors.black), // Couleur de l'icône
+                color: isLiked
+                    ? Colors.red
+                    : (isDarkMode
+                        ? Colors.white
+                        : Colors.black), // Couleur de l'icône
               );
             },
             likeCount: post.likes.length,
@@ -111,7 +129,9 @@ class PostWidget extends ConsumerWidget {
               return Text(
                 count == 0 ? '' : text,
                 style: TextStyle(
-                  color: isLiked ? Colors.red : (isDarkMode ? Colors.white : Colors.black),
+                  color: isLiked
+                      ? Colors.red
+                      : (isDarkMode ? Colors.white : Colors.black),
                 ),
               );
             },
@@ -149,7 +169,9 @@ class PostWidget extends ConsumerWidget {
               return Icon(
                 Icons.bookmark,
                 size: 25,
-                color: isLiked ? Colors.yellowAccent : (isDarkMode ? Colors.white : Colors.black),
+                color: isLiked
+                    ? Colors.yellowAccent
+                    : (isDarkMode ? Colors.white : Colors.black),
               );
             },
           ),
@@ -158,6 +180,7 @@ class PostWidget extends ConsumerWidget {
     );
   }
 }
+
 class VideoPlayerWidget extends StatefulWidget {
   final String videoUrl;
   final bool autoPlay;

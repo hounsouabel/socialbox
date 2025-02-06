@@ -32,8 +32,11 @@ class _UserProfileState extends State<UserProfile> {
 
     return Scaffold(
       extendBodyBehindAppBar: true,
+      appBar: AppBar(actions: [ ],),
       body: Stack(
         children: <Widget>[
+
+          
           Center(
             child: Image.asset(
               "assets/story1.jpg",
