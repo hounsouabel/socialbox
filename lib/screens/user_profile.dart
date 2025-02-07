@@ -7,13 +7,17 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../models/friends/friend_repository.dart';
 import '../providers/get_all_friends_by_id_provider.dart';
+import '../providers/get_all_video_posts_by_userId.dart';
 import '../providers/get_posts_count_by_id.dart';
 import '../providers/get_user_info_by_id_provider.dart';
+
 import '../widgets/profile_images_view.dart';
+import '../widgets/video_player_for_post.dart';
+import '../widgets/video_thumbnail_widget.dart';
+import 'full_screen_video.dart';
 
 class UserProfile extends ConsumerStatefulWidget {
   final String userId;
-
   final bool isSelfProfile;
 
   const UserProfile(
@@ -80,7 +84,7 @@ class _UserProfileState extends ConsumerState<UserProfile> {
     final userDoc =
         await FirebaseFirestore.instance.collection('users').doc(userId).get();
     return userDoc.data()?['profil'] ??
-        'https://example.com/default.png'; // URL par défaut
+        "https://cdn.pixabay.com/photo/2016/11/14/17/39/person-1824147_640.png"; // URL par défaut
   }
 
   @override
@@ -330,10 +334,14 @@ class _UserProfileState extends ConsumerState<UserProfile> {
                                               if (snapshot.connectionState == ConnectionState.waiting) {
                                                 return const CircularProgressIndicator();
                                               } else if (snapshot.hasError) {
-                                                return const Icon(Icons.error); // Affiche une icône d'erreur si l'URL ne peut pas être récupérée
+                                                return Image.network(
+                                                  "https://cdn.pixabay.com/photo/2016/11/14/17/39/person-1824147_640.png",
+
+                                                  fit: BoxFit.contain,
+                                                ); // Affiche une icône d'erreur si l'URL ne peut pas être récupérée
                                               } else {
                                                 return Image.network(
-                                                  snapshot.data ?? 'https://example.com/default.png', // URL par défaut si aucune image n'est trouvée
+                                                  snapshot.data ?? "https://cdn.pixabay.com/photo/2016/11/14/17/39/person-1824147_640.png",
                                                   fit: BoxFit.cover,
                                                 );
                                               }
@@ -358,38 +366,9 @@ class _UserProfileState extends ConsumerState<UserProfile> {
                 ImagesView(userId: widget.userId),
 
                 const SizedBox(height: 8),
-                /*Text(
-              "Vidéos",
-              style: TextStyle(
-                color: textColor,
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            Container(
-              height: 160,
-              child: ListView.builder(
-                padding: const EdgeInsets.all(8),
-                physics: const BouncingScrollPhysics(),
-                scrollDirection: Axis.horizontal,
-                itemCount: 12,
-                itemBuilder: (BuildContext context, int index) {
-                  return Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 4.0),
-                    child: SizedBox(
-                      height: 160,
-                      width: 110,
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(10),
-                        child: _controller.value.isInitialized
-                            ? VideoPlayer(_controller)
-                            : const Center(child: CircularProgressIndicator()),
-                      ),
-                    ),
-                  );
-                },
-              ),
-            ),*/
+                // Section Vidéos dynamique
+                VideoSection(userId: widget.userId,)
+
               ],
             ),
           );
@@ -431,3 +410,77 @@ class _UserProfileState extends ConsumerState<UserProfile> {
     );
   }
 }
+
+class VideoSection extends ConsumerWidget {
+  final dynamic userId;
+
+  const VideoSection({super.key,required this.userId});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    // Définir la couleur du texte selon le mode clair/sombre
+    final textColor =
+    Theme.of(context).brightness == Brightness.dark ? Colors.white : Colors.black;
+
+    final videoPostsAsync = ref.watch(videoPostsProvider(userId));
+
+    return videoPostsAsync.when(
+      data: (videos) {
+        if (videos.isEmpty) return const SizedBox();
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              "Vidéos",
+              style: TextStyle(
+                color: textColor,
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            Container(
+              height: 160,
+              child: ListView.builder(
+                padding: const EdgeInsets.all(8),
+                physics: const BouncingScrollPhysics(),
+                scrollDirection: Axis.horizontal,
+                itemCount: videos.length,
+                itemBuilder: (context, index) {
+                  final videoPost = videos[index];
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                    child: SizedBox(
+                      height: 160,
+                      width: 110,
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(10),
+                        child: GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => FullScreenVideoScreen(
+                                  videoUrl: videoPost.fileUrl,
+                                  post: videoPost,
+                                ),
+                              ),
+                            );
+                          },
+                          child: VideoThumbnailWidget(videoUrl: videoPost.fileUrl!),
+                        ),
+                      ),
+                    ),
+                  );
+                },
+              ),
+            ),
+          ],
+        );
+      },
+      loading: () => const Center(child: CircularProgressIndicator()),
+      error: (error, stack) => Center(child: Text("Erreur: $error")),
+    );
+  }
+}
+
+//

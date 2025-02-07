@@ -76,7 +76,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   final FirebaseAuth auth = FirebaseAuth.instance;
   final List<Widget> tabBarViews = [
     FeedView(userId: FirebaseAuth.instance.currentUser!.uid, ),
-    ReelsView(),
+    VideoView(userId: FirebaseAuth.instance.currentUser!.uid),
     TaggedView(),
   ];
 

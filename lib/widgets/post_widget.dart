@@ -1,13 +1,14 @@
 import 'package:chewie/chewie.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:groupe7/screens/full_image_screen.dart';
 import 'package:like_button/like_button.dart';
 import 'package:firebase_auth/firebase_auth.dart'; // Ajout pour récupérer l'utilisateur actuel
 
 import 'package:video_player/video_player.dart';
 import '../models/post.dart';
 import '../providers/general_provider.dart';
-import '../screens/full_image_screen.dart';
+
 import '../widgets/post_footer.dart';
 import '../widgets/post_header.dart';
 import 'package:groupe7/widgets/comment_screen.dart';
