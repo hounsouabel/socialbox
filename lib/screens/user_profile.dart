@@ -15,6 +15,7 @@ import '../widgets/profile_images_view.dart';
 
 import '../widgets/video_thumbnail_widget.dart';
 import 'full_screen_video.dart';
+import 'image_plein_ecran.dart';
 
 class UserProfile extends ConsumerStatefulWidget {
   final String userId;
@@ -123,11 +124,23 @@ class _UserProfileState extends ConsumerState<UserProfile> {
                       Flexible(
                         child: Row(
                           children: <Widget>[
-                            CircleAvatar(
-                              radius: 50,
-                              backgroundImage: NetworkImage(userData[
-                                      'profil'] ??
-                                  "https://cdn.pixabay.com/photo/2016/11/14/17/39/person-1824147_640.png"),
+                            GestureDetector(
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => FullScreenImage(
+                                      imageUrl: userData['profil']!,
+                                    ),
+                                  ),
+                                );
+                              },
+                              child: CircleAvatar(
+                                radius: 50,
+                                backgroundImage: NetworkImage(userData[
+                                        'profil'] ??
+                                    'https://img.icons8.com/?size=100&id=98957&format=png&color=000000'),
+                              ),
                             ),
                             const SizedBox(width: 12),
                             Flexible(

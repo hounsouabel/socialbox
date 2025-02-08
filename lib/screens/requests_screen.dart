@@ -14,12 +14,19 @@ class FriendRequestsScreen extends ConsumerWidget {
       length: 2, // Deux onglets
       child: Scaffold(
         appBar: AppBar(
-          title: const Text("Demandes d'amitié"),
+          title: const Text("Notifications", style:   TextStyle(fontSize: 20,
+            fontFamily: 'Poppins',
+            fontWeight: FontWeight.w600,),),
           bottom: const TabBar(
             tabs: [
               Tab(text: "Invitations reçues"),
               Tab(text: "Demandes envoyées"),
+              Tab(text: "Messagerie"),
             ],
+            labelColor: Colors.white, // Couleur du texte de l'onglet sélectionné
+            unselectedLabelColor: Colors.grey, // Couleur du texte des onglets non sélectionnés
+            indicatorColor: Colors.pink, // Couleur de l'indicateur
+            indicatorWeight: 4.0,
           ),
         ),
         body: TabBarView(
