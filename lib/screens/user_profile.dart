@@ -12,7 +12,7 @@ import '../providers/get_posts_count_by_id.dart';
 import '../providers/get_user_info_by_id_provider.dart';
 
 import '../widgets/profile_images_view.dart';
-import '../widgets/video_player_for_post.dart';
+
 import '../widgets/video_thumbnail_widget.dart';
 import 'full_screen_video.dart';
 
@@ -127,7 +127,7 @@ class _UserProfileState extends ConsumerState<UserProfile> {
                               radius: 50,
                               backgroundImage: NetworkImage(userData[
                                       'profil'] ??
-                                  'https://img.icons8.com/?size=100&id=98957&format=png&color=000000'),
+                                  "https://cdn.pixabay.com/photo/2016/11/14/17/39/person-1824147_640.png"),
                             ),
                             const SizedBox(width: 12),
                             Flexible(
