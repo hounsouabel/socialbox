@@ -1,12 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
-import 'package:firebase_storage/firebase_storage.dart';
-import 'package:groupe7/screens/home_page.dart'; // ChatterBox
-
-
+import 'package:groupe7/screens/home_page.dart';
 import 'package:cloudinary_url_gen/cloudinary.dart';
 import 'package:cloudinary_api/uploader/cloudinary_uploader.dart';
 import 'package:cloudinary_api/src/request/model/uploader_params.dart';
@@ -85,43 +81,73 @@ class _ProfileImageSelectionState extends State<ProfileImageSelection> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Sélectionnez une image')),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            _selectedImage != null
-                ? Image.file(_selectedImage!,
-                height: 150, width: 150, fit: BoxFit.cover)
-                : const Icon(Icons.account_circle, size: 150, color: Colors.grey),
-            const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: _pickImage,
-              child: const Text('Choisir une image'),
-            ),
-            const SizedBox(height: 20),
-            _isLoading
-                ? const CircularProgressIndicator()
-                : ElevatedButton(
-              onPressed: _uploadImage,
-              child: const Text('Enregistrer'),
-            ),
-            const SizedBox(height: 10),
-            TextButton(
-              onPressed: () {
-                FirebaseFirestore.instance
-                    .collection('users')
-                    .doc(widget.userId)
-                    .update({'firstLogin': false});
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(builder: (context) => const ChatterBox()),
-                );
-              },
-              child: const Text('Ignorer'),
-            ),
-          ],
+      appBar: AppBar(
+        title: const Text('Sélectionnez une image'),
+        centerTitle: true,
+        backgroundColor: Colors.transparent,
+      ),
+      body: Center(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              CircleAvatar(
+                radius: 75,
+                backgroundColor: Colors.white,
+                backgroundImage: _selectedImage != null ? FileImage(_selectedImage!) : null,
+                child: _selectedImage == null ? const Icon(Icons.account_circle, size: 150, color: Colors.grey) : null,
+              ),
+              const SizedBox(height: 30),
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton.icon(
+                  onPressed: _pickImage,
+                  icon: const Icon(Icons.photo_library, color: Colors.white,),
+                  label: const Text('Choisir une image', style: TextStyle(color: Colors.white,),),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.blue,
+                    padding: const EdgeInsets.symmetric(vertical: 15),
+                    textStyle: const TextStyle(fontSize: 16),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 20),
+              SizedBox(
+                width: double.infinity,
+                child: _isLoading
+                    ? const CircularProgressIndicator(color: Colors.blue,)
+                    : ElevatedButton.icon(
+                  onPressed: _uploadImage,
+                  icon: const Icon(Icons.upload, color: Colors.blue,),
+                  label: const Text('Enregistrer', style: TextStyle(color: Colors.blue,),),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.blue[50],
+                    padding: const EdgeInsets.symmetric(vertical: 15),
+                    textStyle: const TextStyle(fontSize: 16),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 20),
+              TextButton(
+                onPressed: () {
+                  FirebaseFirestore.instance
+                      .collection('users')
+                      .doc(widget.userId)
+                      .update({'firstLogin': false});
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(builder: (context) => const ChatterBox()),
+                  );
+                },
+                child: const Text('Ignorer'),
+                style: TextButton.styleFrom(
+                  foregroundColor: Colors.blue,
+                  textStyle: const TextStyle(fontSize: 16),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

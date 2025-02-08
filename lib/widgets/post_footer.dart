@@ -32,9 +32,9 @@ class PostFooter extends ConsumerWidget {
                 pseudo: userData["pseudo"],
                 content: post.content,
                 trimLines: 3,
-                pseudoStyle: const TextStyle(
+                pseudoStyle: TextStyle(
                   fontWeight: FontWeight.w700,
-                  color: Colors.black,
+                  color: isDarkMode ? Colors.white : Colors.black,
                 ),
                 contentStyle: TextStyle(
                   fontWeight: FontWeight.w400,

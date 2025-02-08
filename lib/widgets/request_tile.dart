@@ -67,9 +67,9 @@ class RequestTile extends ConsumerWidget {
                             },
                             style: ElevatedButton.styleFrom(
                               backgroundColor: Colors
-                                  .green, // Couleur pour le bouton "Accepter"
+                                  .pink, // Couleur pour le bouton "Accepter"
                             ),
-                            child: const Text('Accepter'),
+                            child: const Text('Accepter', style: TextStyle(color: Colors.white),),
                           ),
                         ),
                         const SizedBox(width: 10),
@@ -77,15 +77,18 @@ class RequestTile extends ConsumerWidget {
                           child: ElevatedButton(
                             onPressed: () {
                               // Rejeter la demande d'ami
-                              ref
-                                  .read(friendProvider)
-                                  .removeFriendRequest(userId: userId);
+                              ref.read(friendProvider).removeFriendRequest(userId: userId);
                             },
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors
-                                  .red, // Couleur pour le bouton "Rejeter"
+                            style: ElevatedButton.styleFrom( // Fond transparent
+                              side: BorderSide(
+                                color: Colors.pink, // Couleur de la bordure
+                                width: 2.0, // Largeur de la bordure
+                              ),
                             ),
-                            child: const Text('Rejeter'),
+                            child: const Text(
+                              'Rejeter',
+                              style: TextStyle(color: Colors.pink), // Couleur du texte
+                            ),
                           ),
                         ),
                       ],

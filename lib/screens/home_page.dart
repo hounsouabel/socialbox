@@ -25,8 +25,7 @@ class _ChatterBoxState extends State<ChatterBox> {
     PostsSection(),
     SearchScreen(),
     CreatePostScreen(),
-    //HomePage(), // Placeholder for future video screen
-    FriendRequestsScreen(),
+    HomePage(),
     ProfileScreen(),
   ];
 
@@ -68,10 +67,10 @@ class _ChatterBoxState extends State<ChatterBox> {
 
   List<Widget> _buildAppBarActions() {
     return [
-      _buildStyledIconButton(Icons.search, () {
+      _buildStyledIconButton(Icons.notifications_rounded, () {
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => SearchScreen()),
+          MaterialPageRoute(builder: (context) => FriendRequestsScreen()),
         );
       }),
       _buildStyledIconButton(Icons.message, () {

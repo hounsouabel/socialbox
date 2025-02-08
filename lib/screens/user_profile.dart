@@ -10,6 +10,7 @@ import '../providers/get_all_friends_by_id_provider.dart';
 import '../providers/get_posts_count_by_id.dart';
 import '../providers/get_user_info_by_id_provider.dart';
 import '../widgets/profile_images_view.dart';
+import 'image_plein_ecran.dart';
 
 class UserProfile extends ConsumerStatefulWidget {
   final String userId;
@@ -119,11 +120,23 @@ class _UserProfileState extends ConsumerState<UserProfile> {
                       Flexible(
                         child: Row(
                           children: <Widget>[
-                            CircleAvatar(
-                              radius: 50,
-                              backgroundImage: NetworkImage(userData[
-                                      'profil'] ??
-                                  'https://img.icons8.com/?size=100&id=98957&format=png&color=000000'),
+                            GestureDetector(
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => FullScreenImage(
+                                      imageUrl: userData['profil']!,
+                                    ),
+                                  ),
+                                );
+                              },
+                              child: CircleAvatar(
+                                radius: 50,
+                                backgroundImage: NetworkImage(userData[
+                                        'profil'] ??
+                                    'https://img.icons8.com/?size=100&id=98957&format=png&color=000000'),
+                              ),
                             ),
                             const SizedBox(width: 12),
                             Flexible(

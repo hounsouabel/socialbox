@@ -1,10 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/post.dart';
-import '../providers/get_user_info_by_id_provider.dart'; // Assurez-vous que ce chemin est correct
-
-
-import '../widgets/post_footer.dart'; // Importez ou collez ici le code de ExpandableRichText
 
 class FullScreenImageScreen extends ConsumerWidget {
   final String imageUrl;
@@ -18,60 +14,28 @@ class FullScreenImageScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // Récupération des infos de l'utilisateur grâce à son id
-    final userInfo = ref.watch(getUserInfoByIdProvider(post.posterId));
-    bool isDarkMode = MediaQuery.of(context).platformBrightness == Brightness.dark;
-
     return Scaffold(
       backgroundColor: Colors.black,
       appBar: AppBar(
-        backgroundColor: Colors.black,
+        backgroundColor: Colors.transparent,
         elevation: 0,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back,color: isDarkMode ? Colors.black : Colors.white),
+          icon: Icon(Icons.close,color: Colors.white),
           onPressed: () => Navigator.of(context).pop(),
         ),
       ),
-      body: SingleChildScrollView(
-        child: Column(
+      body: Column(
           children: [
             // L'image en mode interactif pour zoomer/déplacer
-            InteractiveViewer(
-              child: Image.network(
-                imageUrl,
-                fit: BoxFit.contain,
-              ),
-            ),
-            const SizedBox(height: 10),
-            // Affichage de la description
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 10),
-              child: userInfo.when(
-                loading: () => const Center(child: CircularProgressIndicator()),
-                error: (error, stackTrace) => Text(
-                  'Erreur: $error',
-                  style: const TextStyle(color: Colors.white),
+            Expanded(
+              child: Center(
+                child: Image.network(
+                  imageUrl,
+                  fit: BoxFit.contain,
                 ),
-                data: (userData) {
-                  return ExpandableRichText(
-                    pseudo: userData["pseudo"]+"  ",
-                    content: post.content,
-                    trimLines: 3,
-                    pseudoStyle: TextStyle(
-                      fontWeight: FontWeight.w700,
-                      color: isDarkMode ? Colors.black : Colors.white,
-                    ),
-                    contentStyle: TextStyle(
-                      fontWeight: FontWeight.w400,
-                      color: isDarkMode ? Colors.black : Colors.white,
-                    ),
-                  );
-                },
               ),
             ),
-            const SizedBox(height: 20),
           ],
-        ),
       ),
     );
   }
