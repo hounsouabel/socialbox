@@ -5,6 +5,7 @@ import 'package:groupe7/screens/requests_screen.dart';
 import 'package:groupe7/screens/search_screen.dart';
 import 'package:groupe7/screens/create_post.dart';
 import 'package:groupe7/screens/settings/settings.dart';
+import 'package:groupe7/screens/video_screen/home_page.dart';
 import '../services/auth_service.dart';
 import 'chats_screen.dart';
 

@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/post.dart';
+import '../providers/get_user_info_by_id_provider.dart'; // Assurez-vous que ce chemin est correct
+
+
+import '../widgets/post_footer.dart'; // Importez ou collez ici le code de ExpandableRichText
 
 class FullScreenImageScreen extends ConsumerWidget {
   final String imageUrl;
@@ -14,6 +18,9 @@ class FullScreenImageScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    // Récupération des infos de l'utilisateur grâce à son id
+    final userInfo = ref.watch(getUserInfoByIdProvider(post.posterId));
+
     return Scaffold(
       backgroundColor: Colors.black,
       appBar: AppBar(
@@ -35,6 +42,34 @@ class FullScreenImageScreen extends ConsumerWidget {
                 ),
               ),
             ),
+            const SizedBox(height: 10),
+            // Affichage de la description
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 10),
+              child: userInfo.when(
+                loading: () => const Center(child: CircularProgressIndicator()),
+                error: (error, stackTrace) => Text(
+                  'Erreur: $error',
+                  style: const TextStyle(color: Colors.white),
+                ),
+                data: (userData) {
+                  return ExpandableRichText(
+                    pseudo: userData["pseudo"]+"  ",
+                    content: post.content,
+                    trimLines: 3,
+                    pseudoStyle: TextStyle(
+                      fontWeight: FontWeight.w700,
+                      color:Colors.white,
+                    ),
+                    contentStyle: TextStyle(
+                      fontWeight: FontWeight.w400,
+                      color:Colors.white,
+                    ),
+                  );
+                },
+              ),
+            ),
+            const SizedBox(height: 20),
           ],
       ),
     );

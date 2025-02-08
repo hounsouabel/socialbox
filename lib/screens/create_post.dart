@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:groupe7/utilities/utils.dart';
-import 'package:groupe7/widgets/round_button.dart';
 import 'package:groupe7/widgets/image_video_view.dart';
 import 'package:groupe7/widgets/profile_info.dart';
 import 'package:groupe7/providers/general_provider.dart';
@@ -38,53 +37,20 @@ class _CreatePostScreenState extends ConsumerState<CreatePostScreen> {
     super.dispose();
   }
 
-  /*Future<void> uploadFile(String fileName) async {
-    if (file == null) return; // Vérifiez si le fichier est sélectionné
-
-    setState(() {
-      isLoading = true; // Indique que le téléchargement est en cours
-    });
-
-    try {
-      // Générer un UUID
-      var uuid = Uuid();
-      String publicId = uuid.v4(); // Générer un nouvel UUID
-
-      var response = await cloudinary.uploader().upload(
-        File(file!.path),
-        params: UploadParams(
-          filename: fileName,
-          publicId: publicId, // Utiliser l'UUID comme publicId
-          uniqueFilename: false,
-          overwrite: false,
-        ),
-      );
-
-      print("Succès ${response?.data?.publicId}");
-      print(response?.data?.secureUrl);
-    } catch (e) {
-      print('Erreur lors du téléchargement : $e');
-    } finally {
-      setState(() {
-        isLoading = false; // Réinitialisez l'état de chargement
-      });
-    }
-  }*/
-
   Future<void> makePost() async {
     if (isLoading || file == null) return;
 
     setState(() => isLoading = true);
     try {
       await ref.read(globalProvider).makePost(
-            content: _postController.text,
-            file: file!,
-            postType: fileType,
-          );
+        content: _postController.text,
+        file: file!,
+        postType: fileType,
+      );
       Navigator.pushAndRemoveUntil(
         context,
         MaterialPageRoute(builder: (context) => ChatterBox()),
-        (Route<dynamic> route) => false,
+            (Route<dynamic> route) => false,
       );
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -95,20 +61,17 @@ class _CreatePostScreenState extends ConsumerState<CreatePostScreen> {
     }
   }
 
+  void clearFile() {
+    setState(() {
+      file = null;
+      fileType = 'image';
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-          /*actions: [
-          TextButton(
-            onPressed: makePost,
-            child: const Text(
-              'PUBLIER',
-              style: TextStyle(color: Colors.white),
-            ),
-          ),
-        ],*/
-          ),
+      appBar: AppBar(),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(20.0),
@@ -138,47 +101,77 @@ class _CreatePostScreenState extends ConsumerState<CreatePostScreen> {
               ),
               const SizedBox(height: 20),
               file != null
-                  ? ImageVideoView(
-                      file: file!,
-                      fileType: fileType,
-                    )
-                  : PickFileWidget(
-                      pickImage: () async {
-                        fileType = 'image';
-                        file = await pickImage();
-                        setState(() {});
-                      },
-                      pickVideo: () async {
-                        fileType = 'video';
-                        try {
-                          file =
-                              await pickVideo();
-                          setState(() {});
-                        } catch (e) {
-                          if (mounted) {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(content: Text(e.toString())),
-                            );
-                          }
-                        }
-                      },
-                    ),
-              const SizedBox(height: 20),
-              isLoading
-                  ? const Center(
-                      child: CircularProgressIndicator(),
-                    )
-                  : Center(
-                      child: RoundButton(
-                        onPressed: file != null
-                            ? () {
-                                makePost();
-                                //uploadFile(file!.path.split('/').last);
-                              }
-                            : null, // Désactivez le bouton si le fichier est nul
-                        label: 'PUBLIER',
+                  ? Column(
+                children: [
+                  ImageVideoView(
+                    file: file!,
+                    fileType: fileType,
+                  ),
+                  const SizedBox(height: 20),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      Expanded(
+                        child: ElevatedButton(
+                          onPressed: () {
+                            makePost();
+                          },
+                          child: const Text('PUBLIER'),
+                          style: ElevatedButton.styleFrom(
+                            foregroundColor: Colors.white,
+                            backgroundColor: Colors.blue,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(30.0),
+                            ),
+                          ),
+                        ),
                       ),
-                    ),
+                      const SizedBox(width: 10),
+                      Expanded(
+                        child: ElevatedButton(
+                          onPressed: clearFile,
+                          child: const Text('ABANDONNER'),
+                          style: ElevatedButton.styleFrom(
+                            foregroundColor: Colors.blue,
+                            side: const BorderSide(
+                              color: Colors.blue,
+                              width: 2.0,
+                            ),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(30.0),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              )
+                  : PickFileWidget(
+                pickImage: () async {
+                  fileType = 'image';
+                  file = await pickImage();
+                  setState(() {});
+                },
+                pickVideo: () async {
+                  fileType = 'video';
+                  try {
+                    file = await pickVideo();
+                    setState(() {});
+                  } catch (e) {
+                    if (mounted) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text(e.toString())),
+                      );
+                    }
+                  }
+                },
+              ),
+              const SizedBox(height: 20),
+              if (isLoading)
+                const Center(
+                  child: CircularProgressIndicator(),
+                ),
             ],
           ),
         ),
