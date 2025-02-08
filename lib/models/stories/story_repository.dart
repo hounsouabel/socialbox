@@ -59,6 +59,31 @@ class StoryRepository {
       return e.toString();
     }
   }
+///Suprimer une story...
+  Future<String?> deleteStory({required String storyId}) async {
+    try {
+      final user = _auth.currentUser ;
+      if (user == null) throw Exception('Utilisateur non connecté');
+
+      // Vérifiez si l'utilisateur est l'auteur de la story
+      final storyDoc = await _firestore.collection('stories').doc(storyId).get();
+      if (!storyDoc.exists) {
+        throw Exception('Story non trouvée');
+      }
+
+      final storyData = storyDoc.data();
+      if (storyData?['authorId'] != user.uid) {
+        throw Exception('Vous n\'êtes pas autorisé à supprimer cette story');
+      }
+
+      // Supprimer la story de Firestore
+      await _firestore.collection('stories').doc(storyId).delete();
+
+      return null; // Retourne null si la suppression a réussi
+    } catch (e) {
+      return e.toString(); // Retourne l'erreur en cas d'échec
+    }
+  }
 
   Future<String?> viewStory({required String storyId}) async {
     try {

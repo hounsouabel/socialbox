@@ -2,10 +2,12 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+
 import '../models/stories/story.dart';
 import '../providers/get_all_stories_provider.dart';
 import '../models/stories/story_repository.dart';
-import 'package:groupe7/screens/user_stories_view.dart';
+import '../screens/user_stories_view.dart';
 
 class StoriesSection extends ConsumerWidget {
   final String profileImage;
@@ -17,8 +19,11 @@ class StoriesSection extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    bool isDarkMode = MediaQuery.of(context).platformBrightness == Brightness.dark;
+    bool isDarkMode = MediaQuery
+        .of(context)
+        .platformBrightness == Brightness.dark;
     final storiesAsync = ref.watch(getAllStoriesProvider);
+    final currentUserId = FirebaseAuth.instance.currentUser?.uid ?? "";
 
     return SliverToBoxAdapter(
       child: Padding(
@@ -41,38 +46,39 @@ class StoriesSection extends ConsumerWidget {
                 data: (stories) {
                   final List<Story> storiesList = stories.toList();
 
-                  // Si aucune story n'existe, affiche seulement le bouton d'ajout.
-                  if (storiesList.isEmpty) {
-                    return SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      child: Row(
-                        children: [
-                          _buildAddStoryButton(context),
-                        ],
-                      ),
-                    );
-                  }
+                  // Filtrer les stories de l'utilisateur actuel
+                  final List<Story> userStories = storiesList
+                      .where((story) => story.authorId == currentUserId)
+                      .toList();
 
-                  // Regrouper les stories par authorId.
+                  // Regrouper les stories par authorId (sans l'utilisateur connecté)
                   final Map<String, List<Story>> groupedStories = {};
                   for (var story in storiesList) {
-                    groupedStories.putIfAbsent(story.authorId, () => []).add(story);
+                    if (story.authorId != currentUserId) {
+                      groupedStories.putIfAbsent(story.authorId, () => []).add(
+                          story);
+                    }
                   }
 
-                  // Créer une liste de widgets pour chaque auteur.
-                  final List<Widget> storyWidgets = groupedStories.entries.map((entry) {
+                  // Construire les stories des amis uniquement
+                  final List<Widget> storyWidgets = groupedStories.entries.map((
+                      entry) {
                     final List<Story> authorStories = entry.value;
                     return GestureDetector(
-                      onTap: () {
-                        // Naviguer vers UserStoriesView avec toutes les stories de cet auteur.
+                      onTap: () async {
+
+
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => UserStoriesView(userStories: authorStories),
+                            builder: (context) =>
+                                UserStoriesView(userStories: authorStories),
                           ),
                         );
                       },
-                      child: _buildStoryImage(authorStories.first.imageUrl),
+                      child: _buildStoryImage(authorStories, currentUserId),
+
+
                     );
                   }).toList();
 
@@ -80,53 +86,63 @@ class StoriesSection extends ConsumerWidget {
                     scrollDirection: Axis.horizontal,
                     child: Row(
                       children: [
-                        _buildAddStoryButton(context),
+                        _buildAddStoryButton(context, userStories),
+                        // Bouton dynamique avec la story de l'utilisateur
                         const SizedBox(width: 10.0),
                         ...storyWidgets,
+                        // Stories des amis uniquement
                       ],
                     ),
                   );
                 },
                 loading: () => const Center(child: CircularProgressIndicator()),
-                error: (error, _) => Center(
-                  child: Text(
-                    "Erreur: $error",
-                    style: const TextStyle(color: Colors.red),
-                  ),
-                ),
+                error: (error, _) =>
+                    Center(
+                      child: Text(
+                        "Erreur: $error",
+                        style: const TextStyle(color: Colors.red),
+                      ),
+                    ),
               ),
             ),
             const SizedBox(height: 10.0),
-            Text(
-              'Votre Story',
-              style: TextStyle(
-                color: isDarkMode ? Colors.white : Colors.black,
-                fontSize: 12.0,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
+
           ],
         ),
       ),
     );
   }
 
-  Widget _buildAddStoryButton(BuildContext context) {
+  /// 🟢 **Bouton pour ajouter une story ou afficher ses propres stories**
+  Widget _buildAddStoryButton(BuildContext context, List<Story> userStories) {
     return GestureDetector(
       onTap: () async {
-        final ImagePicker picker = ImagePicker();
-        final XFile? image = await picker.pickImage(source: ImageSource.gallery);
-        if (image != null) {
-          final storyRepository = StoryRepository();
-          final result = await storyRepository.postStory(image: File(image.path));
-          if (result != null) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text('Erreur: $result')),
-            );
-          } else {
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('Story publiée !')),
-            );
+        if (userStories.isNotEmpty) {
+          // 🔹 Si l'utilisateur a des stories, on les affiche
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => UserStoriesView(userStories: userStories),
+            ),
+          );
+        } else {
+          // 🔹 Sinon, on propose d'ajouter une nouvelle story
+          final ImagePicker picker = ImagePicker();
+          final XFile? image = await picker.pickImage(
+              source: ImageSource.gallery);
+          if (image != null) {
+            final storyRepository = StoryRepository();
+            final result = await storyRepository.postStory(
+                image: File(image.path));
+            if (result != null) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text('Erreur: $result')),
+              );
+            } else {
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text('Story publiée !')),
+              );
+            }
           }
         }
       },
@@ -138,7 +154,12 @@ class StoriesSection extends ConsumerWidget {
             ClipRRect(
               borderRadius: BorderRadius.circular(40),
               child: Image.network(
-                profileImage.isNotEmpty ? profileImage : "https://via.placeholder.com/65",
+                userStories.isNotEmpty
+                    ? userStories.first
+                    .imageUrl // 🔹 Si une story existe, l'afficher
+                    : profileImage.isNotEmpty
+                    ? profileImage
+                    : "https://via.placeholder.com/65", // Sinon, afficher la PP
                 height: 65,
                 width: 65,
                 fit: BoxFit.cover,
@@ -172,19 +193,27 @@ class StoriesSection extends ConsumerWidget {
     );
   }
 
-  Widget _buildStoryImage(String imageUrl) {
+  /// 🟢 **Afficher une story d'un ami**
+  Widget _buildStoryImage(List<Story> authorStories, String currentUserId) {
+    // Utilisez une logique différente pour le cas d'une seule story
+    final hasUnseenStories = authorStories.any((story)
+    => !story.views.contains(currentUserId));
+
     return Padding(
       padding: const EdgeInsets.only(right: 10),
       child: Container(
         padding: const EdgeInsets.all(2),
         decoration: BoxDecoration(
-          border: Border.all(color: Colors.pink, width: 2.0),
+          border: Border.all(
+              color: hasUnseenStories ? Colors.pink : Colors.grey,
+              width: 2.0
+          ),
           borderRadius: BorderRadius.circular(40),
         ),
         child: ClipRRect(
           borderRadius: BorderRadius.circular(40),
           child: Image.network(
-            imageUrl.isNotEmpty ? imageUrl : "https://via.placeholder.com/65",
+            authorStories.first.imageUrl,
             height: 65,
             width: 65,
             fit: BoxFit.cover,
@@ -199,4 +228,6 @@ class StoriesSection extends ConsumerWidget {
       ),
     );
   }
+
+
 }

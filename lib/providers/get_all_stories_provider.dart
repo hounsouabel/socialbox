@@ -23,7 +23,7 @@ final getAllStoriesProvider = StreamProvider.autoDispose<Iterable<Story>>((ref) 
       FirebaseAuth.instance.currentUser !.uid,
       ...user.friends, // Assurez-vous que c'est une liste valide
     ];
-    print("Amis trouvés : $myFriends");
+
 
     // Obtenir le timestamp d'hier en millisecondes
     final yesterday = DateTime.now().subtract(const Duration(days: 1)).millisecondsSinceEpoch;
