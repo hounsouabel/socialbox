@@ -195,9 +195,16 @@ class StoriesSection extends ConsumerWidget {
 
   /// 🟢 **Afficher une story d'un ami**
   Widget _buildStoryImage(List<Story> authorStories, String currentUserId) {
-    // Utilisez une logique différente pour le cas d'une seule story
-    final hasUnseenStories = authorStories.any((story)
-    => !story.views.contains(currentUserId));
+    final now = DateTime.now().millisecondsSinceEpoch;
+
+    // Correction ici : utiliser millisecondsSinceEpoch sur story.createdAt
+    final recentStories = authorStories.where((story) {
+      return (now - story.createdAt.millisecondsSinceEpoch) < (24 * 60 * 60 * 1000);
+    }).toList();
+
+    if (recentStories.isEmpty) return const SizedBox();
+
+    final hasUnseenStories = recentStories.any((story) => !story.views.contains(currentUserId));
 
     return Padding(
       padding: const EdgeInsets.only(right: 10),
@@ -213,7 +220,7 @@ class StoriesSection extends ConsumerWidget {
         child: ClipRRect(
           borderRadius: BorderRadius.circular(40),
           child: Image.network(
-            authorStories.first.imageUrl,
+            recentStories.first.imageUrl,
             height: 65,
             width: 65,
             fit: BoxFit.cover,
@@ -228,6 +235,9 @@ class StoriesSection extends ConsumerWidget {
       ),
     );
   }
+
+
+
 
 
 }

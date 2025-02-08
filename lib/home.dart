@@ -23,7 +23,7 @@ class _MyHomePageState extends State<MyHomePage> {
       "image": "assets/Accueil2.png", // Replace with your image file name
     },
     {
-      "text": "Rejoignez notre communauté et échangez avec \nd'autres passionnés de shopping !",
+      "text": "Rejoignez notre communauté et échangez avec \nd'autres passionnés !",
       "image": "assets/Accueil3.png", // Replace with your image file name
     },
   ];

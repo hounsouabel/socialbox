@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+/*import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/friends/friend_repository.dart'; // Assurez-vous d'importer le bon chemin
 import '../providers/friend_provider.dart'; // Assurez-vous d'importer le bon chemin
@@ -106,6 +106,131 @@ class RequestTile extends ConsumerWidget {
       loading: () {
         return const Center(child: CircularProgressIndicator());
       },
+    );
+  }
+}
+*/
+
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+import '../providers/get_user_info_by_id_provider.dart';
+import '../screens/user_profile.dart';
+
+class RequestTile extends StatefulWidget {
+  final String userId;
+  final String userName;
+  final String? userImage;
+  final bool isSentRequest;
+  final VoidCallback? onAccept;
+  final VoidCallback? onReject;
+  final VoidCallback? onCancel;
+
+  const RequestTile({
+    super.key,
+    required this.userId,
+    required this.userName,
+    this.userImage,
+    this.isSentRequest = false,
+    this.onAccept,
+    this.onReject,
+    this.onCancel,
+  });
+
+  @override
+  State<RequestTile> createState() => _RequestTileState();
+}
+
+class _RequestTileState extends State<RequestTile> {
+  bool _isProcessing = false;
+
+  @override
+  Widget build(BuildContext context) {
+    final currentUserId = FirebaseAuth.instance.currentUser?.uid ?? "";
+
+    return ListTile(
+      leading: GestureDetector(
+        onTap: () => _navigateToProfile(context),
+        child: CircleAvatar(
+          radius: 25,
+          backgroundImage: _getProfileImage(),
+          onBackgroundImageError: (_, __) => const Icon(Icons.error),
+          child: widget.userImage == null ? const Icon(Icons.person) : null,
+        ),
+      ),
+      title: Text(
+        widget.userName,
+        style: const TextStyle(fontWeight: FontWeight.bold),
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
+      ),
+      subtitle: Text(
+        widget.isSentRequest ? 'Demande envoyée' : 'Demande reçue',
+        style: TextStyle(color: Colors.grey[600]),
+      ),
+      trailing: _buildActionButtons(),
+    );
+  }
+
+  ImageProvider? _getProfileImage() {
+    if (widget.userImage?.isNotEmpty ?? false) {
+      return NetworkImage(widget.userImage!);
+    }
+    return const AssetImage('assets/default_profile.png');
+  }
+
+  Widget _buildActionButtons() {
+    if (_isProcessing) {
+      return const SizedBox(
+        width: 24,
+        height: 24,
+        child: CircularProgressIndicator(strokeWidth: 2),
+      );
+    }
+
+    return widget.isSentRequest
+        ? IconButton(
+      icon: const Icon(Icons.cancel, color: Colors.red),
+      onPressed: () => _handleAction(widget.onCancel),
+    )
+        : Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        IconButton(
+          icon: const Icon(Icons.check, color: Colors.green),
+          onPressed: () => _handleAction(widget.onAccept),
+        ),
+        IconButton(
+          icon: const Icon(Icons.close, color: Colors.red),
+          onPressed: () => _handleAction(widget.onReject),
+        ),
+      ],
+    );
+  }
+
+  void _handleAction(VoidCallback? callback) async {
+    if (callback == null || _isProcessing) return;
+
+    setState(() => _isProcessing = true);
+    try {
+      callback();
+    } finally {
+      if (mounted) {
+        setState(() => _isProcessing = false);
+      }
+    }
+  }
+
+  void _navigateToProfile(BuildContext context) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => UserProfile(
+          userId: widget.userId,
+          isSelfProfile: widget.userId == FirebaseAuth.instance.currentUser?.uid,
+        ),
+      ),
     );
   }
 }

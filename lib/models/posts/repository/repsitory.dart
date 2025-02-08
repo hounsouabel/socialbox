@@ -66,7 +66,7 @@ class PostRepository {
         postType: postType,
         fileUrl: downloadUrl,
         createdAt: now,
-        likes: const [],
+        likes: const [], favorites: const [],
       );
 
       // Sauvegarde du post dans Firestore
@@ -205,6 +205,32 @@ class PostRepository {
       }
 
       await _firestore.collection('comments').doc(commentId).delete();
+      return null;
+    } catch (e) {
+      return e.toString();
+    }
+  }
+
+  /// Fonction pour ajouter ou retirer un post des favoris
+  Future<String?> toggleFavoritePost({
+    required String postId,
+    required List<String> favorites,
+  }) async {
+    try {
+      final authorId = FirebaseAuth.instance.currentUser !.uid;
+
+      if (favorites.contains(authorId)) {
+        // Si le post est déjà favori, on le retire
+        await _firestore.collection('posts').doc(postId).update({
+          'favorites': FieldValue.arrayRemove([authorId])
+        });
+      } else {
+        // Sinon, on l'ajoute aux favoris
+        await _firestore.collection('posts').doc(postId).update({
+          'favorites': FieldValue.arrayUnion([authorId])
+        });
+      }
+
       return null;
     } catch (e) {
       return e.toString();
