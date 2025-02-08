@@ -9,8 +9,9 @@ class Post {
   final String fileUrl;
   final DateTime createdAt;
   final List<String> likes;
+  final List<String> favorites;
 
-  const Post({
+  const Post( {
     required this.postId,
     required this.posterId,
     required this.content,
@@ -18,6 +19,7 @@ class Post {
     required this.fileUrl,
     required this.createdAt,
     required this.likes,
+    required this.favorites
   });
 
   Map<String, dynamic> toMap() {
@@ -29,6 +31,7 @@ class Post {
       'datePublished': createdAt.millisecondsSinceEpoch, // Correction ici
       'likes': likes,
       'postType': postType,
+      'favorites':favorites
     };
   }
 
@@ -41,6 +44,7 @@ class Post {
       fileUrl: map['fileUrl'] ?? '',
       createdAt: DateTime.fromMillisecondsSinceEpoch(map['datePublished'] ?? 0), // Correction ici
       likes: List<String>.from(map['likes'] ?? []),
+      favorites: List<String>.from(map['favorites'] ?? []),
     );
   }
 }

@@ -1,5 +1,4 @@
 import 'package:flutter/foundation.dart' show immutable;
-
 @immutable
 class Post {
   final String postId;
@@ -9,6 +8,7 @@ class Post {
   final String? fileUrl;
   final DateTime createdAt;
   final List<String> likes;
+  final List<String> favorites; // Ajout du champ pour les favoris
 
   const Post({
     required this.postId,
@@ -18,6 +18,7 @@ class Post {
     required this.fileUrl,
     required this.createdAt,
     required this.likes,
+    required this.favorites, // Ajout du champ pour les favoris
   });
 
   Map<String, dynamic> toMap() {
@@ -29,6 +30,7 @@ class Post {
       'datePublished': createdAt.millisecondsSinceEpoch,
       'likes': likes,
       'postType': postType,
+      'favorites': favorites,
     };
   }
 
@@ -44,6 +46,9 @@ class Post {
       ),
       likes: List<String>.from(
         (map['likes'] ?? []),
+      ),
+      favorites: List<String>.from(
+        (map['favorites'] ?? []),
       ),
     );
   }
