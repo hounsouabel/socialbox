@@ -31,8 +31,10 @@ Future<void> main() async {
   // Configuration des paramètres Firestore
   FirebaseFirestore.instance.settings = const Settings(
     persistenceEnabled: true, // Active la persistance locale
-    // Assure que SSL est activé
   );
+
+  // Petite pause pour s'assurer que Firebase est complètement initialisé
+  await Future.delayed(const Duration(seconds: 2));
 
   runApp(
     const ProviderScope(
@@ -86,11 +88,11 @@ class MyApp extends StatelessWidget {
       future: _getInitialPage(),
       builder: (context, snapshot) {
         final Widget initialPage =
-            snapshot.connectionState == ConnectionState.waiting
-                ? const Scaffold(
-                    body: Center(child: CircularProgressIndicator()),
-                  )
-                : snapshot.data ?? const MyHomePage();
+        snapshot.connectionState == ConnectionState.waiting
+            ? const Scaffold(
+          body: Center(child: CircularProgressIndicator()),
+        )
+            : snapshot.data ?? const MyHomePage();
 
         return MaterialApp(
           title: 'Social Hub',

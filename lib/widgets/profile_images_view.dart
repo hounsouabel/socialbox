@@ -12,6 +12,8 @@ class ImagesView extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final postsAsync = ref.watch(getImagePostsProvider(userId));
+    final isDarkMode =
+        MediaQuery.of(context).platformBrightness == Brightness.dark;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -19,7 +21,7 @@ class ImagesView extends ConsumerWidget {
         Text(
           "Photos",
           style: TextStyle(
-            color: Colors.black, // Remplace `textColor` si nécessaire
+            color: isDarkMode ? Colors.white : Colors.black,
             fontSize: 16,
             fontWeight: FontWeight.bold,
           ),
@@ -39,7 +41,7 @@ class ImagesView extends ConsumerWidget {
 
   Widget _buildImageList(List<Post> posts) {
     if (posts.isEmpty) {
-      return const Center(child: Text("Aucune photo disponible"));
+      return const Center(child: Text("Pas de publications"));
     }
 
     return ListView.builder(

@@ -30,7 +30,7 @@ class _UserStoriesViewState extends ConsumerState<UserStoriesView> {
   late PageController _pageController;
   final StoryRepository _storyRepository = StoryRepository();
   final String currentUserId = FirebaseAuth.instance.currentUser?.uid ?? "";
-  Set<String> viewedStories = {}; // Stocke les stories déjà vues par l'user
+  Set<String> viewedStories = {};
 
   @override
   void initState() {
