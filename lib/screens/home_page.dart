@@ -1,4 +1,6 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:groupe7/screens/chatsScreen.dart';
 import 'package:groupe7/screens/post_screen.dart';
 import 'package:groupe7/screens/profile_screen.dart';
 import 'package:groupe7/screens/requests_screen.dart';
@@ -7,7 +9,8 @@ import 'package:groupe7/screens/create_post.dart';
 import 'package:groupe7/screens/settings/settings.dart';
 import 'package:groupe7/screens/video_screen/home_page.dart';
 import '../services/auth_service.dart';
-import 'chats_screen.dart';
+
+
 
 class ChatterBox extends StatefulWidget {
   const ChatterBox({super.key});
@@ -73,8 +76,9 @@ class _ChatterBoxState extends State<ChatterBox> {
         );
       }),
       _buildStyledIconButton(Icons.message, () {
+        //ici
         Navigator.push(
-            context, MaterialPageRoute(builder: (context) => ChatsScreen()));
+            context, MaterialPageRoute(builder: (context) =>ChatsScreen() ),);
       }),
       _buildStyledIconButton(Icons.menu, () {
         Navigator.push(

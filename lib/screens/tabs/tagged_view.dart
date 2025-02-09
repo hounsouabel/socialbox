@@ -4,7 +4,7 @@ import '../../models/post.dart';
 
 import '../../providers/get_favorite_post_provider.dart';
 import '../full_screen_video.dart';
-import '../../widgets/video_thumbnail_widget.dart'; 
+import '../../widgets/video_thumbnail_widget.dart';
 
 class TaggedView extends ConsumerWidget {
   const TaggedView({super.key});
