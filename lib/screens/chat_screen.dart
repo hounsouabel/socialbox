@@ -64,7 +64,7 @@ class _ConversationScreenState extends ConsumerState<ConversationScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.blue,
+        backgroundColor: Colors.pink,
         title: FutureBuilder<DocumentSnapshot>(
           future: FirebaseFirestore.instance
               .collection('users')
@@ -144,8 +144,8 @@ class _ConversationScreenState extends ConsumerState<ConversationScreen> {
                             vertical: 10.0, horizontal: 14.0),
                         decoration: BoxDecoration(
                           color: isSentByMe
-                              ? Colors.blue[200]
-                              : Colors.grey[300],
+                              ? Colors.pink
+                              : Colors.grey,
                           borderRadius: BorderRadius.only(
                             topLeft: const Radius.circular(12),
                             topRight: const Radius.circular(12),
@@ -177,11 +177,11 @@ class _ConversationScreenState extends ConsumerState<ConversationScreen> {
                               trimExpandedText: 'voir moins',
                               style: const TextStyle(fontSize: 16),
                               moreStyle: const TextStyle(
-                                color: Colors.blue,
+                                color: Colors.pink,
                                 fontWeight: FontWeight.bold,
                               ),
                               lessStyle: const TextStyle(
-                                color: Colors.blue,
+                                color: Colors.pink,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
@@ -203,7 +203,7 @@ class _ConversationScreenState extends ConsumerState<ConversationScreen> {
                                     const Icon(
                                       Icons.done_all,
                                       size: 16,
-                                      color: Colors.blue,
+                                      color: Colors.pink,
                                     ),
                                   ],
                                 ],
@@ -221,7 +221,7 @@ class _ConversationScreenState extends ConsumerState<ConversationScreen> {
             padding:
             const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
             decoration: BoxDecoration(
-              color: isDarkMode ? Colors.grey[800] : Colors.grey[200],
+              color: isDarkMode ? Colors.grey[800] : Colors.grey,
               border: Border(top: BorderSide(color: Colors.grey.shade300)),
             ),
             child: Row(
@@ -243,7 +243,7 @@ class _ConversationScreenState extends ConsumerState<ConversationScreen> {
                 IconButton(
                   icon: Icon(
                     Icons.send,
-                    color: isDarkMode ? Colors.white : Colors.blue,
+                    color: isDarkMode ? Colors.white : Colors.pink,
                   ),
                   onPressed: _sendMessage,
                 )

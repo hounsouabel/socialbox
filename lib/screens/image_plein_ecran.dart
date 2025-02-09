@@ -33,44 +33,7 @@ class FullScreenImage extends StatelessWidget {
                 ),
               ),
             ),
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              LikeButton(
-                size: 25,
-                likeBuilder: (bool isLiked) {
-                  return Icon(
-                    Icons.favorite,
-                    size: 25,
-                    color: isLiked ? Colors.red : Colors.white,
-                  );
-                },
-                likeCount: 1,
-                countBuilder: (int? count, bool isLiked, String text) {
-                  var color = isLiked ? Colors.red :Colors.white;
-                  Widget result;
-                  if (count == 0) {
-                    result = Text(
-                      'like',
-                      style: TextStyle(color: color),
-                    );
-                  } else {
-                    result = Text(
-                      text,
-                      style: TextStyle(color: color),
-                    );
-                  }
-                  return result;
-                },
-              ),
-              IconButton(
-                onPressed: () {},
-                icon: const Icon(Icons.comment, size: 25, color: Colors.white,),
-              ),
-            ],
-          ),
-          SizedBox(height: 20), // Add some space at the bottom
+          ),// Add some space at the bottom
         ],
       ),
     );

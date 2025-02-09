@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:groupe7/screens/image_plein_ecran.dart';
 import '../../models/post.dart';
 
 import '../../providers/get_favorite_post_provider.dart';
@@ -32,7 +33,7 @@ class TaggedView extends ConsumerWidget {
             crossAxisCount: 2,
             mainAxisSpacing: 2,
             crossAxisSpacing: 2,
-            childAspectRatio: 1,
+            childAspectRatio: 0.75, // Modifier le ratio pour ajuster la hauteur
           ),
           physics: const NeverScrollableScrollPhysics(),
           shrinkWrap: true,
@@ -49,31 +50,57 @@ class TaggedView extends ConsumerWidget {
   Widget _buildPostItem(Post post, BuildContext context) { // Ajouter BuildContext ici
     if (post.postType == 'image') {
       return GestureDetector(
-          onTap: () {
-            // Naviguer vers l'écran d'image pleine
-            // Remplacez par votre logique de navigation
-          },
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => FullScreenImage(
+                imageUrl: post.fileUrl,
+              ),
+            ),
+          );
+        },
+        child: Container(
+          height: 200, // Définir une hauteur fixe
           child: Image.network(
             post.fileUrl,
             fit: BoxFit.cover,
             errorBuilder: (context, error, stackTrace) => _buildErrorIcon(),
-          ));
-          } else if (post.postType == 'video') {
-        return GestureDetector(
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => FullScreenVideoScreen(
-                    videoUrl: post.fileUrl,
-                    post: post,
-                  ),
+          ),
+        ),
+      );
+    } else if (post.postType == 'video') {
+      return GestureDetector(
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => FullScreenVideoScreen(
+                videoUrl: post.fileUrl,
+                post: post,
+              ),
+            ),
+          );
+        },
+        child: Container(
+          height: 220, // Définir une hauteur fixe
+          child: Stack(
+            children: [
+              VideoThumbnailWidget(videoUrl: post.fileUrl),
+              Positioned(
+                bottom: 8,
+                right: 8,
+                child: Icon(
+                  Icons.movie_creation_rounded,
+                  color: Colors.white,
+                  size: 24,
                 ),
-              );
-            },
-            child: VideoThumbnailWidget(videoUrl: post.fileUrl)
-        );
-      } else {
+              ),
+            ],
+          ),
+        ),
+      );
+    } else {
       return _buildErrorIcon(); // Gérer les types de post non reconnus
     }
   }
