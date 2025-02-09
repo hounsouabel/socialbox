@@ -53,7 +53,7 @@ android {
 
 
     //à decommenter pour générer deux versions moins lourdes
-    /*splits {
+    /*.splits {
         abi {
             enable true
             reset()

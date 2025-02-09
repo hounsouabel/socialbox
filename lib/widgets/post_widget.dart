@@ -159,10 +159,10 @@ class PostWidget extends ConsumerWidget {
           const SizedBox(width: 8),
 
           // Bouton Partage
-          IconButton(
+          /*IconButton(
             onPressed: () {},
             icon: const Icon(Icons.near_me_outlined, size: 25),
-          ),
+          ),*/
 
           const Spacer(),
 

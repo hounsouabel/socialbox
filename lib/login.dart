@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:groupe7/screens/account_recovery.dart';
 import 'package:groupe7/screens/home_page.dart';
 import 'package:groupe7/services/auth_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 import 'inscription/page1.dart';
 
@@ -50,25 +52,15 @@ class _MyLoginPageState extends State<MyLoginPage> {
       await prefs.setString('user_email', _emailController.text.trim());
       await prefs.setString('user_password', _passwordController.text.trim());
 
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Informations enregistrées avec succès !')),
-        );
-      }
+      _showToast('Informations enregistrées avec succès !');
     } catch (e) {
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Erreur d\'enregistrement : $e')),
-        );
-      }
+      _showToast('Erreur d\'enregistrement : ${e.toString()}');
     }
   }
 
   Future<void> _handleLogin() async {
     if (_formKey.currentState?.validate() != true) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Veuillez corriger les erreurs')),
-      );
+      _showToast('Veuillez corriger les erreurs');
       return;
     }
 
@@ -81,27 +73,90 @@ class _MyLoginPageState extends State<MyLoginPage> {
         _passwordController.text.trim(),
       );
 
-      if (!mounted) return;
-
       if (_rememberMe) {
         await _saveLoginInformation();
       }
 
-      // Redirection vers la page d'accueil
+      if (!mounted) return;
+
       Navigator.pushAndRemoveUntil(
         context,
         MaterialPageRoute(builder: (context) => ChatterBox()),
             (Route<dynamic> route) => false,
       );
     } catch (e) {
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Erreur de connexion : $e')),
-        );
-      }
+      _showToast(_getErrorMessage(e));
     } finally {
       if (mounted) setState(() => _isLoading = false);
     }
+  }
+
+
+  ///J'essaie d'afficher les bons toast....
+  String _getErrorMessage(dynamic error) {
+    if (error is FirebaseAuthException) {
+      switch (error.code) {
+        case 'invalid-email':
+          return 'L\'adresse e-mail est invalide';
+        case 'wrong-password':
+          return 'Mot de passe incorrect';
+        case 'user-not-found':
+          return 'Aucun compte trouvé avec cet e-mail';
+        case 'user-disabled':
+          return 'Ce compte a été désactivé';
+        case 'email-already-in-use':
+          return 'Cet e-mail est déjà utilisé';
+        case 'too-many-requests':
+          return 'Trop de tentatives, réessayez plus tard';
+        case 'operation-not-allowed':
+          return 'Connexion par e-mail désactivée';
+        case 'network-request-failed':
+          return 'Vérifiez votre connexion Internet';
+        case 'weak-password':
+          return 'Le mot de passe est trop faible';
+        case 'invalid-credential':
+          return 'Identifiants invalides, vérifiez votre e-mail et mot de passe';
+        case 'account-exists-with-different-credential':
+          return 'Ce compte est déjà utilisé avec une autre méthode';
+        case 'invalid-verification-code':
+          return 'Le code de vérification est incorrect';
+        case 'invalid-verification-id':
+          return 'Problème de vérification, réessayez';
+        case 'quota-exceeded':
+          return 'Trop de tentatives, veuillez attendre quelques minutes';
+        case 'recaptcha-check-failed':
+          return 'Vérification reCAPTCHA échouée, réessayez';
+        default:
+          return 'Erreur de connexion: ${error.message}';
+      }
+    } else if (error is FirebaseException) {
+      // Gérer certains codes spécifiques si besoin
+      switch (error.code) {
+        case 'too-many-requests':
+          return 'Trop de tentatives, veuillez attendre quelques minutes';
+        case 'invalid-credential':
+          return 'Identifiants invalides, vérifiez votre e-mail et mot de passe';
+        default:
+          return 'Erreur de connexion: ${error.message}';
+      }
+    } else if (error.toString().contains('incorrect, malformed or has expired')) {
+      // Cas spécifique pour le message d'erreur que vous observez
+      return 'Identifiants incorrects ou expirés';
+    }
+    return 'Une erreur est survenue, réessayez';
+  }
+
+
+
+  void _showToast(String message) {
+    Fluttertoast.showToast(
+      msg: message,
+      toastLength: Toast.LENGTH_LONG,
+      gravity: ToastGravity.TOP,
+      backgroundColor: Colors.red[800],
+      textColor: Colors.white,
+      fontSize: 16.0,
+    );
   }
 
   @override
