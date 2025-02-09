@@ -69,7 +69,7 @@ class _OptionsScreenState extends State<OptionsScreen> {
                     ],
                   ),
                   SizedBox(width: 6),
-                  Text('Flutter is beautiful and fast ❤ ..'),
+                  Text('Socialbox is beautiful and fast ❤ ..'),
                   SizedBox(height: 10),
                   Row(
                     children: [
