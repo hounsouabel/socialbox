@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:readmore/readmore.dart'; // Vous pouvez supprimer cette importation si vous n'utilisez plus ReadMoreText
+import 'package:readmore/readmore.dart';
 import '../models/post.dart';
 import '../providers/get_user_info_by_id_provider.dart';
 import 'comment_screen.dart';
@@ -77,13 +77,13 @@ class ExpandableRichText extends StatefulWidget {
   final int trimLines;
 
   const ExpandableRichText({
-    Key? key,
+    super.key,
     required this.pseudo,
     required this.content,
     required this.pseudoStyle,
     required this.contentStyle,
     this.trimLines = 3,
-  }) : super(key: key);
+  });
 
   @override
   _ExpandableRichTextState createState() => _ExpandableRichTextState();
