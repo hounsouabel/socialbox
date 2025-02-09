@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/post.dart';
-import '../providers/get_user_info_by_id_provider.dart'; // Assurez-vous que ce chemin est correct
+import '../providers/get_user_info_by_id_provider.dart';
 
 
-import '../widgets/post_footer.dart'; // Importez ou collez ici le code de ExpandableRichText
+import '../widgets/post_footer.dart';
 
 class FullScreenImageScreen extends ConsumerWidget {
   final String imageUrl;
@@ -33,7 +33,7 @@ class FullScreenImageScreen extends ConsumerWidget {
       ),
       body: Column(
           children: [
-            // L'image en mode interactif pour zoomer/déplacer
+
             Expanded(
               child: Center(
                 child: Image.network(

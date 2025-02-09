@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:cached_network_image/cached_network_image.dart';
-import 'package:readmore/readmore.dart';
 import '../models/post.dart';
 import '../providers/get_user_info_by_id_provider.dart';
 import 'comment_screen.dart';
@@ -27,7 +25,6 @@ class PostFooter extends ConsumerWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const SizedBox(height: 5),
-              // Utilisation du widget ExpandableRichText pour fusionner le pseudo et le contenu
               ExpandableRichText(
                 pseudo: userData["pseudo"],
                 content: post.content,
@@ -94,7 +91,6 @@ class _ExpandableRichTextState extends State<ExpandableRichText> {
 
   @override
   Widget build(BuildContext context) {
-    // Construit le TextSpan combiné : le pseudo en gras et le reste en style normal.
     final combinedText = TextSpan(
       children: [
         TextSpan(text: widget.pseudo, style: widget.pseudoStyle),
@@ -105,7 +101,7 @@ class _ExpandableRichTextState extends State<ExpandableRichText> {
 
     return LayoutBuilder(
       builder: (context, constraints) {
-        // Calculer si le texte dépasse le nombre de lignes souhaité.
+        // Calculer si le texte dépasse le nombre de lignes.
         final textPainter = TextPainter(
           text: combinedText,
           maxLines: widget.trimLines,

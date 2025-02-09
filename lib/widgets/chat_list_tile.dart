@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:groupe7/models/chat/chatroom.dart';
-import '../screens/chat_screen.dart'; // Assurez-vous que ConversationScreen est importé correctement
+import '../screens/chat_screen.dart';
 
 class ChatListTile extends StatelessWidget {
   final Chatroom chatroom;
@@ -15,7 +15,7 @@ class ChatListTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Pour un chat tête-à-tête, le partenaire est l'autre membre.
+
     final String partnerId = chatroom.members.firstWhere(
           (id) => id != currentUserId,
       orElse: () => currentUserId,
@@ -52,7 +52,7 @@ class ChatListTile extends StatelessWidget {
             if (lastMsgSnapshot.hasData && lastMsgSnapshot.data!.docs.isNotEmpty) {
               final lastMsgDoc = lastMsgSnapshot.data!.docs.first;
               final lastMsgData = lastMsgDoc.data() as Map<String, dynamic>;
-              // Si le dernier message est envoyé par le partenaire et n'est pas vu
+              // Si le dernier message est envoyé par le destinataire et n'est pas vu
               if (lastMsgData['senderId'] == partnerId && (lastMsgData['seen'] == null || lastMsgData['seen'] == false)) {
                 isUnread = true;
               }
@@ -67,7 +67,7 @@ class ChatListTile extends StatelessWidget {
                   fontWeight: isUnread ? FontWeight.bold : FontWeight.normal,
                 ),
               ),
-              // Affiche la première ligne du dernier message
+
               subtitle: Text(
                 chatroom.lastMessage,
                 maxLines: 1,
@@ -102,7 +102,7 @@ class ChatListTile extends StatelessWidget {
                 ],
               ),
               onTap: () {
-                // Ouvre l'écran de conversation en passant chatroomId et partnerId.
+
                 Navigator.push(
                   context,
                   MaterialPageRoute(

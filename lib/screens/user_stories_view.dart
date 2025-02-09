@@ -1,5 +1,3 @@
-
-
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -13,7 +11,6 @@ import '../models/stories/story.dart';
 import '../models/stories/story_repository.dart';
 import '../providers/get_user_info_by_id_provider.dart';
 import 'home_page.dart';
-
 
 class UserStoriesView extends ConsumerStatefulWidget {
   final List<Story> userStories;
@@ -46,7 +43,6 @@ class _UserStoriesViewState extends ConsumerState<UserStoriesView> {
 
   void _markStoryAsViewed(Story story) async {
     if (!story.views.contains(currentUserId)) {
-      // Mise à jour optimiste de l'UI avant l'appel Firebase
       setState(() {
         final updatedStory = story.copyWith(
           views: List<String>.from(story.views)..add(currentUserId),
@@ -55,11 +51,9 @@ class _UserStoriesViewState extends ConsumerState<UserStoriesView> {
         if (index != -1) stories[index] = updatedStory;
       });
 
-      // Envoi asynchrone au backend
       try {
         await _storyRepository.viewStory(storyId: story.storyId);
       } catch (e) {
-        // Rollback en cas d'erreur
         setState(() {
           final index = stories.indexWhere((s) => s.storyId == story.storyId);
           if (index != -1) stories[index] = story;
@@ -67,7 +61,6 @@ class _UserStoriesViewState extends ConsumerState<UserStoriesView> {
       }
     }
   }
-
 
   void _onStoryViewed(Story story) {
     if (!viewedStories.contains(story.storyId)) {
@@ -137,7 +130,8 @@ class _UserStoriesViewState extends ConsumerState<UserStoriesView> {
       );
     }
 
-    final userInfoAsync = ref.watch(getUserInfoByIdProvider(latestStory.authorId));
+    final userInfoAsync =
+        ref.watch(getUserInfoByIdProvider(latestStory.authorId));
 
     return Scaffold(
       backgroundColor: Colors.black,
@@ -155,7 +149,6 @@ class _UserStoriesViewState extends ConsumerState<UserStoriesView> {
             itemBuilder: (context, index) {
               final story = stories[index];
 
-              // Appel automatique pour la première story au rendu initial
               if (index == 0 && stories.length == 1) {
                 WidgetsBinding.instance.addPostFrameCallback((_) {
                   _onStoryViewed(story);
@@ -192,23 +185,22 @@ class _UserStoriesViewState extends ConsumerState<UserStoriesView> {
                             userInfo['pseudo'] ?? 'Utilisateur inconnu',
                             style: const TextStyle(
                                 color: Colors.white,
-                                fontWeight: FontWeight.bold
-                            ),
+                                fontWeight: FontWeight.bold),
                           ),
                           // Ajout du nombre de vues
                           Row(
                             children: [
                               Text(
-                                timeago.format(stories[_currentIndex].createdAt),
+                                timeago
+                                    .format(stories[_currentIndex].createdAt),
                                 style: const TextStyle(
-                                    color: Colors.grey,
-                                    fontSize: 12
-                                ),
+                                    color: Colors.grey, fontSize: 12),
                               ),
                               const SizedBox(width: 8),
                               Row(
                                 children: [
-                                  const Icon(Icons.remove_red_eye,
+                                  const Icon(
+                                    Icons.remove_red_eye,
                                     color: Colors.grey,
                                     size: 14,
                                   ),
@@ -255,7 +247,8 @@ class _UserStoriesViewState extends ConsumerState<UserStoriesView> {
               left: 10,
               top: MediaQuery.of(context).size.height * 0.5 - 25,
               child: IconButton(
-                icon: const Icon(Icons.arrow_back_ios, color: Colors.white, size: 40),
+                icon: const Icon(Icons.arrow_back_ios,
+                    color: Colors.white, size: 40),
                 onPressed: _previousStory,
               ),
             ),
@@ -266,7 +259,8 @@ class _UserStoriesViewState extends ConsumerState<UserStoriesView> {
               right: 10,
               top: MediaQuery.of(context).size.height * 0.5 - 25,
               child: IconButton(
-                icon: const Icon(Icons.arrow_forward_ios, color: Colors.white, size: 40),
+                icon: const Icon(Icons.arrow_forward_ios,
+                    color: Colors.white, size: 40),
                 onPressed: _nextStory,
               ),
             ),
@@ -281,7 +275,7 @@ class _UserStoriesViewState extends ConsumerState<UserStoriesView> {
                   onPressed: () async {
                     final ImagePicker picker = ImagePicker();
                     final XFile? image =
-                    await picker.pickImage(source: ImageSource.gallery);
+                        await picker.pickImage(source: ImageSource.gallery);
                     if (image != null) {
                       final storyRepository = StoryRepository();
                       final result = await storyRepository.postStory(
@@ -308,12 +302,12 @@ class _UserStoriesViewState extends ConsumerState<UserStoriesView> {
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.blue,
                     foregroundColor: Colors.white,
-                    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 20, vertical: 10),
                   ),
                 ),
               ),
             ),
-
         ],
       ),
     );

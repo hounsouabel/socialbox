@@ -7,7 +7,7 @@ class ErrorScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SliverToBoxAdapter( // Assure-toi que ce soit bien un Sliver !
+    return SliverToBoxAdapter(
       child: Padding(
         padding: const EdgeInsets.all(16),
         child: Center(

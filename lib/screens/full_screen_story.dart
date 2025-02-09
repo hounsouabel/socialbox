@@ -4,7 +4,7 @@ import '../models/stories/story.dart';
 class FullScreenStory extends StatefulWidget {
   final Story story;
 
-  const FullScreenStory({Key? key, required this.story}) : super(key: key);
+  const FullScreenStory({super.key, required this.story});
 
   @override
   State<FullScreenStory> createState() => _FullScreenStoryState();

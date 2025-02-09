@@ -10,10 +10,10 @@ class NetworkVideoView extends StatefulWidget {
     this.showControls = true,
   });
 
-  final String videoUrl; // URL de la vidéo
-  final bool autoPlay; // Lecture automatique
-  final bool looping; // Lecture en boucle
-  final bool showControls; // Afficher les contrôles de lecture
+  final String videoUrl;
+  final bool autoPlay;
+  final bool looping;
+  final bool showControls;
 
   @override
   State<NetworkVideoView> createState() => _NetworkVideoViewState();
@@ -21,9 +21,9 @@ class NetworkVideoView extends StatefulWidget {
 
 class _NetworkVideoViewState extends State<NetworkVideoView> {
   late VideoPlayerController _videoController;
-  bool _isInitialized = false; // Indique si la vidéo est initialisée
-  bool _isPlaying = false; // Indique si la vidéo est en cours de lecture
-  String? _errorMessage; // Gestion des erreurs
+  bool _isInitialized = false;
+  bool _isPlaying = false;
+  String? _errorMessage;
 
   @override
   void initState() {
@@ -33,24 +33,21 @@ class _NetworkVideoViewState extends State<NetworkVideoView> {
 
   Future<void> _initializeVideo() async {
     try {
-      // Initialisation du contrôleur vidéo
-      _videoController = VideoPlayerController.networkUrl(Uri.parse(widget.videoUrl))
-        ..addListener(() {
-          if (mounted) {
-            setState(() {});
-          }
-        });
+      _videoController =
+          VideoPlayerController.networkUrl(Uri.parse(widget.videoUrl))
+            ..addListener(() {
+              if (mounted) {
+                setState(() {});
+              }
+            });
 
-      // Initialisation de la vidéo
       await _videoController.initialize();
 
-      // Démarrage automatique si activé
       if (widget.autoPlay) {
         _videoController.play();
         _isPlaying = true;
       }
 
-      // Activation de la boucle si activée
       _videoController.setLooping(widget.looping);
 
       if (mounted) {
@@ -73,26 +70,20 @@ class _NetworkVideoViewState extends State<NetworkVideoView> {
 
   @override
   Widget build(BuildContext context) {
-    // Affichage des erreurs
     if (_errorMessage != null) {
       return _buildErrorUI();
     }
 
-    // Affichage du chargement
     if (!_isInitialized) {
       return _buildLoadingUI();
     }
 
-    // Affichage de la vidéo
     return AspectRatio(
       aspectRatio: _videoController.value.aspectRatio,
       child: Stack(
         alignment: Alignment.center,
         children: [
-          // Lecteur vidéo
           VideoPlayer(_videoController),
-
-          // Contrôles de lecture
           if (widget.showControls)
             Positioned.fill(
               child: GestureDetector(

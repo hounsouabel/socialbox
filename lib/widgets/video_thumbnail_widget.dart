@@ -4,8 +4,7 @@ import 'package:video_player/video_player.dart';
 /// Widget pour afficher une vignette de vidéo (sans lecture automatique)
 class VideoThumbnailWidget extends StatefulWidget {
   final String videoUrl;
-  const VideoThumbnailWidget({Key? key, required this.videoUrl})
-      : super(key: key);
+  const VideoThumbnailWidget({super.key, required this.videoUrl});
 
   @override
   State<VideoThumbnailWidget> createState() => _VideoThumbnailWidgetState();

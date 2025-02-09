@@ -14,12 +14,12 @@ class _VideoScreenState extends State<VideoScreen> {
   void initState() {
     super.initState();
     _controller = VideoPlayerController.networkUrl(
-        'https://www.learningcontainer.com/wp-content/uploads/2020/05/sample-mp4-file.mp4' as Uri // Remplace avec ton URL
+        'https://www.learningcontainer.com/wp-content/uploads/2020/05/sample-mp4-file.mp4' as Uri
     )
       ..initialize().then((_) {
-        setState(() {}); // Met à jour l'interface une fois la vidéo chargée
+        setState(() {});
       })
-      ..setLooping(true) // Répète la vidéo en boucle
+      ..setLooping(true)
       ..addListener(() {
         setState(() {
           _isPlaying = _controller.value.isPlaying;

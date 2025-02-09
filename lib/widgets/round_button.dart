@@ -5,7 +5,7 @@ class RoundButton extends StatelessWidget {
     super.key,
     required this.onPressed,
     required this.label,
-    this.color = Colors.lightBlue, // Remplacement de AppColors.lightBlueColor
+    this.color = Colors.lightBlue,
     this.height = 50,
   });
 
@@ -25,7 +25,7 @@ class RoundButton extends StatelessWidget {
           color: onPressed == null ? Colors.transparent : color,
           borderRadius: BorderRadius.circular(25),
           border: Border.all(
-            color: Colors.blue, // Remplacement de AppColors.darkBlueColor
+            color: Colors.blue,
           ),
         ),
         child: Center(
@@ -33,8 +33,8 @@ class RoundButton extends StatelessWidget {
             label,
             style: TextStyle(
               color: (color == Colors.lightBlue && onPressed != null)
-                  ? Colors.white // Remplacement de AppColors.realWhiteColor
-                  : Colors.blue, // Remplacement de AppColors.darkBlueColor
+                  ? Colors.white
+                  : Colors.blue,
               fontSize: 18,
             ),
           ),

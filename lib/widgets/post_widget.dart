@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:groupe7/screens/full_image_screen.dart';
 import 'package:like_button/like_button.dart';
-import 'package:firebase_auth/firebase_auth.dart'; // Ajout pour récupérer l'utilisateur actuel
+import 'package:firebase_auth/firebase_auth.dart';
 
 import 'package:video_player/video_player.dart';
 import '../models/post.dart';
@@ -81,10 +81,10 @@ class PostWidget extends ConsumerWidget {
 
   Widget _buildVideoThumbnail(String videoUrl) {
     return NetworkVideoView(
-      videoUrl: videoUrl, autoPlay: false, // Désactive la lecture automatique
-      looping: false, // Désactive la boucle
+      videoUrl: videoUrl, autoPlay: false,
+      looping: false,
       showControls: true,
-    ); // Affiche les contrôles de lecture);
+    );
   }
 
   /// Widget pour afficher les boutons d'action sous le post (Like, Comment, Share)

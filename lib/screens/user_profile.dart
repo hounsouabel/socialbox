@@ -187,7 +187,7 @@ class _UserProfileState extends ConsumerState<UserProfile> {
                 ),
                 Row(
                   children: <Widget>[
-                    // Bouton pour envoyer une demande d'amitié (ou pour indiquer qu'ils sont déjà amis)
+
                     !widget.isSelfProfile
                         ? ElevatedButton(
                       style: ElevatedButton.styleFrom(
@@ -238,7 +238,7 @@ class _UserProfileState extends ConsumerState<UserProfile> {
                       ),
                     ),
                     const SizedBox(width: 7),
-                    // Bouton "Message" : affiché uniquement si l'utilisateur connecté est ami avec l'utilisateur du profil
+
                     (!widget.isSelfProfile && _isFriend)
                         ? ElevatedButton(
                       style: ElevatedButton.styleFrom(
@@ -250,9 +250,9 @@ class _UserProfileState extends ConsumerState<UserProfile> {
                         ),
                       ),
                       onPressed: () async {
-                        // On récupère le chatRepository depuis le provider
+
                         final chatRepo = ref.read(chatProvider);
-                        // Crée (ou récupère) le chatroom entre l'utilisateur connecté et l'utilisateur du profil
+
                         final chatroomId =
                         await chatRepo.createChatroom(userId: widget.userId);
                         // Navigation vers l'écran de conversation avec ce chatroom
@@ -366,7 +366,7 @@ class _UserProfileState extends ConsumerState<UserProfile> {
                                                   "https://cdn.pixabay.com/photo/2016/11/14/17/39/person-1824147_640.png",
 
                                                   fit: BoxFit.contain,
-                                                ); // Affiche une icône d'erreur si l'URL ne peut pas être récupérée
+                                                );
                                               } else {
                                                 return Image.network(
                                                   snapshot.data ?? "https://cdn.pixabay.com/photo/2016/11/14/17/39/person-1824147_640.png",

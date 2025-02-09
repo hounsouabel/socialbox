@@ -8,7 +8,7 @@ import 'package:groupe7/providers/chat_provider.dart';
 import '../models/chat/chatroom.dart';
 import '../providers/get_all_friends_by_id_provider.dart';
 import '../widgets/chat_list_tile.dart';
-import 'chat_screen.dart'; // Si vous souhaitez naviguer vers le profil
+import 'chat_screen.dart';
 
 class ChatsScreen extends ConsumerStatefulWidget {
   const ChatsScreen({super.key});
@@ -25,9 +25,7 @@ class _ChatsScreenState extends ConsumerState<ChatsScreen> {
         .doc(friendId)
         .get();
     final data = doc.data();
-    if (data != null &&
-        data['profil'] is String &&
-        data['profil'].isNotEmpty) {
+    if (data != null && data['profil'] is String && data['profil'].isNotEmpty) {
       return data['profil'] as String;
     }
     return "https://cdn.pixabay.com/photo/2016/11/14/17/39/person-1824147_640.png";
@@ -182,14 +180,15 @@ class _ChatsScreenState extends ConsumerState<ChatsScreen> {
             ),
           ),
           const Divider(),
-          // Ici vous pouvez ajouter la liste des conversations existantes (chatrooms) si vous le souhaitez.
+
           Expanded(
             child: StreamBuilder<QuerySnapshot>(
               stream: FirebaseFirestore.instance
                   .collection('chatrooms')
-              // Récupère les chatrooms où l'utilisateur connecté est membre.
-                  .where('members', arrayContains: FirebaseAuth.instance.currentUser!.uid)
-              // Trie par dernier message (le plus récent en premier).
+                  // Récupère les chatrooms où l'utilisateur connecté est membre.
+                  .where('members',
+                      arrayContains: FirebaseAuth.instance.currentUser!.uid)
+                  // Trie par dernier message
                   .orderBy('lastMessageTs', descending: true)
                   .snapshots(),
               builder: (context, snapshot) {
@@ -203,10 +202,9 @@ class _ChatsScreenState extends ConsumerState<ChatsScreen> {
                   return const Center(child: Text('Aucune conversation'));
                 }
 
-                // Transformation des documents Firestore en objets Chatroom.
                 final List<Chatroom> chatrooms = snapshot.data!.docs
-                    .map((doc) => Chatroom.fromMap(
-                    doc.data() as Map<String, dynamic>))
+                    .map((doc) =>
+                        Chatroom.fromMap(doc.data() as Map<String, dynamic>))
                     .toList();
 
                 return ListView.builder(
@@ -215,16 +213,13 @@ class _ChatsScreenState extends ConsumerState<ChatsScreen> {
                     final chatroom = chatrooms[index];
                     return ChatListTile(
                       chatroom: chatroom,
-                      currentUserId:
-                      FirebaseAuth.instance.currentUser!.uid,
+                      currentUserId: FirebaseAuth.instance.currentUser!.uid,
                     );
                   },
                 );
               },
             ),
           ),
-
-
         ],
       ),
     );

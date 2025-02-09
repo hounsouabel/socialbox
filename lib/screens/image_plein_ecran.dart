@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:like_button/like_button.dart';
 
-import '../widgets/comment_screen.dart';
+
 
 class FullScreenImage extends StatelessWidget {
   final String imageUrl;
@@ -70,7 +70,7 @@ class FullScreenImage extends StatelessWidget {
               ),
             ],
           ),
-          SizedBox(height: 20), // Add some space at the bottom
+          SizedBox(height: 20),
         ],
       ),
     );
