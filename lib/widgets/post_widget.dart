@@ -22,7 +22,7 @@ class PostWidget extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // Vérifie si `posterId` est valide
+    // Vérifie si `posterId` existe
     if (post.posterId.isEmpty) {
       return const Padding(
         padding: EdgeInsets.all(8.0),
@@ -93,7 +93,8 @@ class PostWidget extends ConsumerWidget {
         ''; // Récupérer l'ID de l'utilisateur connecté
     final bool isLiked = post.likes
         .contains(currentUserId); // Vérifier si l'utilisateur a liké le post
-    final bool isFavorited = post.favorites.contains(currentUserId); // Vérifier si l'utilisateur a favorisé le post
+    final bool isFavorited = post.favorites.contains(
+        currentUserId); // Vérifier si l'utilisateur a favorisé le post
     bool isDarkMode =
         MediaQuery.of(context).platformBrightness == Brightness.dark;
 
@@ -172,13 +173,16 @@ class PostWidget extends ConsumerWidget {
                 icon: Icon(
                   isFavorited ? Icons.bookmark : Icons.bookmark_border,
                   size: 25,
-                  color: isFavorited ? Colors.yellowAccent : (isDarkMode ? Colors.white : Colors.black),
+                  color: isFavorited
+                      ? Colors.yellowAccent
+                      : (isDarkMode ? Colors.white : Colors.black),
                 ),
                 onPressed: () async {
-                  final result = await ref.read(globalProvider).toggleFavoritePost(
-                    postId: post.postId,
-                    favorites: post.favorites,
-                  );
+                  final result =
+                      await ref.read(globalProvider).toggleFavoritePost(
+                            postId: post.postId,
+                            favorites: post.favorites,
+                          );
                   if (result != null) {
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(content: Text('Erreur: $result')),

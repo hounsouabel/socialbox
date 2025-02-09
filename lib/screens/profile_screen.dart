@@ -10,7 +10,6 @@ import 'package:groupe7/screens/tabs/tagged_view.dart';
 import 'package:groupe7/screens/update_profile.dart';
 import 'package:groupe7/screens/user_profile.dart';
 import '../providers/friend_provider.dart';
-import '../providers/get_posts_count_by_id.dart';
 import '../providers/get_user_info_by_id_provider.dart';
 import '../services/auth_service.dart';
 import 'image_plein_ecran.dart';

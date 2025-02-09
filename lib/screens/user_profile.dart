@@ -6,6 +6,7 @@ import 'package:video_player/video_player.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../models/friends/friend_repository.dart';
+import '../providers/chat_provider.dart';
 import '../providers/get_all_friends_by_id_provider.dart';
 import '../providers/get_all_video_posts_by_userId.dart';
 import '../providers/get_posts_count_by_id.dart';
@@ -14,6 +15,7 @@ import '../providers/get_user_info_by_id_provider.dart';
 import '../widgets/profile_images_view.dart';
 
 import '../widgets/video_thumbnail_widget.dart';
+import 'chat_screen.dart';
 import 'full_screen_video.dart';
 import 'image_plein_ecran.dart';
 
@@ -185,84 +187,97 @@ class _UserProfileState extends ConsumerState<UserProfile> {
                 ),
                 Row(
                   children: <Widget>[
+                    // Bouton pour envoyer une demande d'amitié (ou pour indiquer qu'ils sont déjà amis)
                     !widget.isSelfProfile
                         ? ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: const Color(0xFFE4395F),
-                              padding: const EdgeInsets.symmetric(
-                                  vertical: 8, horizontal: 24),
-                              shape: const RoundedRectangleBorder(
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(20)),
-                              ),
-                            ),
-                            onPressed: _isFollowing || _isFriend
-                                ? null
-                                : _sendFriendRequest,
-                            child: Row(
-                              children: [
-                                if (!_isFollowing && !_isFriend)
-                                  const Icon(Icons.person_add_alt_1,
-                                      color: Colors.white),
-                                Text(
-                                  _isFriend
-                                      ? "Amis"
-                                      : _isFollowing
-                                          ? "Demande envoyée"
-                                          : " Ajouter ami(e)",
-                                  style: const TextStyle(
-                                      fontSize: 14, color: Colors.white),
-                                ),
-                              ],
-                            ),
-                          )
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color(0xFFE4395F),
+                        padding:
+                        const EdgeInsets.symmetric(vertical: 8, horizontal: 24),
+                        shape: const RoundedRectangleBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(20)),
+                        ),
+                      ),
+                      onPressed: _isFollowing || _isFriend
+                          ? null
+                          : _sendFriendRequest,
+                      child: Row(
+                        children: [
+                          if (!_isFollowing && !_isFriend)
+                            const Icon(Icons.person_add_alt_1, color: Colors.white),
+                          Text(
+                            _isFriend
+                                ? "Amis"
+                                : _isFollowing
+                                ? "Demande envoyée"
+                                : "Ajouter ami(e)",
+                            style: const TextStyle(fontSize: 14, color: Colors.white),
+                          ),
+                        ],
+                      ),
+                    )
                         : ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: const Color(0xFFE4395F),
-                              padding: const EdgeInsets.symmetric(
-                                  vertical: 8, horizontal: 24),
-                              shape: const RoundedRectangleBorder(
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(20)),
-                              ),
-                            ),
-                            onPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => UpdateProfile()),
-                              );
-                            },
-                            child: Text(
-                              "Modifier votre profil",
-                              style: TextStyle(color: Colors.white),
-                            )),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color(0xFFE4395F),
+                        padding:
+                        const EdgeInsets.symmetric(vertical: 8, horizontal: 24),
+                        shape: const RoundedRectangleBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(20)),
+                        ),
+                      ),
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => UpdateProfile()),
+                        );
+                      },
+                      child: Text(
+                        "Modifier votre profil",
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    ),
                     const SizedBox(width: 7),
-                    !widget.isSelfProfile
+                    // Bouton "Message" : affiché uniquement si l'utilisateur connecté est ami avec l'utilisateur du profil
+                    (!widget.isSelfProfile && _isFriend)
                         ? ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.white,
-                              padding: const EdgeInsets.symmetric(
-                                  vertical: 8, horizontal: 24),
-                              shape: const RoundedRectangleBorder(
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(20)),
-                              ),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.white,
+                        padding:
+                        const EdgeInsets.symmetric(vertical: 8, horizontal: 24),
+                        shape: const RoundedRectangleBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(20)),
+                        ),
+                      ),
+                      onPressed: () async {
+                        // On récupère le chatRepository depuis le provider
+                        final chatRepo = ref.read(chatProvider);
+                        // Crée (ou récupère) le chatroom entre l'utilisateur connecté et l'utilisateur du profil
+                        final chatroomId =
+                        await chatRepo.createChatroom(userId: widget.userId);
+                        // Navigation vers l'écran de conversation avec ce chatroom
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => ConversationScreen(
+                              chatroomId: chatroomId,
+                              partnerId: widget.userId,
                             ),
-                            onPressed: () {
-                              // Action à effectuer lors du clic sur le bouton
-                            },
-                            child: const Text(
-                              "Message",
-                              style: TextStyle(
-                                fontSize: 14,
-                                color: Colors.pink,
-                              ),
-                            ),
-                          )
+                          ),
+                        );
+                      },
+                      child: const Text(
+                        "Message",
+                        style: TextStyle(
+                          fontSize: 14,
+                          color: Colors.pink,
+                        ),
+                      ),
+                    )
                         : const SizedBox.shrink(),
                   ],
                 ),
+
                 const Divider(color: Colors.transparent),
                 Container(
                   height: 64,

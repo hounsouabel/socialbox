@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:groupe7/providers/get_all_image_posts.dart';
 import '../../models/post.dart';
+import '../screens/full_image_screen.dart';
 
 class ImagesView extends ConsumerWidget {
   final String userId;
@@ -30,7 +31,7 @@ class ImagesView extends ConsumerWidget {
         Container(
           height: 160,
           child: postsAsync.when(
-            data: (posts) => _buildImageList(posts),
+            data: (posts) => _buildImageList(posts, context), // Passer le contexte ici
             error: (error, _) => _buildError(error),
             loading: () => _buildLoading(),
           ),
@@ -39,7 +40,7 @@ class ImagesView extends ConsumerWidget {
     );
   }
 
-  Widget _buildImageList(List<Post> posts) {
+  Widget _buildImageList(List<Post> posts, BuildContext context) {
     if (posts.isEmpty) {
       return const Center(child: Text("Pas de publications"));
     }
@@ -58,11 +59,24 @@ class ImagesView extends ConsumerWidget {
             width: 110,
             child: ClipRRect(
               borderRadius: BorderRadius.circular(10),
-              child: CachedNetworkImage(
-                imageUrl: post.fileUrl,
-                fit: BoxFit.cover,
-                placeholder: (_, __) => _buildPlaceholder(),
-                errorWidget: (_, __, ___) => _buildErrorIcon(),
+              child: GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => FullScreenImageScreen(
+                        imageUrl: post.fileUrl,
+                        post: post,
+                      ),
+                    ),
+                  );
+                },
+                child: CachedNetworkImage(
+                  imageUrl: post.fileUrl,
+                  fit: BoxFit.cover,
+                  placeholder: (_, __) => _buildPlaceholder(),
+                  errorWidget: (_, __, ___) => _buildErrorIcon(),
+                ),
               ),
             ),
           ),
