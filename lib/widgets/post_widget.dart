@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:groupe7/screens/full_image_screen.dart';
 import 'package:like_button/like_button.dart';
-import 'package:firebase_auth/firebase_auth.dart'; // Ajout pour récupérer l'utilisateur actuel
+import 'package:firebase_auth/firebase_auth.dart';
 
 import 'package:video_player/video_player.dart';
 import '../models/post.dart';
@@ -22,7 +22,7 @@ class PostWidget extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // Vérifie si `posterId` est valide
+    // Vérifie si `posterId` existe
     if (post.posterId.isEmpty) {
       return const Padding(
         padding: EdgeInsets.all(8.0),
@@ -81,10 +81,10 @@ class PostWidget extends ConsumerWidget {
 
   Widget _buildVideoThumbnail(String videoUrl) {
     return NetworkVideoView(
-      videoUrl: videoUrl, autoPlay: false, // Désactive la lecture automatique
-      looping: false, // Désactive la boucle
+      videoUrl: videoUrl, autoPlay: false,
+      looping: false,
       showControls: true,
-    ); // Affiche les contrôles de lecture);
+    );
   }
 
   /// Widget pour afficher les boutons d'action sous le post (Like, Comment, Share)
@@ -93,7 +93,8 @@ class PostWidget extends ConsumerWidget {
         ''; // Récupérer l'ID de l'utilisateur connecté
     final bool isLiked = post.likes
         .contains(currentUserId); // Vérifier si l'utilisateur a liké le post
-    final bool isFavorited = post.favorites.contains(currentUserId); // Vérifier si l'utilisateur a favorisé le post
+    final bool isFavorited = post.favorites.contains(
+        currentUserId); // Vérifier si l'utilisateur a favorisé le post
     bool isDarkMode =
         MediaQuery.of(context).platformBrightness == Brightness.dark;
 
@@ -158,10 +159,10 @@ class PostWidget extends ConsumerWidget {
           const SizedBox(width: 8),
 
           // Bouton Partage
-          IconButton(
+          /*IconButton(
             onPressed: () {},
             icon: const Icon(Icons.near_me_outlined, size: 25),
-          ),
+          ),*/
 
           const Spacer(),
 
@@ -172,13 +173,16 @@ class PostWidget extends ConsumerWidget {
                 icon: Icon(
                   isFavorited ? Icons.bookmark : Icons.bookmark_border,
                   size: 25,
-                  color: isFavorited ? Colors.yellowAccent : (isDarkMode ? Colors.white : Colors.black),
+                  color: isFavorited
+                      ? Colors.yellowAccent
+                      : (isDarkMode ? Colors.white : Colors.black),
                 ),
                 onPressed: () async {
-                  final result = await ref.read(globalProvider).toggleFavoritePost(
-                    postId: post.postId,
-                    favorites: post.favorites,
-                  );
+                  final result =
+                      await ref.read(globalProvider).toggleFavoritePost(
+                            postId: post.postId,
+                            favorites: post.favorites,
+                          );
                   if (result != null) {
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(content: Text('Erreur: $result')),

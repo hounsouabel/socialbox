@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:readmore/readmore.dart';
 import 'package:groupe7/models/chat/message.dart';
 import '../providers/chat_provider.dart';
+import 'user_profile.dart'; // Assurez-vous que le chemin est correct
 
 class ConversationScreen extends ConsumerStatefulWidget {
   final String chatroomId;
@@ -82,13 +83,27 @@ class _ConversationScreenState extends ConsumerState<ConversationScreen> {
             final String profileImage = data['profil'] ?? '';
             return Row(
               children: [
-                CircleAvatar(
-                  backgroundImage: profileImage.isNotEmpty
-                      ? NetworkImage(profileImage)
-                      : null,
-                  child: profileImage.isEmpty
-                      ? const Icon(Icons.person)
-                      : null,
+                // Ajout du GestureDetector sur l'image de profil
+                GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => UserProfile(
+                          userId: widget.partnerId,
+                          isSelfProfile: false,
+                        ),
+                      ),
+                    );
+                  },
+                  child: CircleAvatar(
+                    backgroundImage: profileImage.isNotEmpty
+                        ? NetworkImage(profileImage)
+                        : null,
+                    child: profileImage.isEmpty
+                        ? const Icon(Icons.person)
+                        : null,
+                  ),
                 ),
                 const SizedBox(width: 8),
                 Text(

@@ -1,7 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
 import '../providers/get_all_pots_provider.dart';
 import '../providers/get_user_info_by_id_provider.dart';
 import '../widgets/post_widget.dart';
@@ -20,7 +19,7 @@ class PostsSection extends ConsumerWidget {
     return userInfo.when(
       data: (userData) {
         final profileImage = userData['profil'] ??
-            'https://via.placeholder.com/150'; // Placeholder si pas d'image
+            'https://via.placeholder.com/150';
 
         return CustomScrollView(
           key: const PageStorageKey<String>('postsScroll'),

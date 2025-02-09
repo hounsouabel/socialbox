@@ -53,12 +53,12 @@ android {
 
 
     //à decommenter pour générer deux versions moins lourdes
-    /*splits {
+    /*.splits {
         abi {
             enable true
             reset()
             include "arm64-v8a", "armeabi-v7a"
-            universalApk true
+            universalApk false
         }
     }*/
 }

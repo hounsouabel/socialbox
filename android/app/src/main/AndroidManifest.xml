@@ -2,7 +2,7 @@
     >
 
     <application
-        android:label="groupe7"
+        android:label="Social Box"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

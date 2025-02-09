@@ -1,9 +1,9 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:groupe7/screens/chatsScreen.dart';
 import 'package:groupe7/screens/post_screen.dart';
 import 'package:groupe7/screens/profile_screen.dart';
 import 'package:groupe7/screens/requests_screen.dart';
+
 import 'package:groupe7/screens/search_screen.dart';
 import 'package:groupe7/screens/create_post.dart';
 import 'package:groupe7/screens/settings/settings.dart';

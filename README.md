@@ -70,6 +70,7 @@ Les contributions sont les bienvenues ! Créez une branche, proposez vos modific
    - DA-CRUZ Edma
    - HOUNSOU Abel
    - SALIOU Abdel
+   - MOUSSA TOURE Abdoul
 
 ---
 

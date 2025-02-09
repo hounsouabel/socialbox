@@ -140,11 +140,11 @@ class _ProfileImageSelectionState extends State<ProfileImageSelection> {
                     MaterialPageRoute(builder: (context) => const ChatterBox()),
                   );
                 },
-                child: const Text('Ignorer'),
                 style: TextButton.styleFrom(
                   foregroundColor: Colors.blue,
                   textStyle: const TextStyle(fontSize: 16),
                 ),
+                child: const Text('Ignorer'),
               ),
             ],
           ),

@@ -85,7 +85,7 @@ class _SearchScreenState extends State<SearchScreen> {
                 autofocus: true,
                 textInputAction: TextInputAction.search,
                 onChanged: _onSearchChanged,
-                style: TextStyle(color: Colors.black), // Forcer la couleur du texte à noir
+                style: TextStyle(color: Colors.black),
                 decoration: InputDecoration(
                   fillColor: Colors.white,
                   prefixIcon: Icon(

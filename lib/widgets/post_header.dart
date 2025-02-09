@@ -4,8 +4,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:groupe7/screens/user_profile.dart';
 import '../providers/general_provider.dart';
 import '../providers/get_user_info_by_id_provider.dart';
-import '../screens/full_image_screen.dart';
-import 'comment_screen.dart';
 
 class PostHeader extends ConsumerWidget {
   const PostHeader({super.key, required this.userId, required this.postId});
@@ -18,7 +16,7 @@ class PostHeader extends ConsumerWidget {
     final userInfo = ref.watch(getUserInfoByIdProvider(userId));
     final isDarkMode =
         MediaQuery.of(context).platformBrightness == Brightness.dark;
-    // Récupérer l'ID de l'utilisateur connecté
+
     final currentUserId = FirebaseAuth.instance.currentUser?.uid ?? '';
 
     return userInfo.when(

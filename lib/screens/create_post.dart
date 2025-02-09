@@ -116,7 +116,6 @@ class _CreatePostScreenState extends ConsumerState<CreatePostScreen> {
                           onPressed: () {
                             makePost();
                           },
-                          child: const Text('PUBLIER'),
                           style: ElevatedButton.styleFrom(
                             foregroundColor: Colors.white,
                             backgroundColor: Colors.blue,
@@ -124,13 +123,13 @@ class _CreatePostScreenState extends ConsumerState<CreatePostScreen> {
                               borderRadius: BorderRadius.circular(30.0),
                             ),
                           ),
+                          child: const Text('PUBLIER'),
                         ),
                       ),
                       const SizedBox(width: 10),
                       Expanded(
                         child: ElevatedButton(
                           onPressed: clearFile,
-                          child: const Text('ABANDONNER'),
                           style: ElevatedButton.styleFrom(
                             foregroundColor: Colors.blue,
                             side: const BorderSide(
@@ -141,6 +140,7 @@ class _CreatePostScreenState extends ConsumerState<CreatePostScreen> {
                               borderRadius: BorderRadius.circular(30.0),
                             ),
                           ),
+                          child: const Text('ABANDONNER'),
                         ),
                       ),
                     ],

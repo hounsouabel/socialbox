@@ -9,7 +9,7 @@ import 'package:cloudinary_api/src/request/model/uploader_params.dart';
 import 'package:cloudinary_api/uploader/cloudinary_uploader.dart';
 
 class UpdateProfile extends StatefulWidget {
-  const UpdateProfile({Key? key}) : super(key: key);
+  const UpdateProfile({super.key});
 
   @override
   State<UpdateProfile> createState() => _UpdateProfileState();
