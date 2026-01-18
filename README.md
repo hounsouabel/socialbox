@@ -36,6 +36,25 @@ Ce projet est une application mobile développée avec **Flutter**, ayant pour b
 
 ---
 
+## 🌐 **Démo en ligne**
+
+L'application est automatiquement déployée sur GitHub Pages à chaque push sur la branche `main`.
+
+🔗 **Voir la démo** : [https://hounsouabel.github.io/socialbox/](https://hounsouabel.github.io/socialbox/)
+
+### Configuration GitHub Pages (à faire après le merge)
+1. Allez dans **Settings > Pages** du repository
+2. Sélectionnez la branche **gh-pages** comme source
+3. Cliquez sur **Save**
+4. Attendez quelques minutes que le déploiement se termine
+
+### Note Firebase
+Pour que l'authentification Firebase fonctionne sur GitHub Pages, ajoutez le domaine autorisé dans la Firebase Console :
+- Allez dans **Authentication > Settings > Authorized domains**
+- Ajoutez : `hounsouabel.github.io`
+
+---
+
 ## 🖥️ **Installation et Configuration**
 
 1. **Cloner le projet :**  
